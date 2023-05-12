@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
 
-const socket = io('localhost:3000');
+const socket = io('https://noname-iota.vercel.app/');
 
 const Client3 = () => {
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
