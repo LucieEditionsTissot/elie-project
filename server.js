@@ -1,5 +1,5 @@
 const app = require('express')();
-const server = require('http').Server(app);
+const server = require('https').Server(app);
 const io = require('socket.io')(server);
 const next = require('next');
 const fs = require('fs');
@@ -171,6 +171,6 @@ nextApp.prepare().then(() => {
 
   server.listen(port, err => {
     if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`);
+    console.log(`> Ready on https://localhost:${port}`);
   });
 });
