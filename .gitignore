@@ -3,6 +3,7 @@
 .next
 .idea
 # dotenv environment variables file (build for Zeit Now)
+.DS_Store
 .env
 .env.build
 # Dependency directories

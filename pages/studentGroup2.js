@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 
-const socket = io("localhost:3000");
+const socket = io("https://noname-iota.vercel.app/");
 
 export default function StudentTablet2() {
     const [questions, setQuestions] = useState([]);
@@ -14,7 +14,6 @@ export default function StudentTablet2() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
     const [selectedTheme, setSelectedTheme] = useState("");
-
 
     useEffect(() => {
         socket.emit("registerStudent2");

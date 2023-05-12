@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 
-const socket = io("192.168.43.196:3000", {
+const socket = io("https://noname-iota.vercel.app/", {
     query: {group: "teacher"},
 });
 
