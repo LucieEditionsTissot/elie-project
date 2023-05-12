@@ -23,6 +23,7 @@ const themesIndices = {
   montagne: ["Indice 7", "Indice 8", "Indice 9"],
   prairie: ["Indice 10", "Indice 11", "Indice 12"],
   jardin: ["Indice 13", "Indice 14", "Indice 15"],
+  mutualisme: ["Indice 16", "Indice 17", "Indice 18"],
 };
 const clients = io.sockets.adapter.rooms;
 
