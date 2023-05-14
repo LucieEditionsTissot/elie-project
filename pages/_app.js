@@ -1,4 +1,3 @@
-import '../styles/globals.css'
 import '../styles/style.css'
 import Header from "./components/header";
 
