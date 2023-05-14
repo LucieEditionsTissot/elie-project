@@ -20,8 +20,8 @@ function ShowTeams({teamSelected, onTeamSelected}) {
     }
 
     function handleClickOnValidateButton() {
-        if (teamSelected === null) {
-            const teamSelectedByClient = document.querySelector(".card.selected");
+        const teamSelectedByClient = document.querySelector(".card.selected");
+        if (teamSelected === null && !teamSelectedByClient.classList.contains("selectedByOtherTeam")) {
             const teamIndex = teamSelectedByClient.id;
             onTeamSelected(teamIndex);
             const validateButton = document.querySelector(".validateButton");
