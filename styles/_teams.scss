@@ -1,0 +1,106 @@
+#teams {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #eadcd6;
+
+  h1 {
+    position: relative;
+    margin-bottom: 50px;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 500;
+    font-size: 4vw;
+    font-style: normal;
+    text-align: center;
+    color: $gray;
+  }
+
+  .teamsWrapper {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+
+    .card {
+      position: relative;
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+      user-focus: none;
+      border: 3px solid transparent;
+      transform: scale(1);
+      transition: filter 0.35s ease-in-out, border 0.35s ease-in-out, transform 0.35s ease-in-out;
+
+      &.selected {
+        border: 3px solid $gray;
+        transform: scale(1.05);
+      }
+
+      &.selectedByOtherTeam {
+        filter: grayscale(1);
+      }
+
+      .teamName {
+        position: relative;
+        margin-bottom: 15px;
+        font-family: "Helvetica", sans-serif;
+        font-size: 2.8vw;
+        line-height: 1;
+        font-style: normal;
+        font-weight: 500;
+        text-align: center;
+        color: $gray;
+      }
+
+      ul {
+        position: relative;
+        list-style: none;
+
+        li {
+          position: relative;
+          font-family: "Helvetica", sans-serif;
+          font-size: 2vw;
+          font-style: normal;
+          text-align: left;
+          color: $gray;
+        }
+
+      }
+
+    }
+
+  }
+
+  .validateButton {
+    position: relative;
+    margin-top: 30px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: $gray;
+    cursor: pointer;
+
+    p {
+      position: relative;
+      font-family: "Helvetica", sans-serif;
+      font-size: 2vw;
+      font-style: normal;
+      line-height: 1;
+      font-weight: 500;
+      text-align: center;
+      color: white;
+      user-select: none;
+    }
+
+  }
+
+}

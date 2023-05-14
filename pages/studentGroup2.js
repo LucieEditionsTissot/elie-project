@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
+import ShowTeams from "./components/ShowTeams";
 
-const socket = io("https://noname-iota.vercel.app/");
+const socket = io("localhost:3000");
 
 export default function StudentTablet2() {
     const [questions, setQuestions] = useState([]);
@@ -14,6 +15,13 @@ export default function StudentTablet2() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
     const [selectedTheme, setSelectedTheme] = useState("");
+
+    const [teamSelected, setTeamSelected] = useState(null);
+
+    useEffect(() => {
+        console.log("La team choisie est : ", teamSelected)
+        socket.emit("teamChosenGroupeTwo", teamSelected)
+    }, [teamSelected])
 
     useEffect(() => {
         socket.emit("registerStudent2");
@@ -103,6 +111,9 @@ export default function StudentTablet2() {
 
                     </>
                 )}
+
+                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+
                 <div className={"questionWrapper"}>
                     {reponses.map((reponse, index) => (
                         <h2 className={"answer"} key={index} id={reponse.id}

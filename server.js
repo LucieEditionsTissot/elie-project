@@ -14,8 +14,23 @@ let clientsChoixFaits = 0;
 let reponsesCorrectes;
 let themeChoisi;
 
+let teamGroupOne = null
+let teamGroupTwo = null
+let numberOfTeamSelected = 0
+
 const indicesInterval = 15000;
 let currentIndex = 0;
+
+const teams = {
+    "Violette": ["Lucie", "Yohan", "Jean"],
+    "Cyan": ["Sacha", "Léo", "Guilhem"],
+    "Jaune": ["Léa", "Baptiste", "Timothée"],
+    "Rouge": ["Raphaël", "Virgile", "Mathieu"],
+    "Verte": ["Alma", "Jeanne", "Emma"],
+    "Orange": ["Rose", "Gabrielle", "Inès"],
+    "Rose": ["Paul", "Léon", "Lucas"],
+    "Minuit": ["Alice", "Lou", "Théo"]
+}
 
 const themesIndices = {
   ocean: ["*bruit de l'océan pour groupe 1*", "Indice 2", "Indice 3"],
@@ -94,6 +109,7 @@ const getApiAndEmit = (socket) => {
 };
 
 io.on("connection", (socket) => {
+
   if (interval) {
     clearInterval(interval);
   }
@@ -109,6 +125,24 @@ io.on("connection", (socket) => {
     socket.join('client3');
     console.log('Client 3 enregistré :', socket.id);
   });
+
+  // TEAMS /////////////////////////////////////////
+
+  io.emit("startExperience", teams);
+
+  socket.on("teamChosen", (index) => {
+    socket.broadcast.emit("teamChosen", index);
+  })
+
+  socket.on("teamChosenGroupeOne", (teamChosen) => {
+    teamGroupOne = teamChosen;
+    numberOfTeamSelected++
+  })
+
+  socket.on("teamChosenGroupeTwo", (teamChosen) => {
+    teamGroupTwo = teamChosen;
+    numberOfTeamSelected++
+  })
 
   socket.on('themeChoisi', (selectedTheme) => {
     const questions = obtenirQuestionsPourTheme(selectedTheme);

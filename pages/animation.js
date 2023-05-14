@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
 
-const socket = io('https://noname-iota.vercel.app/');
+const socket = io("localhost:3000");
 
 const Client3 = () => {
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
@@ -16,7 +16,7 @@ const Client3 = () => {
     useEffect(() => {
         socket.emit('registerAnimationClient');
 
-        getThemeRandomly()
+        //getThemeRandomly()
 
         socket.on('choicesBothDone', (theme, animation) => {
             setSelectedAnimation(animation);
