@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "./components/ShowTeams";
+import ThemeScreen from "./components/ThemeScreen";
 
 const socket = io("localhost:3000");
 
@@ -15,7 +16,6 @@ export default function StudentTablet1() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
     const [selectedTheme, setSelectedTheme] = useState("");
-
     const [teamSelected, setTeamSelected] = useState(null);
 
     useEffect(() => {
@@ -25,6 +25,11 @@ export default function StudentTablet1() {
 
     useEffect(() => {
         socket.emit("registerStudent1");
+
+        socket.on('teamsAreDoneSelectThemeRandomly',  () => {
+            hideAndShowSection("#teams", "#themeScreen")
+        })
+
         socket.on("questions", (questions) => {
             setQuestions(questions);
         });
@@ -36,6 +41,7 @@ export default function StudentTablet1() {
             }));
             setReponses(reponsesAvecId);
         });
+
         socket.on('themeChosen', (selectedTheme) => {
             setSelectedTheme(selectedTheme);
         });
@@ -43,6 +49,7 @@ export default function StudentTablet1() {
         socket.on("choixFaits", ({clientId}) => {
             setClientId(clientId);
         });
+
         socket.on("reloadClient", () => {
             window.location.reload();
         });
@@ -51,6 +58,7 @@ export default function StudentTablet1() {
             socket.off("questions");
             socket.off("reponses");
         };
+
     }, []);
 
     useEffect(() => {
@@ -94,11 +102,21 @@ export default function StudentTablet1() {
         }
     }
 
+    function hideAndShowSection(hideSection, showSection) {
+        document.querySelector(hideSection).classList.add('hide');
+        document.querySelector(showSection).classList.remove('hide');
+    }
+
     return (
         <>
             <Head>
                 <title>Tablette groupe 1</title>
             </Head>
+
+            <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+
+            <ThemeScreen/>
+
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Tablette groupe 1</h5>
                 {questions.question && (
@@ -110,8 +128,6 @@ export default function StudentTablet1() {
 
                     </>
                 )}
-
-                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
 
                 <div className={"questionWrapper"}>
                         {reponses.map((reponse, index) => (
@@ -146,6 +162,7 @@ export default function StudentTablet1() {
 
                 </div>
             </div>
+
         </>
     );
 }

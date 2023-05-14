@@ -129,6 +129,7 @@ io.on("connection", (socket) => {
   // TEAMS /////////////////////////////////////////
 
   io.emit("startExperience", teams);
+  numberOfTeamSelected = 0;
 
   socket.on("teamChosen", (index) => {
     socket.broadcast.emit("teamChosen", index);
@@ -137,12 +138,22 @@ io.on("connection", (socket) => {
   socket.on("teamChosenGroupeOne", (teamChosen) => {
     teamGroupOne = teamChosen;
     numberOfTeamSelected++
+    if (numberOfTeamSelected >= 2) {
+      teamsAreDoneSelectThemeRandomly()
+    }
   })
 
   socket.on("teamChosenGroupeTwo", (teamChosen) => {
     teamGroupTwo = teamChosen;
     numberOfTeamSelected++
+    if (numberOfTeamSelected >= 2) {
+      teamsAreDoneSelectThemeRandomly()
+    }
   })
+
+  function teamsAreDoneSelectThemeRandomly() {
+    io.emit('teamsAreDoneSelectThemeRandomly');
+  }
 
   socket.on('themeChoisi', (selectedTheme) => {
     const questions = obtenirQuestionsPourTheme(selectedTheme);

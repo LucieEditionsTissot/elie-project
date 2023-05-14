@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
+import SelectThemeRandomly from "./components/SelectThemeRandomly";
 
 const socket = io("localhost:3000");
 
@@ -16,7 +17,10 @@ const Client3 = () => {
     useEffect(() => {
         socket.emit('registerAnimationClient');
 
-        //getThemeRandomly()
+        socket.on('teamsAreDoneSelectThemeRandomly',  () => {
+            getThemeRandomly()
+            document.querySelector('#theme').classList.remove('hide');
+        })
 
         socket.on('choicesBothDone', (theme, animation) => {
             setSelectedAnimation(animation);
@@ -45,18 +49,14 @@ const Client3 = () => {
         }
     }, [prevIndices]);
 
-    function getThemeRandomly() {
-        const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
-        socket.emit('themeChoisi', selectedTheme);
-        setSelectedTheme(selectedTheme);
-        console.log("Theme choisi :", selectedTheme);
-    }
-
     return (
         <>
             <Head>
                 <title>Animation</title>
             </Head>
+
+            <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme}/>
+
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>
 
@@ -92,8 +92,22 @@ const Client3 = () => {
                 )}
                 {selectedTheme && <VideoPlayer />}
             </div>
+
         </>
     );
+
+    function getThemeRandomly() {
+        const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
+        socket.emit('themeChoisi', selectedTheme);
+        setSelectedTheme(selectedTheme);
+        console.log("Theme choisi : ", selectedTheme);
+    }
+
+    function hideAndShowSection(hideSection, showSection) {
+        document.querySelector(hideSection).classList.add('hide');
+        document.querySelector(showSection).classList.remove('hide');
+    }
+
 };
 
 export default Client3;
