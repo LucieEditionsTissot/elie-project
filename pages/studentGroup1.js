@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "./components/ShowTeams";
 import ThemeScreen from "./components/ThemeScreen";
+import RulesScreen from "./components/RulesScreen";
 
 const socket = io("localhost:3000");
 
@@ -26,8 +27,12 @@ export default function StudentTablet1() {
     useEffect(() => {
         socket.emit("registerStudent1");
 
-        socket.on('teamsAreDoneSelectThemeRandomly',  () => {
-            hideAndShowSection("#teams", "#themeScreen")
+        socket.on('teamsAreDoneShowRules',  () => {
+            hideAndShowSection("#teams", "#rulesScreen")
+        })
+
+        socket.on('rulesAreDoneSelectThemeRandomly',  () => {
+            hideAndShowSection('#rulesScreen', '#themeScreen')
         })
 
         socket.on("questions", (questions) => {
@@ -114,6 +119,8 @@ export default function StudentTablet1() {
             </Head>
 
             <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+
+            <RulesScreen/>
 
             <ThemeScreen/>
 

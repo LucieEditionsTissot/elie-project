@@ -3,11 +3,15 @@ import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
 import SelectThemeRandomly from "./components/SelectThemeRandomly";
+import ShowRules from "./components/ShowRules";
 
 const socket = io("localhost:3000");
 
 const Client3 = () => {
+
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
+    const [rules, setRules] = useState([]);
+
     const [selectedTheme, setSelectedTheme] = useState('');
     const [selectedAnimation, setSelectedAnimation] = useState('');
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -17,9 +21,14 @@ const Client3 = () => {
     useEffect(() => {
         socket.emit('registerAnimationClient');
 
-        socket.on('teamsAreDoneSelectThemeRandomly',  () => {
+        socket.on('teamsAreDoneShowRules',  (rules) => {
+            document.querySelector('#rules').classList.remove('hide');
+            setRules(rules)
+        })
+
+        socket.on('rulesAreDoneSelectThemeRandomly',  () => {
             getThemeRandomly()
-            document.querySelector('#theme').classList.remove('hide');
+            hideAndShowSection('#rules', '#theme')
         })
 
         socket.on('choicesBothDone', (theme, animation) => {
@@ -54,6 +63,8 @@ const Client3 = () => {
             <Head>
                 <title>Animation</title>
             </Head>
+
+            <ShowRules rules={rules}/>
 
             <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme}/>
 
@@ -98,7 +109,7 @@ const Client3 = () => {
 
     function getThemeRandomly() {
         const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
-        socket.emit('themeChoisi', selectedTheme);
+        socket.emit('themeIsRandomlyChosen', selectedTheme);
         setSelectedTheme(selectedTheme);
         console.log("Theme choisi : ", selectedTheme);
     }

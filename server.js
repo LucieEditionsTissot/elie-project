@@ -1,5 +1,5 @@
 const app = require('express')();
-const server = require('https').Server(app);
+const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const next = require('next');
 const fs = require('fs');
@@ -9,28 +9,15 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 
+////////////////////////////////////////
+
 let interval;
 let clientsChoixFaits = 0;
 let reponsesCorrectes;
 let themeChoisi;
 
-let teamGroupOne = null
-let teamGroupTwo = null
-let numberOfTeamSelected = 0
-
 const indicesInterval = 15000;
 let currentIndex = 0;
-
-const teams = {
-    "Violette": ["Lucie", "Yohan", "Jean"],
-    "Cyan": ["Sacha", "Léo", "Guilhem"],
-    "Jaune": ["Léa", "Baptiste", "Timothée"],
-    "Rouge": ["Raphaël", "Virgile", "Mathieu"],
-    "Verte": ["Alma", "Jeanne", "Emma"],
-    "Orange": ["Rose", "Gabrielle", "Inès"],
-    "Rose": ["Paul", "Léon", "Lucas"],
-    "Minuit": ["Alice", "Lou", "Théo"]
-}
 
 const themesIndices = {
   ocean: ["*bruit de l'océan pour groupe 1*", "Indice 2", "Indice 3"],
@@ -108,6 +95,34 @@ const getApiAndEmit = (socket) => {
   socket.emit("FromAPI", response);
 };
 
+//////////////////////////// New //////////////////////////////
+
+let teamGroupOne = null
+let teamGroupTwo = null
+let numberOfTeamSelected = 0
+
+const rulesTimer = 5000
+
+let randomTheme = ""
+
+const teams = {
+  "Violette": ["Lucie", "Yohan", "Jean"],
+  "Cyan": ["Sacha", "Léo", "Guilhem"],
+  "Jaune": ["Léa", "Baptiste", "Timothée"],
+  "Rouge": ["Raphaël", "Virgile", "Mathieu"],
+  "Verte": ["Alma", "Jeanne", "Emma"],
+  "Orange": ["Rose", "Gabrielle", "Inès"],
+  "Rose": ["Paul", "Léon", "Lucas"],
+  "Minuit": ["Alice", "Lou", "Théo"]
+}
+
+const rules = {
+  0: "blablabla",
+  1: "c'est vraiment des superbes règles",
+  2: "Et pas des équerres",
+  3: "Reprend toi yohan..."
+}
+
 io.on("connection", (socket) => {
 
   if (interval) {
@@ -139,7 +154,7 @@ io.on("connection", (socket) => {
     teamGroupOne = teamChosen;
     numberOfTeamSelected++
     if (numberOfTeamSelected >= 2) {
-      teamsAreDoneSelectThemeRandomly()
+      teamsAreDoneShowRules()
     }
   })
 
@@ -147,12 +162,19 @@ io.on("connection", (socket) => {
     teamGroupTwo = teamChosen;
     numberOfTeamSelected++
     if (numberOfTeamSelected >= 2) {
-      teamsAreDoneSelectThemeRandomly()
+      teamsAreDoneShowRules()
     }
   })
 
-  function teamsAreDoneSelectThemeRandomly() {
-    io.emit('teamsAreDoneSelectThemeRandomly');
+  socket.on("themeIsRandomlyChosen", (theme) => {
+    randomTheme = theme
+  })
+
+  function teamsAreDoneShowRules() {
+    io.emit('teamsAreDoneShowRules', rules);
+    setTimeout(() => {
+      io.emit('rulesAreDoneSelectThemeRandomly');
+    }, rulesTimer)
   }
 
   socket.on('themeChoisi', (selectedTheme) => {
