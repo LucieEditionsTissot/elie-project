@@ -104,6 +104,7 @@ let numberOfTeamSelected = 0
 const rulesTimer = 5000
 
 let randomTheme = ""
+const themeTimer = 5000
 
 const teams = {
     "Violette": ["Lucie", "Yohan", "Jean"],
@@ -120,7 +121,13 @@ const rules = {
     0: "blablabla",
     1: "c'est vraiment des superbes règles",
     2: "Et pas des équerres",
-    3: "Reprend toi yohan..."
+    3: "Reprend toi Yohan..."
+}
+
+const themeExplanation = {
+    "Mutualisme": "Explication brève du mutualisme",
+    "Predation": "Explication brève de la prédation",
+    "Commensalisme": "Explication brève du commensalisme"
 }
 
 io.on("connection", (socket) => {
@@ -128,14 +135,17 @@ io.on("connection", (socket) => {
     if (interval) {
         clearInterval(interval);
     }
+
     socket.on('registerStudent1', () => {
         socket.join('client1');
         console.log('Client 1 enregistré :', socket.id);
     });
+
     socket.on('registerStudent2', () => {
         socket.join('client2');
         console.log('Client 2 enregistré :', socket.id);
     });
+
     socket.on('registerAnimationClient', () => {
         socket.join('client3');
         console.log('Client 3 enregistré :', socket.id);
@@ -166,6 +176,8 @@ io.on("connection", (socket) => {
         }
     })
 
+    // RULES /////////////////////////////////////////
+
     function teamsAreDoneShowRules() {
         io.emit('teamsAreDoneShowRules', rules);
         setTimeout(() => {
@@ -173,8 +185,13 @@ io.on("connection", (socket) => {
         }, rulesTimer)
     }
 
+    // THEME /////////////////////////////////////////
+
     socket.on("themeIsRandomlyChosen", (theme) => {
         randomTheme = theme
+        setTimeout(() => {
+            io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
+        }, themeTimer)
     })
 
     socket.on('themeChoisi', (selectedTheme) => {

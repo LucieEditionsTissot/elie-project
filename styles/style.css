@@ -153,7 +153,7 @@ header a:last-child h3 {
   margin-bottom: 0;
 }
 
-#theme, #themeScreen {
+#theme, #themeScreen, #themeExplanation, #themeExplanationScreen {
   position: fixed;
   padding: 5%;
   top: 0;
@@ -167,7 +167,7 @@ header a:last-child h3 {
   background: white;
   z-index: 10;
 }
-#theme h1, #themeScreen h1 {
+#theme h1, #themeScreen h1, #themeExplanation h1, #themeExplanationScreen h1 {
   position: relative;
   margin-bottom: 50px;
   font-family: "Helvetica", sans-serif;
@@ -178,7 +178,7 @@ header a:last-child h3 {
   color: #303030;
 }
 
-#themeScreen h1 {
+#themeScreen h1, #themeExplanationScreen h1 {
   margin-bottom: 0;
 }
 

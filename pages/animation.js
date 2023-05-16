@@ -4,6 +4,7 @@ import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
 import SelectThemeRandomly from "./components/SelectThemeRandomly";
 import ShowRules from "./components/ShowRules";
+import ThemeExplanation from "./components/ThemeExplanation";
 
 const socket = io("localhost:3000");
 
@@ -11,6 +12,7 @@ const Client3 = () => {
 
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
     const [rules, setRules] = useState([]);
+    const [themeExplanation, setThemeExplanation] = useState([]);
 
     const [selectedTheme, setSelectedTheme] = useState('');
     const [selectedAnimation, setSelectedAnimation] = useState('');
@@ -30,6 +32,13 @@ const Client3 = () => {
             getThemeRandomly()
             hideAndShowSection('#rules', '#theme')
         })
+
+        socket.on('themeIsSelectedShowThemeExplanation',  (explanation) => {
+            setThemeExplanation(explanation)
+            hideAndShowSection('#theme', '#themeExplanation')
+        })
+
+        /////////////////////////////////////////////
 
         socket.on('choicesBothDone', (theme, animation) => {
             setSelectedAnimation(animation);
@@ -67,6 +76,8 @@ const Client3 = () => {
             <ShowRules rules={rules}/>
 
             <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme}/>
+
+            <ThemeExplanation explanation={themeExplanation}/>
 
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>

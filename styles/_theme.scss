@@ -1,4 +1,4 @@
-#theme, #themeScreen {
+#theme, #themeScreen, #themeExplanation, #themeExplanationScreen {
   position: fixed;
   padding: 5%;
   top: 0;
@@ -25,7 +25,7 @@
 
 }
 
-#themeScreen {
+#themeScreen, #themeExplanationScreen {
 
     h1 {
       margin-bottom: 0;

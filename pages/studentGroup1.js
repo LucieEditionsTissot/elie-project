@@ -4,6 +4,7 @@ import Head from "next/head";
 import ShowTeams from "./components/ShowTeams";
 import ThemeScreen from "./components/ThemeScreen";
 import RulesScreen from "./components/RulesScreen";
+import ThemeExplanationScreen from "./components/ThemeExplanationScreen";
 
 const socket = io("localhost:3000");
 
@@ -34,6 +35,12 @@ export default function StudentTablet1() {
         socket.on('rulesAreDoneSelectThemeRandomly',  () => {
             hideAndShowSection('#rulesScreen', '#themeScreen')
         })
+
+        socket.on('themeIsSelectedShowThemeExplanation',  () => {
+            hideAndShowSection('#themeScreen', '#themeExplanationScreen')
+        })
+
+        /////////////////////////////////////////////
 
         socket.on("questions", (questions) => {
             setQuestions(questions);
@@ -123,6 +130,8 @@ export default function StudentTablet1() {
             <RulesScreen/>
 
             <ThemeScreen/>
+
+            <ThemeExplanationScreen/>
 
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Tablette groupe 1</h5>
