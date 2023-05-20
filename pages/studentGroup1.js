@@ -129,8 +129,6 @@ export default function StudentTablet1() {
 
             <RulesScreen/>
 
-            <ThemeScreen/>
-
             <ThemeExplanationScreen/>
 
             <div className={"global-wrapper"}>
