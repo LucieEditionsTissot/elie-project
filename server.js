@@ -106,17 +106,17 @@ const rulesTimer = 5000
 let randomTheme = ""
 const themeTimer = 5000
 
-const teams = [
-    { Violette: ["Lucie", "Yohan", "Jean"]},
-    {Cyan: ["Sacha", "Léo", "Guilhem"]},
-    {Jaune: ["Léa", "Baptiste", "Timothée"]},
-    {Rouge: ["Raphaël", "Virgile", "Mathieu"]},
-    {Verte: ["Alma", "Jeanne", "Emma"]},
-    {Orange: ["Rose", "Gabrielle", "Inès"]},
-    {Rose: ["Paul", "Léon", "Lucas"]},
-    {Minuit: ["Alice", "Lou", "Théo"]}
-]
-const teamNames = teams.map((team) => Object.keys(team)[0]);
+const teams = {
+    "Violette": ["Lucie", "Yohan", "Jean"],
+    "Cyan": ["Sacha", "Léo", "Guilhem"],
+    "Jaune": ["Léa", "Baptiste", "Timothée"],
+    "Rouge": ["Raphaël", "Virgile", "Mathieu"],
+    "Verte": ["Alma", "Jeanne", "Emma"],
+    "Orange": ["Rose", "Gabrielle", "Inès"],
+    "Rose": ["Paul", "Léon", "Lucas"],
+    "Minuit": ["Alice", "Lou", "Théo"]
+}
+
 const rules = {
     0: "blablabla",
     1: "c'est vraiment des superbes règles",
@@ -160,31 +160,16 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("teamChosen", index);
     })
 
-    teamNames.forEach((teamName) => {
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
-        console.log(teamChosen);
-        console.log(teamGroupOne);
-        console.log(teams);
-        console.log(teamNames);
-
-        console.log(teamName);
-        const team = teams.find((teamObj) => Object.keys(teamObj)[0] === teamName);
-
-        if (team) {
-            const members = Object.values(team)[0];
-            console.log(members);
-            }
         numberOfTeamSelected++
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
-    });
     })
 
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
-
         numberOfTeamSelected++
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
@@ -204,21 +189,12 @@ io.on("connection", (socket) => {
 
     socket.on("themeIsRandomlyChosen", (theme) => {
         randomTheme = theme
-        const questions = obtenirQuestionsPourTheme(theme);
-        const reponses = obtenirQuestionsPourTheme(theme).reponses;
-        const reponsesGroupe1 = reponses.slice(0, reponses.length / 2);
-        const reponsesGroupe2 = reponses.slice(reponses.length / 2);
-        console.log(reponsesGroupe1)
-        console.log(reponsesGroupe2)
-        console.log(questions)
         setTimeout(() => {
-           // io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
-            io.emit('questions', questions);
-
-            io.to("client1").emit('reponses', reponsesGroupe1);
-            io.to("client2").emit('reponses', reponsesGroupe2);
+            io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
         }, themeTimer)
     })
+
+    // OLD ///////////////////////////////////////////
 
     socket.on('themeChoisi', (selectedTheme) => {
         const questions = obtenirQuestionsPourTheme(selectedTheme);
@@ -282,6 +258,6 @@ nextApp.prepare().then(() => {
 
     server.listen(port, err => {
         if (err) throw err;
-        console.log(`> Ready on https://localhost:${port}`);
+        console.log(`> Ready on http://localhost:${port}`);
     });
 });

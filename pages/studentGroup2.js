@@ -130,6 +130,7 @@ export default function StudentTablet2() {
 
             <RulesScreen/>
 
+            <ThemeScreen/>
 
             <ThemeExplanationScreen/>
 
