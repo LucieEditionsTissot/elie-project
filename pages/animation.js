@@ -5,6 +5,7 @@ import VideoPlayer from '../pages/components/VideoPlayer';
 import SelectThemeRandomly from "./components/SelectThemeRandomly";
 import ShowRules from "./components/ShowRules";
 import ThemeExplanation from "./components/ThemeExplanation";
+import ShowMap from "./components/ShowMap";
 
 const socket = io("localhost:3000");
 
@@ -13,6 +14,7 @@ const Client3 = () => {
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
     const [rules, setRules] = useState([]);
     const [themeExplanation, setThemeExplanation] = useState([]);
+    const [animation, setAnimation] = useState(null)
 
     const [selectedTheme, setSelectedTheme] = useState('');
     const [selectedAnimation, setSelectedAnimation] = useState('');
@@ -38,7 +40,17 @@ const Client3 = () => {
             hideAndShowSection('#theme', '#themeExplanation')
         })
 
-        /////////////////////////////////////////////
+        socket.on('startTurnByTurn',  () => {
+            hideAndShowSection('#themeExplanation', '#map')
+        })
+
+        socket.on('animation',  (animationData) => {
+            if (animation === null) {
+                setAnimation(animationData)
+            }
+        })
+
+        /*
 
         socket.on('choicesBothDone', (theme, animation) => {
             setSelectedAnimation(animation);
@@ -53,8 +65,12 @@ const Client3 = () => {
         return () => {
             socket.disconnect();
         };
+
+         */
+
     }, []);
 
+    /*
     useEffect(() => {
         if (prevIndices.length > 0) {
             const timerId = setInterval(() => {
@@ -66,6 +82,7 @@ const Client3 = () => {
             }, 15000);
         }
     }, [prevIndices]);
+     */
 
     return (
         <>
@@ -78,6 +95,8 @@ const Client3 = () => {
             <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme}/>
 
             <ThemeExplanation explanation={themeExplanation}/>
+
+            <ShowMap animation={animation}/>
 
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>
@@ -119,8 +138,10 @@ const Client3 = () => {
     );
 
     function getThemeRandomly() {
-        const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
-        socket.emit('themeIsRandomlyChosen', selectedTheme);
+        const randomIndex = Math.floor(Math.random() * themes.length);
+        const selectedTheme = themes[randomIndex];
+        const data = [selectedTheme, randomIndex]
+        socket.emit('themeIsRandomlyChosen', data);
         setSelectedTheme(selectedTheme);
         console.log("Theme choisi : ", selectedTheme);
     }

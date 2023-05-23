@@ -1,0 +1,149 @@
+#turnByTurn {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 10;
+
+  h1 {
+    position: relative;
+    margin-bottom: 15px;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 500;
+    font-size: 4vw;
+    font-style: normal;
+    text-align: center;
+    color: $gray;
+  }
+
+  h2 {
+    position: relative;
+    margin-bottom: 50px;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 500;
+    font-size: 3vw;
+    font-style: normal;
+    text-align: center;
+    color: $gray;
+  }
+
+  .animal-wrapper {
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+
+    .animal {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: $gray;
+      user-select: none;
+      transition: transform 0.65s;
+      transform-style: preserve-3d;
+
+      p {
+        position: relative;
+        font-family: "Helvetica", sans-serif;
+        font-size: 2vw;
+        line-height: 1;
+        font-weight: 500;
+        font-style: normal;
+        text-align: center;
+        color: white;
+      }
+
+      &.hidden {
+        transform: rotateY(180deg);
+
+        p {
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+        }
+
+      }
+
+      &.empty {
+        background: transparent;
+        cursor: none;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+    }
+
+  }
+
+  .timer-wrapper  {
+    position: relative;
+    margin-top: 50px;
+    height: 20px;
+    width: 100%;
+    border-radius: 5px;
+    border: 2px solid $gray;
+
+    .timer {
+      position: relative;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: green;
+      animation-duration: 999s;
+      animation: timer linear infinite;
+      animation-play-state: paused;
+    }
+
+  }
+  
+  @keyframes timer {
+    0% {
+      width: 0;
+      background: green;
+    }
+    50% {
+      background: orange;
+    }
+    100% {
+      width: 100%;
+      background: red;
+    }
+  }
+
+  .validateButton {
+    position: relative;
+    margin-top: 30px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: $gray;
+    cursor: pointer;
+    display: none;
+
+    p {
+      position: relative;
+      font-family: "Helvetica", sans-serif;
+      font-size: 2vw;
+      font-style: normal;
+      line-height: 1;
+      font-weight: 500;
+      text-align: center;
+      color: white;
+      user-select: none;
+    }
+
+  }
+
+}
