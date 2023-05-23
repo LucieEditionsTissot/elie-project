@@ -8,10 +8,9 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
-
-////////////////////////////////////////
-
 let interval;
+
+/*
 let clientsChoixFaits = 0;
 let reponsesCorrectes;
 let themeChoisi;
@@ -90,6 +89,8 @@ const obtenirReponsesCorrectesPourTheme = (theme, bonnesReponses) => {
         return bonnesReponses.includes(reponse.animal) && reponse.isCorrect === true;
     });
 };
+ */
+
 const getApiAndEmit = (socket) => {
     const response = new Date();
     socket.emit("FromAPI", response);
@@ -101,10 +102,12 @@ let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
 
-const rulesTimer = 5000
+const rulesTimer = 2000
 
 let randomTheme = ""
-const themeTimer = 5000
+const themeTimer = 2000
+
+let numberOfChosenAnimals = 0
 
 const teams = {
     "Violette": ["Lucie", "Yohan", "Jean"],
@@ -128,6 +131,45 @@ const themeExplanation = {
     "Mutualisme": "Explication brève du mutualisme",
     "Predation": "Explication brève de la prédation",
     "Commensalisme": "Explication brève du commensalisme"
+}
+
+const animals = {
+    "Mutualisme" : {
+        "teamGroupOne": {
+            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer" : 7
+        },
+        "teamGroupTwo": {
+            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer" : 4
+        }
+    },
+    "Predation" : {
+        "teamGroupOne": {
+            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer" : 7
+        },
+        "teamGroupTwo": {
+            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer" : 4
+        }
+    },
+    "Commensalisme" : {
+        "teamGroupOne": {
+            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer" : 7
+        },
+        "teamGroupTwo": {
+            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer" : 4
+        }
+    }
+}
+
+const answersAnimation = {
+    "Mutualisme" : "anim mutualisme",
+    "Predation" : "anim predation",
+    "Commensalisme" : "anim commensalisme"
 }
 
 io.on("connection", (socket) => {
@@ -187,15 +229,30 @@ io.on("connection", (socket) => {
 
     // THEME /////////////////////////////////////////
 
-    socket.on("themeIsRandomlyChosen", (theme) => {
-        randomTheme = theme
+    socket.on("themeIsRandomlyChosen", (data) => {
+        randomTheme = data[0]
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
+            setTimeout(() => {
+                const themeIndex = data[1]
+                const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
+                io.emit('startTurnByTurn', dataTurnByTurn)
+            }, themeTimer)
         }, themeTimer)
+    })
+
+    // ANIMAL CHOSEN  ////////////////////////////////
+
+    socket.on("animalChosen", () => {
+        numberOfChosenAnimals++
+        if (numberOfChosenAnimals >= 2) {
+            io.emit("animation", answersAnimation[randomTheme])
+        }
     })
 
     // OLD ///////////////////////////////////////////
 
+    /*
     socket.on('themeChoisi', (selectedTheme) => {
         const questions = obtenirQuestionsPourTheme(selectedTheme);
         const reponses = obtenirQuestionsPourTheme(selectedTheme).reponses;
@@ -243,6 +300,7 @@ io.on("connection", (socket) => {
             }, 2000);
         }
     });
+     */
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {

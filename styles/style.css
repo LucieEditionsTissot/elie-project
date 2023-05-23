@@ -182,6 +182,195 @@ header a:last-child h3 {
   margin-bottom: 0;
 }
 
+#map {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 10;
+}
+#map h1 {
+  position: relative;
+  margin-bottom: 50px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 4vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
+}
+
+#map h1 {
+  margin-bottom: 0;
+}
+
+#turnByTurn {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 10;
+}
+#turnByTurn h1 {
+  position: relative;
+  margin-bottom: 15px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 4vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
+}
+#turnByTurn h2 {
+  position: relative;
+  margin-bottom: 50px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 3vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
+}
+#turnByTurn .animal-wrapper {
+  position: relative;
+  width: 100%;
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+#turnByTurn .animal-wrapper .animal {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #303030;
+  user-select: none;
+  transition: transform 0.65s;
+  transform-style: preserve-3d;
+}
+#turnByTurn .animal-wrapper .animal p {
+  position: relative;
+  font-family: "Helvetica", sans-serif;
+  font-size: 2vw;
+  line-height: 1;
+  font-weight: 500;
+  font-style: normal;
+  text-align: center;
+  color: white;
+}
+#turnByTurn .animal-wrapper .animal.hidden {
+  transform: rotateY(180deg);
+}
+#turnByTurn .animal-wrapper .animal.hidden p {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+#turnByTurn .animal-wrapper .animal.empty {
+  background: transparent;
+  cursor: none;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+#turnByTurn .timer-wrapper {
+  position: relative;
+  margin-top: 50px;
+  height: 20px;
+  width: 100%;
+  border-radius: 5px;
+  border: 2px solid #303030;
+}
+#turnByTurn .timer-wrapper .timer {
+  position: relative;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background: green;
+  animation-duration: 999s;
+  animation: timer linear infinite;
+  animation-play-state: paused;
+}
+@keyframes timer {
+  0% {
+    width: 0;
+    background: green;
+  }
+  50% {
+    background: orange;
+  }
+  100% {
+    width: 100%;
+    background: red;
+  }
+}
+#turnByTurn .validateButton {
+  position: relative;
+  margin-top: 30px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background: #303030;
+  cursor: pointer;
+  display: none;
+}
+#turnByTurn .validateButton p {
+  position: relative;
+  font-family: "Helvetica", sans-serif;
+  font-size: 2vw;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 500;
+  text-align: center;
+  color: white;
+  user-select: none;
+}
+
+#animationScreen {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 10;
+}
+#animationScreen h1 {
+  position: relative;
+  margin-bottom: 50px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 4vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
+}
+
+#animationScreen h1 {
+  margin-bottom: 0;
+}
+
 * {
   margin: 0;
   padding: 0;
