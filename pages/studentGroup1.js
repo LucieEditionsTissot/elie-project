@@ -1,10 +1,17 @@
 import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
+import ShowTeams from "./components/ShowTeams";
+import ThemeScreen from "./components/ThemeScreen";
+import RulesScreen from "./components/RulesScreen";
+import ThemeExplanationScreen from "./components/ThemeExplanationScreen";
+import TurnByTurn from "./components/TurnByTurn";
+import AnimationScreen from "./components/AnimationScreen";
 
-const socket = io("https://noname-iota.vercel.app/");
+const socket = io("localhost:3000");
 
 export default function StudentTablet1() {
+    /*
     const [questions, setQuestions] = useState([]);
     const [reponses, setReponses] = useState([]);
     const [reponseSoumise, setReponseSoumise] = useState(false);
@@ -13,10 +20,41 @@ export default function StudentTablet1() {
     const [attenteReponse, setAttenteReponse] = useState(false);
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
+     */
     const [selectedTheme, setSelectedTheme] = useState("");
+    const [teamSelected, setTeamSelected] = useState(null);
+    const [turnByTurnData, setTurnByTurnData] = useState({});
+
+    useEffect(() => {
+        console.log("La team choisie est : ", teamSelected)
+        socket.emit("teamChosenGroupeOne", teamSelected)
+    }, [teamSelected])
 
     useEffect(() => {
         socket.emit("registerStudent1");
+
+        socket.on('teamsAreDoneShowRules',  () => {
+            hideAndShowSection("#teams", "#rulesScreen")
+        })
+
+        socket.on('rulesAreDoneSelectThemeRandomly',  () => {
+            hideAndShowSection('#rulesScreen', '#themeScreen')
+        })
+
+        socket.on('themeIsSelectedShowThemeExplanation',  () => {
+            hideAndShowSection('#themeScreen', '#themeExplanationScreen')
+        })
+
+        socket.on('startTurnByTurn',  (data) => {
+            setTurnByTurnData(data)
+            hideAndShowSection('#themeExplanationScreen', '#turnByTurn')
+        })
+
+        socket.on('animation',  () => {
+            hideAndShowSection('#turnByTurn', '#animationScreen')
+        })
+
+        /*
         socket.on("questions", (questions) => {
             setQuestions(questions);
         });
@@ -28,6 +66,7 @@ export default function StudentTablet1() {
             }));
             setReponses(reponsesAvecId);
         });
+
         socket.on('themeChosen', (selectedTheme) => {
             setSelectedTheme(selectedTheme);
         });
@@ -35,6 +74,7 @@ export default function StudentTablet1() {
         socket.on("choixFaits", ({clientId}) => {
             setClientId(clientId);
         });
+
         socket.on("reloadClient", () => {
             window.location.reload();
         });
@@ -43,100 +83,36 @@ export default function StudentTablet1() {
             socket.off("questions");
             socket.off("reponses");
         };
+         */
+
     }, []);
-
-    useEffect(() => {
-        if (clientId && reponseChoisie) {
-            socket.emit("choixFaits", {clientId});
-            socket.emit("reloadClient");
-            setAttenteReponse(false)
-            setChoixFaits(true);
-        }
-    }, [clientId, reponseChoisie]);
-
-    const handleClickOnAnswer = (e) => {
-        e.target.classList.toggle('disabled')
-        const numberOfAnswersLeft = document.querySelectorAll('.answer:not(.disabled)').length;
-        if (numberOfAnswersLeft === 1) {
-            document.querySelector('.buttonValidate').classList.add('readyToClick')
-        } else {
-            document.querySelector('.buttonValidate').classList.remove('readyToClick')
-        }
-
-    };
-
-    const handleClickOnValidateButton = () => {
-        const numberOfAnswers = document.querySelectorAll('.answer').length;
-        const numberOfDisabledAnswers = document.querySelectorAll('.answer.disabled').length;
-
-        if (numberOfDisabledAnswers === numberOfAnswers - 1) {
-            const lastAnswerNotSelected = document.querySelector('.answer:not(.disabled)');
-            const lastAnswerNotSelectedId = lastAnswerNotSelected.id
-            const reponseSelectionnee = reponses.find(reponse => reponse.id === lastAnswerNotSelectedId);
-
-            if (reponseSelectionnee) {
-                const isReponseCorrecte = reponseSelectionnee.isCorrect;
-                socket.emit("reponseQuestion", {lastAnswerNotSelectedId, isCorrect: isReponseCorrecte});
-                setReponseSoumise(true);
-                setReponseChoisie(reponseSelectionnee.animal);
-                setReponseCorrecte(isReponseCorrecte);
-                setAttenteReponse(true);
-            }
-
-        }
-    }
 
     return (
         <>
             <Head>
                 <title>Tablette groupe 1</title>
             </Head>
-            <div className={"global-wrapper"}>
-                <h5 className={"type"}>Tablette groupe 1</h5>
-                {questions.question && (
-                    <>
-                        <h3 className={"question"}>Question : {questions.question}</h3>
-                        <p className={"info"}>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous
-                            pensez
-                            être le bon</p>
 
-                    </>
-                )}
-                <div className={"questionWrapper"}>
-                        {reponses.map((reponse, index) => (
-                            <h2 className={"answer"} key={index} id={reponse.id}
-                                onClick={(e) => !reponseSoumise && handleClickOnAnswer(e)}
-                                style={{
-                                    cursor: reponseSoumise ? "not-allowed" : "pointer"
-                                }}
-                            >
-                                {reponse.animal}
-                            </h2>
-                        ))}
-                </div>
-                {questions.question && (
-                    <div className={"buttonValidate"} onClick={() => handleClickOnValidateButton()}>
-                        <p>Valider</p>
-                    </div>
-                )}
-                <div className={"answerWrapper"}>
+            <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
 
-                    {reponseChoisie && (
-                        <p>{reponseCorrecte ? "Correct" : "Incorrect"}</p>
-                    )}
+            <RulesScreen/>
 
-                    {attenteReponse && (
-                        <h5>, en attente du deuxième groupe</h5>
-                    )}
+            <ThemeScreen/>
 
-                    {choixFaits && (
-                        <h5>, les choix ont été faits sur les deux tablettes.</h5>
-                    )}
+            <ThemeExplanationScreen/>
 
-                </div>
-            </div>
+            <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
+
+            <AnimationScreen/>
+
         </>
     );
+
+    function hideAndShowSection(hideSection, showSection) {
+        document.querySelector(hideSection).classList.add('hide');
+        document.querySelector(showSection).classList.remove('hide');
+    }
+
 }
 
 

@@ -1,0 +1,33 @@
+#rules, #rulesScreen {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 10;
+
+  h1 {
+    position: relative;
+    margin-bottom: 50px;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 500;
+    font-size: 4vw;
+    font-style: normal;
+    text-align: center;
+    color: $gray;
+  }
+
+}
+
+#rulesScreen {
+
+  h1 {
+    margin-bottom: 0;
+  }
+}
