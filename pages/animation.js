@@ -7,7 +7,7 @@ import ShowRules from "./components/ShowRules";
 import ThemeExplanation from "./components/ThemeExplanation";
 import ShowMap from "./components/ShowMap";
 
-const socket = io("localhost:3000");
+const socket = io('https://noname-iota.vercel.app/');
 
 const Client3 = () => {
 

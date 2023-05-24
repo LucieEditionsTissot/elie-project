@@ -1,7 +1,4 @@
 import React, {useEffect, useRef, useState} from "react";
-import io from 'socket.io-client';
-
-const socket = io("localhost:3000");
 
 function ThemeExplanationScreen() {
 

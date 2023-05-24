@@ -102,10 +102,10 @@ let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
 
-const rulesTimer = 2000
+const rulesTimer = 10000
 
 let randomTheme = ""
-const themeTimer = 2000
+const themeTimer = 10000
 
 let numberOfChosenAnimals = 0
 

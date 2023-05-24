@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
 import {type} from "os";
 
-const socket = io("localhost:3000");
+const socket = io('https://noname-iota.vercel.app/');
 
 function ShowTeams({teamSelected, onTeamSelected}) {
     const [teams, setTeams] = useState([]);

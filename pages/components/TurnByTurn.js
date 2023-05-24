@@ -2,14 +2,14 @@ import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
 import {randomBytes} from "crypto";
 
-const socket = io("localhost:3000");
+const socket = io('https://noname-iota.vercel.app/');
 
 function TurnByTurn(props) {
 
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
-    const [globalTimer, setGlobalTimer] = useState(10);
+    const [globalTimer, setGlobalTimer] = useState(30);
 
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
