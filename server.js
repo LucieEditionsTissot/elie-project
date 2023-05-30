@@ -102,10 +102,10 @@ let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
 
-const rulesTimer = 10000
+let numberOfRulesUnderstood = 0
 
 let randomTheme = ""
-const themeTimer = 10000
+const themeTimer = 2000
 
 let numberOfChosenAnimals = 0
 
@@ -134,42 +134,42 @@ const themeExplanation = {
 }
 
 const animals = {
-    "Mutualisme" : {
+    "Mutualisme": {
         "teamGroupOne": {
-            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer" : 7
+            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer": 7
         },
         "teamGroupTwo": {
-            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer" : 4
+            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer": 4
         }
     },
-    "Predation" : {
+    "Predation": {
         "teamGroupOne": {
-            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer" : 7
+            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer": 7
         },
         "teamGroupTwo": {
-            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer" : 4
+            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer": 4
         }
     },
-    "Commensalisme" : {
+    "Commensalisme": {
         "teamGroupOne": {
-            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer" : 7
+            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer": 7
         },
         "teamGroupTwo": {
-            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer" : 4
+            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer": 4
         }
     }
 }
 
 const answersAnimation = {
-    "Mutualisme" : "anim mutualisme",
-    "Predation" : "anim predation",
-    "Commensalisme" : "anim commensalisme"
+    "Mutualisme": "anim mutualisme",
+    "Predation": "anim predation",
+    "Commensalisme": "anim commensalisme"
 }
 
 io.on("connection", (socket) => {
@@ -196,7 +196,9 @@ io.on("connection", (socket) => {
     // TEAMS /////////////////////////////////////////
 
     io.emit("startExperience", teams);
+
     numberOfTeamSelected = 0;
+    numberOfRulesUnderstood = 0;
 
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);
@@ -221,11 +223,17 @@ io.on("connection", (socket) => {
     // RULES /////////////////////////////////////////
 
     function teamsAreDoneShowRules() {
-        io.emit('teamsAreDoneShowRules', rules);
-        setTimeout(() => {
-            io.emit('rulesAreDoneSelectThemeRandomly');
-        }, rulesTimer)
+        if (numberOfTeamSelected >= 2) {
+            io.emit('teamsAreDoneShowRules', rules);
+        }
     }
+
+    socket.on("rulesAreUnderstood", () => {
+        numberOfRulesUnderstood++
+        if (numberOfRulesUnderstood >= 2) {
+            io.emit('rulesAreDoneSelectThemeRandomly');
+        }
+    })
 
     // THEME /////////////////////////////////////////
 

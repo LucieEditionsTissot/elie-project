@@ -148,6 +148,22 @@ header a:last-child h3 {
   text-align: center;
   color: #303030;
 }
+#rules button, #rulesScreen button {
+  position: relative;
+  padding: 3px 7px;
+  margin: 50px auto 0;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 2vw;
+  font-style: normal;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  background: #303030;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
 
 #rulesScreen h1 {
   margin-bottom: 0;
@@ -339,6 +355,38 @@ header a:last-child h3 {
   font-weight: 500;
   text-align: center;
   color: white;
+  user-select: none;
+}
+#turnByTurn .waitingScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  z-index: 1;
+  visibility: hidden;
+  pointer-events: none;
+  background: white;
+  transition: opacity 0.35s ease-in-out, visibility 0.35s ease-in-out;
+}
+#turnByTurn .waitingScreen.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+#turnByTurn .waitingScreen h4 {
+  position: relative;
+  font-family: "Helvetica", sans-serif;
+  font-size: 5vw;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 500;
+  text-align: center;
+  color: #303030;
   user-select: none;
 }
 

@@ -1,15 +1,16 @@
 import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
 import {randomBytes} from "crypto";
+import {pick} from "next/dist/lib/pick";
 
-const socket = io('https://noname-iota.vercel.app/');
+const socket = io('localhost:3000')
 
 function TurnByTurn(props) {
 
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
-    const [globalTimer, setGlobalTimer] = useState(30);
+    const [globalTimer, setGlobalTimer] = useState(10);
 
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -42,13 +43,15 @@ function TurnByTurn(props) {
     }, [teams, teamIndex]);
 
     useEffect(() => {
-        gameManager(globalTimer)
+        if (stateOfTheGame !== null) {
+            showTipsWaitingScreen("Indice en cours !")
+        }
     }, [stateOfTheGame]);
 
     function handleFlipCard(e) {
         const element = e.target.closest('.animal')
         const allCards = document.querySelectorAll(".animal");
-        const allHiddenCards = document.querySelectorAll(".animal.hidden");
+        let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
         if (!isValueSubmit) {
             if (allHiddenCards.length < maxNumberOfCard) {
@@ -60,46 +63,98 @@ function TurnByTurn(props) {
             }
         }
 
+        allHiddenCards = document.querySelectorAll(".animal.hidden")
+        const validateButton = document.querySelector("#turnByTurn .validateButton")
+
+        if (allHiddenCards.length === Object.keys(animals).length - 1) {
+            validateButton.style.display = "block"
+        } else {
+            validateButton.style.display = "none"
+        }
+
     }
 
-    function gameManager(duration) {
-        if (teams && teamIndex !== null) {
+    function showTipsWaitingScreen(text) {
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreen.classList.add("is-active")
+        waitingScreenText.innerHTML = text
 
-            const timerWrapper = document.querySelector(".timer-wrapper");
-            const timer = document.querySelector(".timer");
-            if (stateOfTheGame !== null) {
-                timer.style.animationDuration = `${duration}s`;
-                timer.style.animationPlayState = "running";
-            }
+        setTimeout(() => {
+            showPlayerWaitingScreen()
+        }, 3000)
+    }
 
-            setTimeout(() => {
-                if (stateOfTheGame < 1) {
-                    setStateOfTheGame(stateOfTheGame + 1)
-                    setActualIndexOfMembers(actualIndexOfMembers + 1)
-                    if (maxNumberOfCard < 9) {
-                        setMaxNumberOfCard(maxNumberOfCard + 3)
-                    }
-                } else {
-                    disableTimerAndShowValidateButton()
+    function showPlayerWaitingScreen() {
+
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+        waitingScreen.classList.add("is-active")
+
+        setTimeout(() => {
+            waitingScreen.classList.remove("is-active")
+            pickPhaseAndUpdateDependencies()
+        }, 3000)
+
+    }
+
+    function pickPhaseAndUpdateDependencies() {
+        const timerWrapper = document.querySelector(".timer-wrapper");
+        const timer = document.querySelector(".timer");
+
+        if (stateOfTheGame !== null) {
+            timer.style.animationDuration = `${globalTimer}s`;
+            timer.style.animationPlayState = "running";
+        }
+
+        setTimeout(() => {
+            timer.style.animationPlayState = "paused";
+            if (stateOfTheGame < 1) {
+                setStateOfTheGame(stateOfTheGame + 1)
+                setActualIndexOfMembers(actualIndexOfMembers + 1)
+                if (maxNumberOfCard < 9) {
                     setMaxNumberOfCard(maxNumberOfCard + 3)
                 }
-            }, duration * 1000);
+            } else {
+                setActualIndexOfMembers(actualIndexOfMembers + 1)
+                updateWaitingScreenForTheLastTime()
+                disableTimer()
+                setMaxNumberOfCard(maxNumberOfCard + 3)
+            }
+        }, globalTimer * 1000);
 
-        }
     }
 
-    function disableTimerAndShowValidateButton() {
-        setActualIndexOfMembers(actualIndexOfMembers + 1)
+    function updateWaitingScreenForTheLastTime() {
+
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreenText.innerHTML = "Indice en cours !"
+        waitingScreen.classList.add("is-active")
+
+        setTimeout(() => {
+            if (actualTeamMembers[actualIndexOfMembers + 1]) {
+                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers + 1] + " à toi de jouer !"
+            } else {
+                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+            }
+            setTimeout(() => {
+                waitingScreen.classList.remove("is-active")
+            }, 3000)
+        }, 3000)
+
+    }
+
+    function disableTimer() {
         const timerWrapper = document.querySelector(".timer-wrapper");
         const timer = document.querySelector(".timer");
         timerWrapper.style.display = "none";
         timer.style.display = "none";
         timer.style.animationPlayState = "paused";
-        const validateButton = document.querySelector("#turnByTurn .validateButton")
-        validateButton.style.display = "block"
     }
 
-    function handleClickOnValidateButton () {
+    function handleClickOnValidateButton() {
         const lastCard = document.querySelectorAll(".animal:not(.hidden)")
         const answerText = document.querySelector(".answerText")
         if (lastCard.length === 1 && isValueSubmit === false) {
@@ -110,11 +165,9 @@ function TurnByTurn(props) {
             } else {
                 answerText.innerHTML = "Mauvaise réponse !"
             }
-            console.log(lastCard[0].id, correctAnswer)
         }
 
     }
-
 
     return (
         <section id={"turnByTurn"} className={"hide"}>
@@ -150,6 +203,12 @@ function TurnByTurn(props) {
             </div>
 
             <h5 className={"answerText"}></h5>
+
+            <div className={"waitingScreen"}>
+
+                <h4>Premier indice en cours</h4>
+
+            </div>
 
         </section>
     );

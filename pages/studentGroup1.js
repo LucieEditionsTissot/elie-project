@@ -8,7 +8,7 @@ import ThemeExplanationScreen from "./components/ThemeExplanationScreen";
 import TurnByTurn from "./components/TurnByTurn";
 import AnimationScreen from "./components/AnimationScreen";
 
-const socket = io('https://noname-iota.vercel.app/');
+const socket = io('localhost:3000')
 
 export default function StudentTablet1() {
     /*
@@ -21,14 +21,20 @@ export default function StudentTablet1() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
      */
+    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
 
     useEffect(() => {
-        console.log("La team choisie est : ", teamSelected)
         socket.emit("teamChosenGroupeOne", teamSelected)
     }, [teamSelected])
+
+    useEffect(() => {
+        if (rulesButtonClicked) {
+            socket.emit("rulesAreUnderstood")
+        }
+    }, [rulesButtonClicked])
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -95,7 +101,7 @@ export default function StudentTablet1() {
 
             <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
 
-            <RulesScreen/>
+            <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
 
             <ThemeScreen/>
 
