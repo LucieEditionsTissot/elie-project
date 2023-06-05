@@ -12,6 +12,8 @@ import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 const socket = io('https://noname-iota.vercel.app/');
 
 export default function StudentTablet1() {
+
+    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
