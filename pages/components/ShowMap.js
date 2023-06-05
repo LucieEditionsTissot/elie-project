@@ -9,7 +9,7 @@ function ShowMap(props) {
 
             {props.animation !== null &&
 
-                <h5>{props.animation}</h5>
+                <video src={props.animation} autoPlay loop></video>
 
             }
 

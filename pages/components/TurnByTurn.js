@@ -10,7 +10,7 @@ function TurnByTurn(props) {
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
-    const [globalTimer, setGlobalTimer] = useState(10);
+    const [globalTimer, setGlobalTimer] = useState(15);
 
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -79,6 +79,8 @@ function TurnByTurn(props) {
         const waitingScreenText = document.querySelector(".waitingScreen h4")
         waitingScreen.classList.add("is-active")
         waitingScreenText.innerHTML = text
+
+        console.log("stateOfTheGame", stateOfTheGame)
 
         setTimeout(() => {
             showPlayerWaitingScreen()

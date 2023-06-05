@@ -7,6 +7,7 @@ import RulesScreen from "./components/RulesScreen";
 import ThemeExplanationScreen from "./components/ThemeExplanationScreen";
 import TurnByTurn from "./components/TurnByTurn";
 import AnimationScreen from "./components/AnimationScreen";
+import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 
 const socket = io('localhost:3000')
 
@@ -25,6 +26,7 @@ export default function StudentTablet1() {
     const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
+    const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
 
     useEffect(() => {
         socket.emit("teamChosenGroupeOne", teamSelected)
@@ -58,6 +60,11 @@ export default function StudentTablet1() {
 
         socket.on('animation',  () => {
             hideAndShowSection('#turnByTurn', '#animationScreen')
+        })
+
+        socket.on('askQuestion',  (data) => {
+            setAnimationQuestionScreen(data)
+            hideAndShowSection('#animationScreen', '#animationQuestionScreen')
         })
 
         /*
@@ -110,6 +117,8 @@ export default function StudentTablet1() {
             <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
 
             <AnimationScreen/>
+
+            <AnimationQuestionScreen data={animationQuestionScreen}/>
 
         </>
     );

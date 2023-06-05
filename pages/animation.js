@@ -15,6 +15,10 @@ const Client3 = () => {
     const [rules, setRules] = useState([]);
     const [themeExplanation, setThemeExplanation] = useState([]);
     const [animation, setAnimation] = useState(null)
+    const [animationTime, setAnimationTime] = useState(null)
+    const [animationQuestion, setAnimationQuestion] = useState(null)
+    const [animationAnswers, setAnimationAnswers] = useState([])
+    const [animationCorrectAnswer, setAnimationCorrectAnswer] = useState(null)
 
     const [selectedTheme, setSelectedTheme] = useState('');
     const [selectedAnimation, setSelectedAnimation] = useState('');
@@ -46,7 +50,23 @@ const Client3 = () => {
 
         socket.on('animation',  (animationData) => {
             if (animation === null) {
-                setAnimation(animationData)
+                setAnimation(animationData['animation'])
+            }
+            if (animationTime === null) {
+                setAnimationTime(animationData['time'])
+                setTimeout(() => {
+                    const data = [animationData['question'], animationData['answers'], animationData['correctAnswer']]
+                    socket.emit('animationIsDoneAskQuestion', data)
+                }, animationData['time'] * 1000)
+            }
+            if (animationQuestion === null) {
+                setAnimationQuestion(animationData['question'])
+            }
+            if (animationAnswers === []) {
+                setAnimationAnswers(animationData['answers'])
+            }
+            if (animationCorrectAnswer === null) {
+                setAnimationCorrectAnswer(animationData['correctAnswer'])
             }
         })
 
