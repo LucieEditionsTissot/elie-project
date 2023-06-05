@@ -7,8 +7,9 @@ import RulesScreen from "./components/RulesScreen";
 import ThemeExplanationScreen from "./components/ThemeExplanationScreen";
 import TurnByTurn from "./components/TurnByTurn";
 import AnimationScreen from "./components/AnimationScreen";
+import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 
-const socket = io('https://noname-iota.vercel.app/');
+const socket = io('localhost:3000')
 
 export default function StudentTablet1() {
     /*
@@ -21,14 +22,21 @@ export default function StudentTablet1() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
      */
+    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
+    const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
 
     useEffect(() => {
-        console.log("La team choisie est : ", teamSelected)
         socket.emit("teamChosenGroupeOne", teamSelected)
     }, [teamSelected])
+
+    useEffect(() => {
+        if (rulesButtonClicked) {
+            socket.emit("rulesAreUnderstood")
+        }
+    }, [rulesButtonClicked])
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -52,6 +60,11 @@ export default function StudentTablet1() {
 
         socket.on('animation',  () => {
             hideAndShowSection('#turnByTurn', '#animationScreen')
+        })
+
+        socket.on('askQuestion',  (data) => {
+            setAnimationQuestionScreen(data)
+            hideAndShowSection('#animationScreen', '#animationQuestionScreen')
         })
 
         /*
@@ -95,7 +108,7 @@ export default function StudentTablet1() {
 
             <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
 
-            <RulesScreen/>
+            <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
 
             <ThemeScreen/>
 
@@ -104,6 +117,8 @@ export default function StudentTablet1() {
             <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
 
             <AnimationScreen/>
+
+            <AnimationQuestionScreen data={animationQuestionScreen}/>
 
         </>
     );

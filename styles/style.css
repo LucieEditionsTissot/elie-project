@@ -148,6 +148,22 @@ header a:last-child h3 {
   text-align: center;
   color: #303030;
 }
+#rules button, #rulesScreen button {
+  position: relative;
+  padding: 3px 7px;
+  margin: 50px auto 0;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 2vw;
+  font-style: normal;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  background: #303030;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
 
 #rulesScreen h1 {
   margin-bottom: 0;
@@ -205,6 +221,14 @@ header a:last-child h3 {
   font-style: normal;
   text-align: center;
   color: #303030;
+}
+#map video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 #map h1 {
@@ -341,6 +365,38 @@ header a:last-child h3 {
   color: white;
   user-select: none;
 }
+#turnByTurn .waitingScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  z-index: 1;
+  visibility: hidden;
+  pointer-events: none;
+  background: white;
+  transition: opacity 0.35s ease-in-out, visibility 0.35s ease-in-out;
+}
+#turnByTurn .waitingScreen.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+#turnByTurn .waitingScreen h4 {
+  position: relative;
+  font-family: "Helvetica", sans-serif;
+  font-size: 5vw;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 500;
+  text-align: center;
+  color: #303030;
+  user-select: none;
+}
 
 #animationScreen {
   position: fixed;
@@ -369,6 +425,110 @@ header a:last-child h3 {
 
 #animationScreen h1 {
   margin-bottom: 0;
+}
+
+#animationQuestionScreen {
+  position: fixed;
+  padding: 5%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 10;
+}
+#animationQuestionScreen h1 {
+  position: relative;
+  margin-bottom: 10px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 4vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
+}
+#animationQuestionScreen .sub-title {
+  position: relative;
+  margin-bottom: 40px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 2.25vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
+}
+#animationQuestionScreen .wrapper {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+#animationQuestionScreen .wrapper .answer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: 2px solid #303030;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.35s ease-in-out, color 0.35s ease-in-out, border 0.35s ease-in-out;
+}
+#animationQuestionScreen .wrapper .answer.selected {
+  background: #303030 !important;
+  color: white;
+}
+#animationQuestionScreen .wrapper .answer.selectedByTheOtherTeam {
+  background: #b2b2b2;
+}
+#animationQuestionScreen .wrapper .answer.wrongAnswer {
+  background: #fd5a5a;
+  border: 2px solid #fd5a5a;
+  color: white;
+}
+#animationQuestionScreen .wrapper .answer.correctAnswer {
+  background: #4aa445;
+  border: 2px solid #4aa445;
+  color: white;
+}
+#animationQuestionScreen .validateButton {
+  position: relative;
+  display: none;
+  padding: 3px 7px;
+  margin: 50px auto 0;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 2.5vw;
+  font-style: normal;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  background: #303030;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+}
+#animationQuestionScreen .info {
+  position: relative;
+  margin-top: 30px;
+  font-family: "Helvetica", sans-serif;
+  font-weight: 500;
+  font-size: 2vw;
+  font-style: normal;
+  text-align: center;
+  color: #303030;
 }
 
 * {

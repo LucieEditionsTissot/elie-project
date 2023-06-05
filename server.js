@@ -102,12 +102,17 @@ let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
 
-const rulesTimer = 10000
+let numberOfRulesUnderstood = 0
 
 let randomTheme = ""
-const themeTimer = 10000
+const themeTimer = 5000
 
 let numberOfChosenAnimals = 0
+
+let numberOfAnimationQuestionAnswered = 0
+let IdOfAnimationQuestionAnswered = []
+
+let isFinalQuestionIsCorrect = true
 
 const teams = {
     "Violette": ["Lucie", "Yohan", "Jean"],
@@ -121,10 +126,10 @@ const teams = {
 }
 
 const rules = {
-    0: "blablabla",
-    1: "c'est vraiment des superbes règles",
-    2: "Et pas des équerres",
-    3: "Reprend toi Yohan..."
+    0: "Règles du jeu :",
+    1: "Règle 1",
+    2: "Règle 2",
+    3: "Règle 3"
 }
 
 const themeExplanation = {
@@ -134,42 +139,60 @@ const themeExplanation = {
 }
 
 const animals = {
-    "Mutualisme" : {
+    "Mutualisme": {
         "teamGroupOne": {
-            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer" : 7
+            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer": 7
         },
         "teamGroupTwo": {
-            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer" : 4
+            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer": 4
         }
     },
-    "Predation" : {
+    "Predation": {
         "teamGroupOne": {
-            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer" : 7
+            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer": 7
         },
         "teamGroupTwo": {
-            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer" : 4
+            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer": 4
         }
     },
-    "Commensalisme" : {
+    "Commensalisme": {
         "teamGroupOne": {
-            "animals" : ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer" : 7
+            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "answer": 7
         },
         "teamGroupTwo": {
-            "animals" : ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer" : 4
+            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "answer": 4
         }
     }
 }
 
 const answersAnimation = {
-    "Mutualisme" : "anim mutualisme",
-    "Predation" : "anim predation",
-    "Commensalisme" : "anim commensalisme"
+    "Mutualisme": {
+        "animation": "video-1.mp4",
+        "time": 5,
+        "question": "Qu'avez vous compris ?",
+        "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
+        "correctAnswer": 1
+    },
+    "Predation": {
+        "animation": "video-1.mp4",
+        "time": 5,
+        "question": "Qu'avez vous compris ?",
+        "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
+        "correctAnswer": 2
+    },
+    "Commensalisme": {
+        "animation": "video-1.mp4",
+        "time": 5,
+        "question": "Qu'avez vous compris ?",
+        "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
+        "correctAnswer": 3
+    }
 }
 
 io.on("connection", (socket) => {
@@ -196,7 +219,13 @@ io.on("connection", (socket) => {
     // TEAMS /////////////////////////////////////////
 
     io.emit("startExperience", teams);
-    numberOfTeamSelected = 0;
+
+    numberOfTeamSelected = 0
+    numberOfRulesUnderstood = 0
+    numberOfChosenAnimals = 0
+    numberOfAnimationQuestionAnswered = 0
+    IdOfAnimationQuestionAnswered = []
+    isFinalQuestionIsCorrect = true
 
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);
@@ -221,11 +250,17 @@ io.on("connection", (socket) => {
     // RULES /////////////////////////////////////////
 
     function teamsAreDoneShowRules() {
-        io.emit('teamsAreDoneShowRules', rules);
-        setTimeout(() => {
-            io.emit('rulesAreDoneSelectThemeRandomly');
-        }, rulesTimer)
+        if (numberOfTeamSelected >= 2) {
+            io.emit('teamsAreDoneShowRules', rules);
+        }
     }
+
+    socket.on("rulesAreUnderstood", () => {
+        numberOfRulesUnderstood++
+        if (numberOfRulesUnderstood >= 2) {
+            io.emit('rulesAreDoneSelectThemeRandomly');
+        }
+    })
 
     // THEME /////////////////////////////////////////
 
@@ -249,6 +284,34 @@ io.on("connection", (socket) => {
             io.emit("animation", answersAnimation[randomTheme])
         }
     })
+
+    // ANIMATION IS DONE  ////////////////////////////
+
+    socket.on("animationIsDoneAskQuestion", (data) => {
+        io.emit("askQuestion", data)
+    })
+
+    // ANIMATION IS ANSWERED  ////////////////////////
+
+    socket.on("animationQuestionIsAnswered", (answerId) => {
+        numberOfAnimationQuestionAnswered++
+        IdOfAnimationQuestionAnswered.push(answerId)
+        socket.broadcast.emit("animationQuestionIsAnswered", answerId);
+        if (numberOfAnimationQuestionAnswered >= 2) {
+            checkIfAnimationQuestionIsCorrect()
+            const data = [isFinalQuestionIsCorrect, answersAnimation[randomTheme].correctAnswer]
+            io.emit("revealAnimationCorrectAnswer", data)
+        }
+    })
+
+    function checkIfAnimationQuestionIsCorrect() {
+        IdOfAnimationQuestionAnswered.map((answerId) => {
+            if (answerId !== answersAnimation[randomTheme].correctAnswer) {
+                isFinalQuestionIsCorrect = false
+            }
+        })
+
+    }
 
     // OLD ///////////////////////////////////////////
 
