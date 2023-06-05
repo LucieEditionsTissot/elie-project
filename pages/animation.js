@@ -19,12 +19,9 @@ const Client3 = () => {
     const [animationQuestion, setAnimationQuestion] = useState(null)
     const [animationAnswers, setAnimationAnswers] = useState([])
     const [animationCorrectAnswer, setAnimationCorrectAnswer] = useState(null)
-
     const [selectedTheme, setSelectedTheme] = useState('');
-    const [selectedAnimation, setSelectedAnimation] = useState('');
-    const [correctAnswers, setCorrectAnswers] = useState([]);
+    const [showIndices, setShowIndices] = useState([]);
     const [indices, setIndices] = useState([]);
-    const [prevIndices, setPrevIndices] = useState([]);
 
     useEffect(() => {
         socket.emit('registerAnimationClient');
@@ -44,9 +41,12 @@ const Client3 = () => {
             hideAndShowSection('#theme', '#themeExplanation')
         })
 
-        socket.on('startTurnByTurn',  () => {
-            hideAndShowSection('#themeExplanation', '#map')
-        })
+        socket.on('startTurnByTurn', () => {
+            hideAndShowSection('#themeExplanation', '#map');
+            setTimeout(() => {
+                setShowIndices(true);
+            }, 3000);
+        });
 
         socket.on('animation',  (animationData) => {
             if (animation === null) {
@@ -70,39 +70,9 @@ const Client3 = () => {
             }
         })
 
-        /*
-
-        socket.on('choicesBothDone', (theme, animation) => {
-            setSelectedAnimation(animation);
-        });
-        socket.on('indices', (indices) => {
-            // setIndices((prevIndices) => [...prevIndices, ...indices]);
-            console.log("Indices reçus :", indices);
-        });
-        socket.on('reponsesCorrectes', (reponses) => {
-            setCorrectAnswers(reponses);
-        });
-        return () => {
-            socket.disconnect();
-        };
-
-         */
 
     }, []);
 
-    /*
-    useEffect(() => {
-        if (prevIndices.length > 0) {
-            const timerId = setInterval(() => {
-                setIndices((indices) => [...indices, prevIndices[indices.length]]);
-                if (indices.length === prevIndices.length) {
-                    clearInterval(timerId);
-                    setPrevIndices([]);
-                }
-            }, 15000);
-        }
-    }, [prevIndices]);
-     */
 
     return (
         <>
@@ -121,37 +91,17 @@ const Client3 = () => {
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>
 
-                {indices.length > 0 && (
+                {showIndices && indices.length > 0 && (
                     <div>
                         <h3>Indices :</h3>
 
                         <ul>
                             {indices.map((indice, index) => (
-                                <li key={index}>{indices}</li>
+                                <li key={index}>{indice}</li>
                             ))}
                         </ul>
-
                     </div>
                 )}
-                {selectedTheme && (
-                    <div>
-                        <h2 className={'question'}>Thème tiré au hasard : {selectedTheme}</h2>
-                        <h3 className={'selectedAnimation'}>{selectedAnimation}</h3>
-
-                        {correctAnswers.length > 0 ? (
-                            <div className={'answerWrapper'}>
-                                <h5>Réponses correctes : </h5>
-
-                                {correctAnswers.map((reponse, index) => (
-                                    <p key={index}>{reponse.animal}</p>
-                                ))}
-                            </div>
-                        ) : (
-                            <p>Aucune réponse correcte n'a encore été reçue.</p>
-                        )}
-                    </div>
-                )}
-                {selectedTheme && <VideoPlayer />}
             </div>
 
         </>
@@ -162,7 +112,6 @@ const Client3 = () => {
         const selectedTheme = themes[randomIndex];
         const data = [selectedTheme, randomIndex]
         socket.emit('themeIsRandomlyChosen', data);
-        setSelectedTheme(selectedTheme);
         console.log("Theme choisi : ", selectedTheme);
     }
 
