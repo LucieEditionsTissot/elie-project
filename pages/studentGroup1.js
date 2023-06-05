@@ -9,20 +9,9 @@ import TurnByTurn from "./components/TurnByTurn";
 import AnimationScreen from "./components/AnimationScreen";
 import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 
-const socket = io('localhost:3000')
+const socket = io('https://noname-iota.vercel.app/');
 
 export default function StudentTablet1() {
-    /*
-    const [questions, setQuestions] = useState([]);
-    const [reponses, setReponses] = useState([]);
-    const [reponseSoumise, setReponseSoumise] = useState(false);
-    const [reponseChoisie, setReponseChoisie] = useState(null);
-    const [reponseCorrecte, setReponseCorrecte] = useState(false);
-    const [attenteReponse, setAttenteReponse] = useState(false);
-    const [choixFaits, setChoixFaits] = useState(false);
-    const [clientId, setClientId] = useState(null);
-     */
-    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
@@ -67,36 +56,6 @@ export default function StudentTablet1() {
             hideAndShowSection('#animationScreen', '#animationQuestionScreen')
         })
 
-        /*
-        socket.on("questions", (questions) => {
-            setQuestions(questions);
-        });
-
-        socket.on("reponses", (reponses) => {
-            const reponsesAvecId = reponses.map((reponse) => ({
-                ...reponse,
-                id: Math.random().toString(36).substring(2),
-            }));
-            setReponses(reponsesAvecId);
-        });
-
-        socket.on('themeChosen', (selectedTheme) => {
-            setSelectedTheme(selectedTheme);
-        });
-
-        socket.on("choixFaits", ({clientId}) => {
-            setClientId(clientId);
-        });
-
-        socket.on("reloadClient", () => {
-            window.location.reload();
-        });
-
-        return () => {
-            socket.off("questions");
-            socket.off("reponses");
-        };
-         */
 
     }, []);
 
