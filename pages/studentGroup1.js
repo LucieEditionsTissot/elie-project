@@ -9,7 +9,7 @@ import TurnByTurn from "./components/TurnByTurn";
 import AnimationScreen from "./components/AnimationScreen";
 import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 
-const socket = io('localhost:3000')
+const socket = io('https://noname-iota.vercel.app/');
 
 export default function StudentTablet1() {
 

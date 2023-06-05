@@ -12,9 +12,7 @@ import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 const socket = io('localhost:3000')
 
 export default function StudentTablet2() {
-
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
-    const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
