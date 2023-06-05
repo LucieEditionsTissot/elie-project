@@ -24,7 +24,6 @@ const Client3 = () => {
     const [selectedAnimation, setSelectedAnimation] = useState('');
     const [correctAnswers, setCorrectAnswers] = useState([]);
     const [indices, setIndices] = useState([]);
-    const [prevIndices, setPrevIndices] = useState([]);
 
     useEffect(() => {
         socket.emit('registerAnimationClient');
@@ -70,39 +69,9 @@ const Client3 = () => {
             }
         })
 
-        /*
-
-        socket.on('choicesBothDone', (theme, animation) => {
-            setSelectedAnimation(animation);
-        });
-        socket.on('indices', (indices) => {
-            // setIndices((prevIndices) => [...prevIndices, ...indices]);
-            console.log("Indices reçus :", indices);
-        });
-        socket.on('reponsesCorrectes', (reponses) => {
-            setCorrectAnswers(reponses);
-        });
-        return () => {
-            socket.disconnect();
-        };
-
-         */
 
     }, []);
 
-    /*
-    useEffect(() => {
-        if (prevIndices.length > 0) {
-            const timerId = setInterval(() => {
-                setIndices((indices) => [...indices, prevIndices[indices.length]]);
-                if (indices.length === prevIndices.length) {
-                    clearInterval(timerId);
-                    setPrevIndices([]);
-                }
-            }, 15000);
-        }
-    }, [prevIndices]);
-     */
 
     return (
         <>
