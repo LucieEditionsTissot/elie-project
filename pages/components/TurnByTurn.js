@@ -1,12 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useState } from "react";
 import io from 'socket.io-client';
-import {randomBytes} from "crypto";
-import {pick} from "next/dist/lib/pick";
+import { randomBytes } from "crypto";
+import { pick } from "next/dist/lib/pick";
 
 const socket = io('localhost:3000')
 
 function TurnByTurn(props) {
-
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
@@ -23,33 +22,40 @@ function TurnByTurn(props) {
     const [isValueSubmit, setIsValueSubmit] = useState(false);
 
     useEffect(() => {
-        setData(props.data)
-        setTeams(props.data[0])
-        setRandomTheme(props.data[3])
-        setTeamIndex(props.data[Number(props.client)])
-        const animalData = props.data[4]
+        setData(props.data);
+        setTeams(props.data[0]);
+        setRandomTheme(props.data[3]);
+        setTeamIndex(props.data[Number(props.client)]);
+        const animalData = props.data[4];
         if (animalData) {
-            setAnimals(animalData[props.groupName]["animals"])
-            setCorrectAnswer(animalData[props.groupName]["answer"])
+            setAnimals(animalData[props.groupName]["animals"]);
+            setCorrectAnswer(animalData[props.groupName]["answer"]);
         }
-    }, [props.data])
+    }, [props.data]);
 
     useEffect(() => {
         if (teams && teamIndex !== null) {
             setActualTeamName(Object.keys(teams)[teamIndex]);
             setActualTeamMembers(Object.values(teams)[teamIndex]);
-            setStateOfTheGame(0)
+            setStateOfTheGame(0);
         }
     }, [teams, teamIndex]);
 
     useEffect(() => {
         if (stateOfTheGame !== null) {
-            showTipsWaitingScreen("Indice en cours !")
+            showTipsWaitingScreen("Indice en cours !");
         }
     }, [stateOfTheGame]);
 
+    useEffect(() => {
+        if (stateOfTheGame === 1 && actualIndexOfMembers === actualTeamMembers.length - 1) {
+            // Évènement pour passer au tour suivant dans Client3
+            socket.emit("nextTurn");
+        }
+    }, [stateOfTheGame, actualIndexOfMembers, actualTeamMembers.length]);
+
     function handleFlipCard(e) {
-        const element = e.target.closest('.animal')
+        const element = e.target.closest('.animal');
         const allCards = document.querySelectorAll(".animal");
         let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
@@ -63,42 +69,37 @@ function TurnByTurn(props) {
             }
         }
 
-        allHiddenCards = document.querySelectorAll(".animal.hidden")
-        const validateButton = document.querySelector("#turnByTurn .validateButton")
+        allHiddenCards = document.querySelectorAll(".animal.hidden");
+        const validateButton = document.querySelector("#turnByTurn .validateButton");
 
         if (allHiddenCards.length === Object.keys(animals).length - 1) {
-            validateButton.style.display = "block"
+            validateButton.style.display = "block";
         } else {
-            validateButton.style.display = "none"
+            validateButton.style.display = "none";
         }
-
     }
 
     function showTipsWaitingScreen(text) {
-        const waitingScreen = document.querySelector(".waitingScreen")
-        const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreen.classList.add("is-active")
-        waitingScreenText.innerHTML = text
-
-        console.log("stateOfTheGame", stateOfTheGame)
+        const waitingScreen = document.querySelector(".waitingScreen");
+        const waitingScreenText = document.querySelector(".waitingScreen h4");
+        waitingScreen.classList.add("is-active");
+        waitingScreenText.innerHTML = text;
 
         setTimeout(() => {
-            showPlayerWaitingScreen()
-        }, 3000)
+            showPlayerWaitingScreen();
+        }, 3000);
     }
 
     function showPlayerWaitingScreen() {
-
-        const waitingScreen = document.querySelector(".waitingScreen")
-        const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
-        waitingScreen.classList.add("is-active")
+        const waitingScreen = document.querySelector(".waitingScreen");
+        const waitingScreenText = document.querySelector(".waitingScreen h4");
+        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !";
+        waitingScreen.classList.add("is-active");
 
         setTimeout(() => {
-            waitingScreen.classList.remove("is-active")
-            pickPhaseAndUpdateDependencies()
-        }, 3000)
-
+            waitingScreen.classList.remove("is-active");
+            pickPhaseAndUpdateDependencies();
+        }, 3000);
     }
 
     function pickPhaseAndUpdateDependencies() {
@@ -113,39 +114,36 @@ function TurnByTurn(props) {
         setTimeout(() => {
             timer.style.animationPlayState = "paused";
             if (stateOfTheGame < 1) {
-                setStateOfTheGame(stateOfTheGame + 1)
-                setActualIndexOfMembers(actualIndexOfMembers + 1)
+                setStateOfTheGame(stateOfTheGame + 1);
+                setActualIndexOfMembers(actualIndexOfMembers + 1);
                 if (maxNumberOfCard < 9) {
-                    setMaxNumberOfCard(maxNumberOfCard + 3)
+                    setMaxNumberOfCard(maxNumberOfCard + 3);
                 }
             } else {
-                setActualIndexOfMembers(actualIndexOfMembers + 1)
-                updateWaitingScreenForTheLastTime()
-                disableTimer()
-                setMaxNumberOfCard(maxNumberOfCard + 3)
+                setActualIndexOfMembers(actualIndexOfMembers + 1);
+                updateWaitingScreenForTheLastTime();
+                disableTimer();
+                setMaxNumberOfCard(maxNumberOfCard + 3);
             }
         }, globalTimer * 1000);
-
     }
 
     function updateWaitingScreenForTheLastTime() {
-
-        const waitingScreen = document.querySelector(".waitingScreen")
-        const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreenText.innerHTML = "Indice en cours !"
-        waitingScreen.classList.add("is-active")
+        const waitingScreen = document.querySelector(".waitingScreen");
+        const waitingScreenText = document.querySelector(".waitingScreen h4");
+        waitingScreenText.innerHTML = "Indice en cours !";
+        waitingScreen.classList.add("is-active");
 
         setTimeout(() => {
             if (actualTeamMembers[actualIndexOfMembers + 1]) {
-                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers + 1] + " à toi de jouer !"
+                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers + 1] + " à toi de jouer !";
             } else {
-                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !";
             }
             setTimeout(() => {
-                waitingScreen.classList.remove("is-active")
-            }, 3000)
-        }, 3000)
-
+                waitingScreen.classList.remove("is-active");
+            }, 3000);
+        }, 3000);
     }
 
     function disableTimer() {
@@ -157,23 +155,21 @@ function TurnByTurn(props) {
     }
 
     function handleClickOnValidateButton() {
-        const lastCard = document.querySelectorAll(".animal:not(.hidden)")
-        const answerText = document.querySelector(".answerText")
+        const lastCard = document.querySelectorAll(".animal:not(.hidden)");
+        const answerText = document.querySelector(".answerText");
         if (lastCard.length === 1 && isValueSubmit === false) {
-            setIsValueSubmit(true)
-            socket.emit("animalChosen", Number(lastCard.id))
+            setIsValueSubmit(true);
+            socket.emit("animalChosen", Number(lastCard.id));
             if (Number(lastCard[0].id) === Number(correctAnswer)) {
-                answerText.innerHTML = "Bonne réponse !"
+                answerText.innerHTML = "Bonne réponse !";
             } else {
-                answerText.innerHTML = "Mauvaise réponse !"
+                answerText.innerHTML = "Mauvaise réponse !";
             }
         }
-
     }
 
     return (
         <section id={"turnByTurn"} className={"hide"}>
-
             <h1>Équipe {actualTeamName}</h1>
 
             {actualTeamMembers !== undefined && actualTeamMembers.length > 0 && stateOfTheGame !== null ? (
@@ -181,7 +177,6 @@ function TurnByTurn(props) {
             ) : null}
 
             <div className="animal-wrapper">
-
                 {animals !== undefined && animals.length > 0 ? (
                     animals.map((animal, index) => (
                         <div
@@ -207,13 +202,11 @@ function TurnByTurn(props) {
             <h5 className={"answerText"}></h5>
 
             <div className={"waitingScreen"}>
-
                 <h4>Premier indice en cours</h4>
-
             </div>
-
         </section>
     );
 }
 
 export default TurnByTurn;
+

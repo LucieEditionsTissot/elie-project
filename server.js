@@ -114,6 +114,22 @@ const answersAnimation = {
         "correctAnswer": 3
     }
 }
+const themeIndices = Object.entries(answersAnimation).map(([theme, data]) => {
+    const { animation, time, question, answers, correctAnswer } = data;
+    const type = animation.includes(".mp4") ? "video" : "audio";
+
+    return {
+        theme,
+        type,
+        animation,
+        time,
+        question,
+        answers,
+        correctAnswer
+    };
+});
+
+console.log(themeIndices);
 
 io.on("connection", (socket) => {
 

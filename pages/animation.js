@@ -14,11 +14,10 @@ const Client3 = () => {
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
     const [rules, setRules] = useState([]);
     const [themeExplanation, setThemeExplanation] = useState([]);
-    const [animation, setAnimation] = useState(null)
-    const [animationTime, setAnimationTime] = useState(null)
-    const [animationQuestion, setAnimationQuestion] = useState(null)
-    const [animationAnswers, setAnimationAnswers] = useState([])
-    const [animationCorrectAnswer, setAnimationCorrectAnswer] = useState(null)
+    const [animation, setAnimation] = useState(null);
+    const [animationTime, setAnimationTime] = useState(null);
+    const [animationQuestion, setAnimationQuestion] = useState(null);
+    const [currentTurn, setCurrentTurn] = useState(0); // 0: Visuel, 1: Sonore
     const [selectedTheme, setSelectedTheme] = useState('');
     const [showIndices, setShowIndices] = useState([]);
     const [indices, setIndices] = useState([]);
@@ -36,10 +35,10 @@ const Client3 = () => {
             hideAndShowSection('#rules', '#theme')
         })
 
-        socket.on('themeIsSelectedShowThemeExplanation',  (explanation) => {
-            setThemeExplanation(explanation)
-            hideAndShowSection('#theme', '#themeExplanation')
-        })
+        socket.on('themeIsSelectedShowThemeExplanation', (explanation) => {
+            setThemeExplanation(explanation);
+            hideAndShowSection('#theme', '#themeExplanation');
+        });
 
         socket.on('startTurnByTurn', () => {
             hideAndShowSection('#themeExplanation', '#map');
@@ -73,6 +72,9 @@ const Client3 = () => {
 
     }, []);
 
+    const handleNextTurn = () => {
+        setCurrentTurn((prevTurn) => (prevTurn + 1) % 2);
+    };
 
     return (
         <>
@@ -86,7 +88,11 @@ const Client3 = () => {
 
             <ThemeExplanation explanation={themeExplanation}/>
 
-            <ShowMap animation={animation}/>
+            <ShowMap
+                animation={animation}
+                currentTurn={currentTurn}
+                onNextTurn={handleNextTurn}
+            />
 
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>
@@ -103,7 +109,6 @@ const Client3 = () => {
                     </div>
                 )}
             </div>
-
         </>
     );
 
