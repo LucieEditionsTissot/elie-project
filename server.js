@@ -136,9 +136,17 @@ io.on("connection", (socket) => {
         console.log('Client 3 enregistré :', socket.id);
     });
 
+
+    const events = [
+        { id: 1, type: 'audio', url: 'audio1.mp3' },
+        { id: 1, type: 'video', url: 'video1.mp4' },
+    ];
+
     // TEAMS /////////////////////////////////////////
 
-    //// Créer des types à partager entre le front et le back, les events, liste des clients et liste des events
+    //// Créer des types à partager entre le front et le back, les events, liste des clients et liste des events.
+    // Passer les id des vidéos et des audios côté front,
+    // se servir des composants bas niveaux et leur faire changer les id à chaque évènements
 
     //// Clients : Student1, Student2, CentralAnimation
     //// Types : Audio, Vidéos
@@ -159,13 +167,29 @@ io.on("connection", (socket) => {
 
     io.emit("startExperience", teams);
 
+    socket.emit('eventList', events);
+
+    socket.on('start', () => {
+        socket.emit('loadAudio', { id: 1, url: 'audio1.mp3' });
+        socket.emit('loadMap', { id: 1, url: 'map1.jpg' });
+    });
+
+    socket.on('rules', () => {
+        socket.emit('pauseAudio', { id: 1 });
+        
+        socket.emit('loadAudio', { id: 2, url: 'audio2.mp3' });
+        socket.emit('loadMap', { id: 2, url: 'map2.jpg' });
+    });
+
     numberOfTeamSelected = 0
     numberOfRulesUnderstood = 0
     numberOfChosenAnimals = 0
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
-    // Démarrage vidéo 1 & audio 1
+    socket.on("mediaLoader", (audio, video) => {
+
+    })
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);
     })

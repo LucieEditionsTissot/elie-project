@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Head from 'next/head';
-import VideoPlayer from '../components/VideoPlayer';
-import SelectThemeRandomly from "../components/SelectThemeRandomly";
-import ShowRules from "../components/ShowRules";
-import ThemeExplanation from "../components/ThemeExplanation";
-import ShowMap from "../components/ShowMap";
+import VideoPlayer from '../pages/components/VideoPlayer';
+import SelectThemeRandomly from "./components/SelectThemeRandomly";
+import ShowRules from "./components/ShowRules";
+import ThemeExplanation from "./components/ThemeExplanation";
+import ShowMap from "./components/ShowMap";
+import AudioPlayer from "./components/AudioPlayer";
 
 const socket = io('localhost:3000')
 
@@ -22,6 +23,29 @@ const Client3 = () => {
     const [selectedTheme, setSelectedTheme] = useState('');
     const [showIndices, setShowIndices] = useState([]);
     const [indices, setIndices] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [currentAudio, setCurrentAudio] = useState(null);
+    const [currentVideo, setCurrentVideo] = useState(null);
+
+    useEffect(() => {
+        socket.on('eventList', (eventList) => {
+            setEvents(eventList);
+        });
+
+        socket.on('loadAudio', (audio) => {
+            setCurrentAudio(audio);
+        });
+
+        socket.on('loadVideo', (video) => {
+            setCurrentVideo(video);
+        });
+
+        socket.on('pauseAudio', (audio) => {
+            if (currentAudio && currentAudio.id === audio.id) {
+                setCurrentAudio(null);
+            }
+        });
+    }, []);
 
     useEffect(() => {
         socket.emit('registerAnimationClient');
@@ -86,7 +110,11 @@ const Client3 = () => {
 
             <ThemeExplanation explanation={themeExplanation}/>
 
-            <ShowMap animation={animation}/>
+            <div>
+                {currentAudio && <AudioPlayer src={currentAudio.url} />}
+
+                {currentVideo && <VideoPlayer src={currentVideo.url} />}
+            </div>
 
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>
