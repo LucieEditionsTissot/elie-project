@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useEffect, useRef } from 'react';
 
-const VideoPlayer = () => {
-    return (
-        <div style={{ position: "relative", width: "500px", height: "500px", margin: "0 auto", overflow: "hidden"}}>
-            <video
-                src="/video/Anim_indice_01_003.mp4"
-                style={{
-                    top: "0",
-                    left: "0",
-                    width: "100%",
-                    height: "100%"
-                }}
-                autoPlay muted playsInline loop
-            />
-        </div>
-    );
+const VideoPlayer = ({ src }) => {
+    const videoRef = useRef(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        video.src = src;
+        video.load();
+        video.play();
+
+        return () => {
+            video.pause();
+        };
+    }, [src]);
+
+    return <video ref={videoRef} controls />;
 };
 
 export default VideoPlayer;

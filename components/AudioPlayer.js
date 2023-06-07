@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useEffect, useRef } from 'react';
+import { Howl } from 'howler';
 
-const AudioPlayer = () => {
-    return (
-        <div style={{ position: "relative", width: "500px", height: "500px", margin: "0 auto", overflow: "hidden"}}>
-            <audio
-                controls
-                src="/audio/Corbeau.mov">
-                Your browser does not support the
-                <code>audio</code> element.
-            </audio>
-        </div>
+const AudioPlayer = ({ src }) => {
+    const soundRef = useRef(null);
 
-    );
+    useEffect(() => {
+        const sound = new Howl({ src: [src] });
+        soundRef.current = sound;
+
+        sound.play();
+
+        return () => {
+            sound.stop();
+        };
+    }, [src]);
+
+    return null;
 };
 
 export default AudioPlayer;

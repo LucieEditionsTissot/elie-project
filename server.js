@@ -138,15 +138,15 @@ io.on("connection", (socket) => {
 
 
     const events = [
-        { id: 1, type: 'audio', url: 'audio1.mp3' },
-        { id: 1, type: 'video', url: 'video1.mp4' },
+        { clientId: 1, type: 'audio', url: 'audio1.mp3' },
+        { clientId: 1, type: 'video', url: 'video1.mp4' },
     ];
 
     // TEAMS /////////////////////////////////////////
 
     //// Créer des types à partager entre le front et le back, les events, liste des clients et liste des events.
     // Passer les id des vidéos et des audios côté front,
-    // se servir des composants bas niveaux et leur faire changer les id à chaque évènements
+    // se servir des composants bas niveaux et leur faire changer les id à chaque évènements et renvoyer les vidéos et ou audio selon l'id de leur client de destination
 
     //// Clients : Student1, Student2, CentralAnimation
     //// Types : Audio, Vidéos
@@ -167,18 +167,20 @@ io.on("connection", (socket) => {
 
     io.emit("startExperience", teams);
 
+
     socket.emit('eventList', events);
 
     socket.on('start', () => {
-        socket.emit('loadAudio', { id: 1, url: 'audio1.mp3' });
-        socket.emit('loadMap', { id: 1, url: 'map1.jpg' });
+        io.to('client3').emit('loadAudio', { id: 1, url: 'audio1.mp3' });
+        io.to('client3').emit('loadMap', { id: 1, url: 'map1.jpg' });
     });
 
     socket.on('rules', () => {
-        socket.emit('pauseAudio', { id: 1 });
-        
-        socket.emit('loadAudio', { id: 2, url: 'audio2.mp3' });
-        socket.emit('loadMap', { id: 2, url: 'map2.jpg' });
+        io.to('client3').emit('pauseAudio', { id: 1 });
+
+
+        io.to('client3').emit('loadAudio', { id: 2, url: 'audio2.mp3' });
+        io.to('client3').emit('loadMap', { id: 2, url: 'map2.jpg' });
     });
 
     numberOfTeamSelected = 0
