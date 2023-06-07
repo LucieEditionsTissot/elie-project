@@ -6,6 +6,7 @@ import SelectThemeRandomly from "./components/SelectThemeRandomly";
 import ShowRules from "./components/ShowRules";
 import ThemeExplanation from "./components/ThemeExplanation";
 import ShowMap from "./components/ShowMap";
+import ClueMap from "./components/ClueMap";
 
 const socket = io('localhost:3000')
 
@@ -20,8 +21,8 @@ const Client3 = () => {
     const [animationAnswers, setAnimationAnswers] = useState([])
     const [animationCorrectAnswer, setAnimationCorrectAnswer] = useState(null)
     const [selectedTheme, setSelectedTheme] = useState('');
-    const [showIndices, setShowIndices] = useState([]);
-    const [indices, setIndices] = useState([]);
+    const [showIndices, setShowIndices] = useState(null);
+    const [indice, setIndices] = useState(null);
 
     useEffect(() => {
         socket.emit('registerAnimationClient');
@@ -69,6 +70,11 @@ const Client3 = () => {
                 setAnimationCorrectAnswer(animationData['correctAnswer'])
             }
         })
+        socket.on("clue", (clues) => {
+            if (indice === null) {
+                setIndices(clues);
+            }
+        });
 
 
     }, []);
@@ -86,22 +92,11 @@ const Client3 = () => {
 
             <ThemeExplanation explanation={themeExplanation}/>
 
-            <ShowMap animation={animation}/>
+            <ShowMap animation={animation} clue={indice}/>
 
             <div className={"global-wrapper"}>
                 <h5 className={"type"}>Animation</h5>
 
-                {showIndices && indices.length > 0 && (
-                    <div>
-                        <h3>Indices :</h3>
-
-                        <ul>
-                            {indices.map((indice, index) => (
-                                <li key={index}>{indice}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
 
         </>

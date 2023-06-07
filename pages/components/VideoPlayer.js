@@ -1,10 +1,10 @@
 import React from "react";
 
-const VideoPlayer = () => {
+const VideoPlayer = (src) => {
     return (
         <div style={{ position: "relative", width: "500px", height: "500px", margin: "0 auto", overflow: "hidden"}}>
             <video
-                src="/video/Anim_indice_01_003.mp4"
+                src={src}
                 style={{
                     top: "0",
                     left: "0",

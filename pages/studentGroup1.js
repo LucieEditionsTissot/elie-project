@@ -9,7 +9,7 @@ import TurnByTurn from "./components/TurnByTurn";
 import AnimationScreen from "./components/AnimationScreen";
 import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
 
-const socket = io('https://noname-iota.vercel.app/');
+const socket = io('localhost:3000');
 
 export default function StudentTablet1() {
 
@@ -18,6 +18,7 @@ export default function StudentTablet1() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
+    const [audioLoaded, setAudioLoaded] = useState(false);
 
     useEffect(() => {
         socket.emit("teamChosenGroupeOne", teamSelected)
@@ -53,12 +54,23 @@ export default function StudentTablet1() {
             hideAndShowSection('#turnByTurn', '#animationScreen')
         })
 
+
+
         socket.on('askQuestion',  (data) => {
             setAnimationQuestionScreen(data)
             hideAndShowSection('#animationScreen', '#animationQuestionScreen')
         })
 
+        socket.on('loadAudio', (audioUrl) => {
+            const audioElement = document.getElementById('animationAudio');
+            audioElement.src = audioUrl;
+            setAudioLoaded(true);
+        });
 
+        socket.on('playAudio', () => {
+            const audioElement = document.getElementById('animationAudio');
+            audioElement.play();
+        });
     }, []);
 
     return (

@@ -62,37 +62,76 @@ const animals = {
     "Mutualisme": {
         "teamGroupOne": {
             "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "audioUrl" : "audio/Corbeau.mov",
             "answer": 7
         },
         "teamGroupTwo": {
             "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "audioUrl" : "audio/Corbeau.mov",
             "answer": 4
         }
     },
     "Predation": {
         "teamGroupOne": {
             "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "audioUrl" : "audio/Corbeau.mov",
             "answer": 7
         },
         "teamGroupTwo": {
             "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "audioUrl" : "audio/Corbeau.mov",
             "answer": 4
         }
     },
     "Commensalisme": {
         "teamGroupOne": {
             "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "audioUrl" : "audio/Salamandre.mov",
             "answer": 7
         },
         "teamGroupTwo": {
             "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "audioUrl" : "audio/Corbeau.mov",
             "answer": 4
         }
     }
 }
+const clues = {
+    "Mutualisme": {
+        "teamGroupOne": {
+            "videoUrl": "video/clue1.mp4",
+            "audioUrl": "audio/clue1.mp3"
+        },
+        "teamGroupTwo": {
+            "videoUrl": "video/clue2.mp4",
+            "audioUrl": "audio/clue2.mp3"
+        }
+    },
+    "Predation": {
+        "teamGroupOne": {
+            "videoUrl": "video/clue3.mp4",
+            "audioUrl": "audio/clue3.mp3"
+        },
+        "teamGroupTwo": {
+            "videoUrl": "video/clue4.mp4",
+            "audioUrl": "audio/clue4.mp3"
+        }
+    },
+    "Commensalisme": {
+        "teamGroupOne": {
+            "videoUrl": "video/clue5.mp4",
+            "audioUrl": "audio/clue5.mp3"
+        },
+        "teamGroupTwo": {
+            "videoUrl": "video/clue6.mp4",
+            "audioUrl": "audio/clue6.mp3"
+        }
+    }
+};
 
 const answersAnimation = {
     "Mutualisme": {
+        "clue" : "video/Anim_indice_01_003.mp4",
         "animation": "video/Anim_indice_01_003.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
@@ -100,6 +139,7 @@ const answersAnimation = {
         "correctAnswer": 1
     },
     "Predation": {
+        "clue" : "video/Anim_indice_01_003.mp4",
         "animation": "video/Anim_indice_01_003.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
@@ -107,6 +147,7 @@ const answersAnimation = {
         "correctAnswer": 2
     },
     "Commensalisme": {
+        "clue" : "video/Anim_indice_01_003.mp4",
         "animation": "video/Anim_indice_01_003.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
@@ -151,6 +192,21 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("teamChosen", index);
     })
 
+
+    socket.on("startAnimation", () => {
+        const audioPath = "audio/Corbeau.mov";
+        const audioStream = fs.createReadStream(audioPath);
+
+        io.emit("loadAudio", audioStream);
+    });
+
+    socket.on("playAudio", () => {
+        io.emit("playAudio");
+    });
+    socket.on("sendCluesToClients", (clues) => {
+        io.emit("cluesReceived", clues);
+    });
+
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
         numberOfTeamSelected++
@@ -171,13 +227,16 @@ io.on("connection", (socket) => {
 
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
+            console.log("1")
             io.emit('teamsAreDoneShowRules', rules);
         }
     }
 
+
     socket.on("rulesAreUnderstood", () => {
         numberOfRulesUnderstood++
         if (numberOfRulesUnderstood >= 2) {
+            console.log("2")
             io.emit('rulesAreDoneSelectThemeRandomly');
         }
     })
@@ -185,9 +244,11 @@ io.on("connection", (socket) => {
     // THEME /////////////////////////////////////////
 
     socket.on("themeIsRandomlyChosen", (data) => {
+        console.log("3")
         randomTheme = data[0]
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
+           io.emit('sendClues', answersAnimation[randomTheme].clue)
             setTimeout(() => {
                 const themeIndex = data[1]
                 const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
@@ -199,21 +260,29 @@ io.on("connection", (socket) => {
     // ANIMAL CHOSEN  ////////////////////////////////
 
     socket.on("animalChosen", () => {
+        console.log("4")
         numberOfChosenAnimals++
         if (numberOfChosenAnimals >= 2) {
+            console.log(io.emit("animation", answersAnimation[randomTheme]))
             io.emit("animation", answersAnimation[randomTheme])
         }
+    })
+    socket.on("sendClues", () => {
+        console.log("aqui");
+        io.emit("clue", answersAnimation[randomTheme].clue)
     })
 
     // ANIMATION IS DONE  ////////////////////////////
 
     socket.on("animationIsDoneAskQuestion", (data) => {
+        console.log("5")
         io.emit("askQuestion", data)
     })
 
     // ANIMATION IS ANSWERED  ////////////////////////
 
     socket.on("animationQuestionIsAnswered", (answerId) => {
+        console.log("6")
         numberOfAnimationQuestionAnswered++
         IdOfAnimationQuestionAnswered.push(answerId)
         socket.broadcast.emit("animationQuestionIsAnswered", answerId);
