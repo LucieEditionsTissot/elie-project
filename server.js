@@ -138,6 +138,25 @@ io.on("connection", (socket) => {
 
     // TEAMS /////////////////////////////////////////
 
+    //// Créer des types à partager entre le front et le back, les events, liste des clients et liste des events
+
+    //// Clients : Student1, Student2, CentralAnimation
+    //// Types : Audio, Vidéos
+    //// Composant bas niveau : AudioPlayer, VideoPlayer
+    //// Events :
+    // Start : Démarrage de la map sur client central, chargement de l'audio1 et de la map1,
+    // Rules : Audio1 pause, chargement de l'audio 2 et map 2 pour l'explication des règles
+    // Theme chosen : Audio 2 pause, redémarrage de l'audio 1 et de la vidéo 1
+    // Indice 1 : Pause de la vidéo 1, Démarrage de la vidéo 3, possibilité de restart
+    // Fin de l'indice : Pause de la vidéo 3 démarrage de la vidéo 1
+    // Indice numéro 2 : Lancement de l'audio 2-1 Student1, lancement de l'audio 2-2 Student2, possibilité de restart
+    // Fin de l'indice : Pause des audios 2-1 & 2-2
+    // Indice numéro 3 : Lancement des audios 3-1 pour Student1 & 3-2 pour Student2, pause de la vidéo 1 et lancement de la vidéo 4,
+    // Fin de l'indice : Pause des audios 3-1 & 3-2, pause de la vidéo 4, lancement de la vidéo 1
+    // Réponse : Fin de la vidéo 1, lancement de la vidéo 5, lancement de l'audio 4 (indices communs & vidéo interaction),
+    // Solution : Fin vidéo 5 et audio 4, lancement de la vidéo 6 et audio 5,
+    // Animation final : Fin de l'audio 5 et boucle sur la vidéo 6.
+
     io.emit("startExperience", teams);
 
     numberOfTeamSelected = 0
@@ -146,7 +165,7 @@ io.on("connection", (socket) => {
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
-
+    // Démarrage vidéo 1 & audio 1
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);
     })
@@ -172,6 +191,7 @@ io.on("connection", (socket) => {
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
+            // Fin audio 1 & Vidéo 1, lancement audio 2 & vidéo 2
         }
     }
 
@@ -179,6 +199,7 @@ io.on("connection", (socket) => {
         numberOfRulesUnderstood++
         if (numberOfRulesUnderstood >= 2) {
             io.emit('rulesAreDoneSelectThemeRandomly');
+            // Fin audio 2 & Vidéo 2, lancement audio 1 & vidéo 1
         }
     })
 
@@ -188,6 +209,7 @@ io.on("connection", (socket) => {
         randomTheme = data[0]
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
+            // Fin audio 1 & Vidéo 1, lancement audio 3 & vidéo 3
             setTimeout(() => {
                 const themeIndex = data[1]
                 const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
