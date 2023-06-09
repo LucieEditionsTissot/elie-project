@@ -52,24 +52,22 @@ const Client3 = () => {
         socket.emit('registerAnimationClient');
 
         socket.on('teamsAreDoneShowRules', (rules) => {
-            if (rulesRef.current) {
-                hideAndShowSection(rulesRef.current, themeRef.current);
-            }
             setRules(rules);
+            hideAndShowSection(rulesRef, themeRef);
         });
 
         socket.on('rulesAreDoneSelectThemeRandomly', () => {
             getThemeRandomly();
-            hideAndShowSection(rulesRef.current, themeRef.current);
+            hideAndShowSection(rulesRef, themeRef);
         });
 
         socket.on('themeIsSelectedShowThemeExplanation', (explanation) => {
             setThemeExplanation(explanation);
-            hideAndShowSection(themeRef.current, themeExplanationRef.current);
+            hideAndShowSection(themeRef, themeExplanationRef);
         });
 
         socket.on('startTurnByTurn', () => {
-            hideAndShowSection(themeExplanationRef.current, '#map');
+            hideAndShowSection(themeExplanationRef, null);
             setTimeout(() => {
                 setShowIndices(true);
             }, 3000);
@@ -82,7 +80,11 @@ const Client3 = () => {
             if (animationTime === null) {
                 setAnimationTime(animationData['time']);
                 setTimeout(() => {
-                    const data = [animationData['question'], animationData['answers'], animationData['correctAnswer']];
+                    const data = [
+                        animationData['question'],
+                        animationData['answers'],
+                        animationData['correctAnswer'],
+                    ];
                     socket.emit('animationIsDoneAskQuestion', data);
                 }, animationData['time'] * 1000);
             }
@@ -98,42 +100,6 @@ const Client3 = () => {
         });
     }, []);
 
-    return (
-        <>
-            <Head>
-                <title>Animation</title>
-            </Head>
-
-            <ShowRules rules={rules} rulesRef={rulesRef} />
-
-            <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme} ref={themeRef} />
-
-            <ThemeExplanation explanation={themeExplanation} ref={themeExplanationRef} />
-
-            <div>
-                {currentAudio && <AudioPlayer src={currentAudio.url} />}
-
-                {currentVideo && <VideoPlayer src={currentVideo.url} />}
-            </div>
-
-            <div className={"global-wrapper"}>
-                <h5 className={"type"}>Animation</h5>
-
-                {showIndices && indices.length > 0 && (
-                    <div>
-                        <h3>Indices :</h3>
-
-                        <ul>
-                            {indices.map((indice, index) => (
-                                <li key={index}>{indice}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
-        </>
-    );
-
     function getThemeRandomly() {
         const randomIndex = Math.floor(Math.random() * themes.length);
         const selectedTheme = themes[randomIndex];
@@ -142,12 +108,47 @@ const Client3 = () => {
         console.log("Theme choisi : ", selectedTheme);
     }
 
-    function hideAndShowSection(hideSection, showSection) {
-        hideSection.classList.add('hide');
-        showSection.classList.remove('hide');
+    function hideAndShowSection(hideSectionRef, showSectionRef) {
+        if (hideSectionRef && hideSectionRef.current) {
+            hideSectionRef.current.style.display = 'none';
+        }
+        if (showSectionRef && showSectionRef.current) {
+            showSectionRef.current.style.display = 'block';
+        }
     }
+
+    return (
+        <>
+            <Head>
+                <title>Animation</title>
+            </Head>
+
+            <ShowRules rules={rules} rulesRef={rulesRef} />
+
+            <SelectThemeRandomly
+                themes={themes}
+                selectedTheme={selectedTheme}
+                ref={themeRef}
+            />
+
+            <ThemeExplanation
+                explanation={themeExplanation}
+                ref={themeExplanationRef}
+            />
+
+            <div>
+                {currentAudio && <AudioPlayer src={currentAudio.url} />}
+                {currentVideo && <VideoPlayer src={currentVideo.url} />}
+            </div>
+
+            <div className="global-wrapper">
+                <h5 className="type">Animation</h5>
+            </div>
+        </>
+    );
 };
 
 export default Client3;
+
 
 

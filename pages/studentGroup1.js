@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -9,58 +9,58 @@ import TurnByTurn from "../components/TurnByTurn";
 import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 
-const socket = io('localhost:3000');
+const socket = io("localhost:3000");
 
 export default function StudentTablet1() {
-
-    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
-    const [themesButtonClicked, setThemesButtonClicked] = useState(false);
-    const [selectedTheme, setSelectedTheme] = useState("");
     const [teamSelected, setTeamSelected] = useState(null);
+    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
+    const [teamsDone, setTeamsDone] = useState(false);
+    const [currentScreen, setCurrentScreen] = useState("teams");
     const [turnByTurnData, setTurnByTurnData] = useState({});
-    const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
+    const [animationInProgress, setAnimationInProgress] = useState(false);
+    const [animationQuestionData, setAnimationQuestionData] = useState([]);
 
     useEffect(() => {
         if (teamSelected) {
-            socket.emit("teamChosenGroupeOne", teamSelected)
+            socket.emit("teamChosenGroupeOne", teamSelected);
         }
-    }, [teamSelected])
+    }, [teamSelected]);
 
     useEffect(() => {
         if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood")
+            socket.emit("rulesAreUnderstood");
         }
-    }, [rulesButtonClicked])
+    }, [rulesButtonClicked]);
 
     useEffect(() => {
         socket.emit("registerStudent1");
 
-        socket.on('teamsAreDoneShowRules',  () => {
-            hideAndShowSection("#teams", "#rulesScreen")
-        })
+        socket.on("teamsAreDoneShowRules", () => {
+            setTeamsDone(true);
+            setCurrentScreen("rules");
+        });
 
-        socket.on('rulesAreDoneSelectThemeRandomly',  () => {
-            hideAndShowSection('#rulesScreen', '#themeScreen')
-        })
+        socket.on("rulesAreDoneSelectThemeRandomly", () => {
+            setCurrentScreen("theme");
+        });
 
-        socket.on('themeIsSelectedShowThemeExplanation',  () => {
-            hideAndShowSection('#themeScreen', '#themeExplanationScreen')
-        })
+        socket.on("startTurnByTurn", (data) => {
+            setTurnByTurnData(data);
+            setCurrentScreen("turnByTurn");
+        });
 
-        socket.on('startTurnByTurn',  (data) => {
-            setTurnByTurnData(data)
-            hideAndShowSection('#themeExplanationScreen', '#turnByTurn')
-        })
+        socket.on("animation", () => {
+            setAnimationInProgress(true);
+            setCurrentScreen("animation");
+        });
 
-        socket.on('animation',  () => {
-            hideAndShowSection('#turnByTurn', '#animationScreen')
-        })
+        socket.on("askQuestion", (data) => {
+            setAnimationQuestionData(data);
+            setAnimationInProgress(false);
+            setCurrentScreen("animationQuestion");
+        });
 
-        socket.on('askQuestion',  (data) => {
-            setAnimationQuestionScreen(data)
-            hideAndShowSection('#animationScreen', '#animationQuestionScreen')
-        })
-
+        // Autres listeners...
 
     }, []);
 
@@ -70,28 +70,35 @@ export default function StudentTablet1() {
                 <title>Tablette groupe 1</title>
             </Head>
 
-            <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+            {currentScreen === "teams" && (
+                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+            )}
 
-            <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
+            {currentScreen === "rules" && teamsDone && (
+                <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
+            )}
 
-            <ThemeScreen onThemesButtonClicked={setThemesButtonClicked}/>
+            {currentScreen === "theme" && (
+                <ThemeScreen />
+            )}
 
-            <ThemeExplanationScreen/>
+            {currentScreen === "themeExplanation" && (
+                <ThemeExplanationScreen />
+            )}
 
-            <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
+            {currentScreen === "turnByTurn" && (
+                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
+            )}
 
-            <AnimationScreen/>
+            {currentScreen === "animation" && (
+                <AnimationScreen />
+            )}
 
-            <AnimationQuestionScreen data={animationQuestionScreen}/>
-
+            {currentScreen === "animationQuestion" && (
+                <AnimationQuestionScreen data={animationQuestionData} />
+            )}
         </>
     );
-
-    function hideAndShowSection(hideSection, showSection) {
-        document.querySelector(hideSection).classList.add('hide');
-        document.querySelector(showSection).classList.remove('hide');
-    }
-
 }
 
 

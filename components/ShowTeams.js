@@ -13,7 +13,6 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     }, [teams]);
 
     function handleClickOnTeam(index) {
-        console.log(teamSelected);
         if (teamSelected === null) {
             const cards = cardRefs.current;
             const selectedCard = cards[index];
@@ -27,16 +26,12 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
             const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
             if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
                 const teamIndex = selectedCard.id;
-                console.log(teamIndex);
                 onTeamSelected(teamIndex);
-                const validateButton = document.querySelector(".validateButton");
-                validateButton.style.display = "none";
             }
         }
     }
 
     socket.on("teamChosen", function (index) {
-        console.log(teamSelected);
         const selectedCard = cardRefs.current.find(card => card.id === index);
         if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
             cardRefs.current.forEach(card => card.classList.remove("selectedByOtherTeam"));
@@ -57,19 +52,19 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     }, [teamSelected]);
 
     return (
-        <section id={"teams"}>
+        <section id="teams">
             <h1>Choisissez votre équipe</h1>
-            <div className={"teamsWrapper"}>
+            <div className="teamsWrapper">
                 {Object.keys(teams).map((teamColor, index) => (
                     <div
                         ref={ref => (cardRefs.current[index] = ref)}
                         key={index}
                         id={index}
-                        className={"card"}
+                        className="card"
                         style={{ background: colors[index] }}
                         onClick={() => handleClickOnTeam(index)}
                     >
-                        <h2 className={"teamName"}>{teamColor}</h2>
+                        <h2 className="teamName">{teamColor}</h2>
                         <ul>
                             {teams[teamColor].map((member, index) => (
                                 <li key={index}>{member}</li>
@@ -78,7 +73,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
                     </div>
                 ))}
             </div>
-            <div className={"validateButton"} onClick={handleClickOnValidateButton}>
+            <div className="validateButton" onClick={handleClickOnValidateButton}>
                 <p>Valider</p>
             </div>
         </section>
@@ -86,4 +81,5 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
 }
 
 export default ShowTeams;
+
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 function ThemeScreen({ onThemesButtonClicked }) {
     const validateButtonRef = useRef(null);
@@ -15,9 +15,9 @@ function ThemeScreen({ onThemesButtonClicked }) {
     }
 
     return (
-        <section id={"themeScreen"} className={"hide"}>
+        <section id="themeScreen" className="hide">
             <h1>Selection du thème en cours de manière aléatoire</h1>
-            <button ref={validateButtonRef} onClick={() => handleThemesButtonClicked()}>
+            <button ref={validateButtonRef} onClick={handleThemesButtonClicked}>
                 J'ai compris
             </button>
         </section>
@@ -25,3 +25,4 @@ function ThemeScreen({ onThemesButtonClicked }) {
 }
 
 export default ThemeScreen;
+
