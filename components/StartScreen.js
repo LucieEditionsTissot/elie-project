@@ -1,23 +1,25 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 
+function StartScreen({ onstartButtonClicked }) {
+    const validateButtonRef = useRef(null);
+    const rulesParagraphRef = useRef(null);
 
-function StartScreen({onstartButtonClicked}) {
     function handleStartButtonClicked() {
-        onstartButtonClicked(true)
-        const validateButton = document.querySelector("#startScreen button")
-        validateButton.style.display = "none"
-        const rulesParagraph = document.querySelector("#startScreen .paragraph")
-        rulesParagraph.textContent = `( En attente de l'autre équipe )`
+        onstartButtonClicked(true);
+        if (validateButtonRef.current) {
+            validateButtonRef.current.style.display = "none";
+        }
+        if (rulesParagraphRef.current) {
+            rulesParagraphRef.current.textContent = "( En attente de l'autre équipe )";
+        }
     }
 
     return (
         <section id={"startScreen"} className={"hide"}>
-
             <h1>Selection du thème en cours de manière aléatoire</h1>
-            <button onClick={() => handleStartButtonClicked()}>Commencer</button>
-
+            <button ref={validateButtonRef} onClick={() => handleStartButtonClicked()}>
+                Commencer
+            </button>
         </section>
-    )
+    );
 }
-
-export default StartScreen;

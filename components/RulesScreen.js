@@ -1,26 +1,28 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef } from "react";
 
-function RulesScreen({onRulesButtonClicked}) {
+function RulesScreen({ onRulesButtonClicked }) {
+    const validateButtonRef = useRef(null);
+    const rulesParagraphRef = useRef(null);
 
     function handleRulesButtonClicked() {
-        onRulesButtonClicked(true)
-        const validateButton = document.querySelector("#rulesScreen button")
-        validateButton.style.display = "none"
-        const rulesParagraph = document.querySelector("#rulesScreen .paragraph")
-        rulesParagraph.textContent = `( En attente de l'autre équipe )`
+        onRulesButtonClicked(true);
+        if (validateButtonRef.current) {
+            validateButtonRef.current.style.display = "none";
+        }
+        if (rulesParagraphRef.current) {
+            rulesParagraphRef.current.textContent = "( En attente de l'autre équipe )";
+        }
     }
 
     return (
         <section id={"rulesScreen"} className={"hide"}>
-
             <h1>Explication des règles en cours</h1>
-
-            <button onClick={() => handleRulesButtonClicked()}>J'ai compris</button>
-
-            <p className={"paragraph"}></p>
-
+            <button ref={validateButtonRef} onClick={() => handleRulesButtonClicked()}>
+                J'ai compris
+            </button>
+            <p className={"paragraph"} ref={rulesParagraphRef}></p>
         </section>
-    )
+    );
 }
 
 export default RulesScreen;

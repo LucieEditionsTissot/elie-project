@@ -1,43 +1,46 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import io from 'socket.io-client';
-import {type} from "os";
 
-const socket = io('localhost:3000')
+const socket = io('localhost:3000');
 
-function ShowTeams({teamSelected, onTeamSelected}) {
+function ShowTeams({ teamSelected, onTeamSelected }) {
     const [teams, setTeams] = useState([]);
     const colors = ["purple", "cyan", "yellow", "red", "green", "orange", "pink", "midnightblue"];
+    const cardRefs = useRef([]);
+
+    useEffect(() => {
+        cardRefs.current = cardRefs.current.slice(0, teams.length); // Maintain refs array length
+    }, [teams]);
 
     function handleClickOnTeam(index) {
-        console.log(teamSelected)
+        console.log(teamSelected);
         if (teamSelected === null) {
-            const card = document.querySelector(`.card[id='${index}']`);
-            if (card) {
-                const cards = document.querySelectorAll(".card");
-                cards.forEach(card => card.classList.remove("selected"))
-                card.classList.add("selected");
-            }
+            const cards = cardRefs.current;
+            const selectedCard = cards[index];
+            cards.forEach(card => card.classList.remove("selected"));
+            selectedCard.classList.add("selected");
         }
     }
 
     function handleClickOnValidateButton() {
-        const teamSelectedByClient = document.querySelector(".card.selected");
-        if (teamSelected === null && !teamSelectedByClient.classList.contains("selectedByOtherTeam")) {
-            const teamIndex = teamSelectedByClient.id;
-            console.log(teamIndex);
-            onTeamSelected(teamIndex);
-            const validateButton = document.querySelector(".validateButton");
-            validateButton.style.display = "none";
+        if (teamSelected === null) {
+            const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
+            if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
+                const teamIndex = selectedCard.id;
+                console.log(teamIndex);
+                onTeamSelected(teamIndex);
+                const validateButton = document.querySelector(".validateButton");
+                validateButton.style.display = "none";
+            }
         }
     }
 
     socket.on("teamChosen", function (index) {
         console.log(teamSelected);
-        const cards = document.querySelectorAll(".card");
-        const teamAlreadySelected = document.querySelector(`.card[id='${index}']`);
-        if (teamAlreadySelected && !teamAlreadySelected.classList.contains("selectedByOtherTeam")) {
-            cards.forEach(card => card.classList.remove("selectedByOtherTeam"));
-            teamAlreadySelected.classList.add('selectedByOtherTeam');
+        const selectedCard = cardRefs.current.find(card => card.id === index);
+        if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
+            cardRefs.current.forEach(card => card.classList.remove("selectedByOtherTeam"));
+            selectedCard.classList.add("selectedByOtherTeam");
         }
     });
 
@@ -49,19 +52,23 @@ function ShowTeams({teamSelected, onTeamSelected}) {
 
     useEffect(() => {
         if (teamSelected !== null) {
-            socket.emit("teamChosen", teamSelected, {excludeSelf: true});
+            socket.emit("teamChosen", teamSelected, { excludeSelf: true });
         }
     }, [teamSelected]);
 
     return (
         <section id={"teams"}>
-
             <h1>Choisissez votre équipe</h1>
-
             <div className={"teamsWrapper"}>
                 {Object.keys(teams).map((teamColor, index) => (
-                    <div key={index} id={index} className={"card"} style={{background: colors[index]}}
-                         onClick={() => handleClickOnTeam(index)}>
+                    <div
+                        ref={ref => (cardRefs.current[index] = ref)}
+                        key={index}
+                        id={index}
+                        className={"card"}
+                        style={{ background: colors[index] }}
+                        onClick={() => handleClickOnTeam(index)}
+                    >
                         <h2 className={"teamName"}>{teamColor}</h2>
                         <ul>
                             {teams[teamColor].map((member, index) => (
@@ -71,13 +78,12 @@ function ShowTeams({teamSelected, onTeamSelected}) {
                     </div>
                 ))}
             </div>
-
             <div className={"validateButton"} onClick={handleClickOnValidateButton}>
                 <p>Valider</p>
             </div>
-
         </section>
-    )
+    );
 }
 
 export default ShowTeams;
+
