@@ -4,6 +4,12 @@ function RulesScreen({ onRulesButtonClicked }) {
     const validateButtonRef = useRef(null);
     const rulesParagraphRef = useRef(null);
 
+    useEffect(() => {
+        if (validateButtonRef.current) {
+            validateButtonRef.current.addEventListener("click", handleRulesButtonClicked);
+        }
+    }, []);
+
     function handleRulesButtonClicked() {
         onRulesButtonClicked(true);
         if (validateButtonRef.current) {
@@ -17,9 +23,7 @@ function RulesScreen({ onRulesButtonClicked }) {
     return (
         <section id={"rulesScreen"} className={"hide"}>
             <h1>Explication des règles en cours</h1>
-            <button ref={validateButtonRef} onClick={() => handleRulesButtonClicked()}>
-                J'ai compris
-            </button>
+            <button ref={validateButtonRef}>J'ai compris</button>
             <p className={"paragraph"} ref={rulesParagraphRef}></p>
         </section>
     );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
@@ -7,24 +7,26 @@ import ShowRules from "../components/ShowRules";
 import ThemeExplanation from "../components/ThemeExplanation";
 import AudioPlayer from "../components/AudioPlayer";
 
-const socket = io('localhost:3000')
+const socket = io('localhost:3000');
 
 const Client3 = () => {
-
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
     const [rules, setRules] = useState([]);
     const [themeExplanation, setThemeExplanation] = useState([]);
-    const [animation, setAnimation] = useState(null)
-    const [animationTime, setAnimationTime] = useState(null)
-    const [animationQuestion, setAnimationQuestion] = useState(null)
-    const [animationAnswers, setAnimationAnswers] = useState([])
-    const [animationCorrectAnswer, setAnimationCorrectAnswer] = useState(null)
+    const [animation, setAnimation] = useState(null);
+    const [animationTime, setAnimationTime] = useState(null);
+    const [animationQuestion, setAnimationQuestion] = useState(null);
+    const [animationAnswers, setAnimationAnswers] = useState([]);
+    const [animationCorrectAnswer, setAnimationCorrectAnswer] = useState(null);
     const [selectedTheme, setSelectedTheme] = useState('');
-    const [showIndices, setShowIndices] = useState([]);
+    const [showIndices, setShowIndices] = useState(false);
     const [indices, setIndices] = useState([]);
     const [events, setEvents] = useState([]);
     const [currentAudio, setCurrentAudio] = useState(null);
     const [currentVideo, setCurrentVideo] = useState(null);
+    const rulesRef = useRef(null);
+    const themeRef = useRef(null);
+    const themeExplanationRef = useRef(null);
 
     useEffect(() => {
         socket.on('eventList', (eventList) => {
@@ -49,53 +51,52 @@ const Client3 = () => {
     useEffect(() => {
         socket.emit('registerAnimationClient');
 
-        socket.on('teamsAreDoneShowRules',  (rules) => {
-            document.querySelector('#rules').classList.remove('hide');
-            setRules(rules)
-        })
+        socket.on('teamsAreDoneShowRules', (rules) => {
+            if (rulesRef.current) {
+                hideAndShowSection(rulesRef.current, themeRef.current);
+            }
+            setRules(rules);
+        });
 
-        socket.on('rulesAreDoneSelectThemeRandomly',  () => {
-            getThemeRandomly()
-            hideAndShowSection('#rules', '#theme')
-        })
+        socket.on('rulesAreDoneSelectThemeRandomly', () => {
+            getThemeRandomly();
+            hideAndShowSection(rulesRef.current, themeRef.current);
+        });
 
-        socket.on('themeIsSelectedShowThemeExplanation',  (explanation) => {
-            setThemeExplanation(explanation)
-            hideAndShowSection('#theme', '#themeExplanation')
-        })
+        socket.on('themeIsSelectedShowThemeExplanation', (explanation) => {
+            setThemeExplanation(explanation);
+            hideAndShowSection(themeRef.current, themeExplanationRef.current);
+        });
 
         socket.on('startTurnByTurn', () => {
-            hideAndShowSection('#themeExplanation', '#map');
+            hideAndShowSection(themeExplanationRef.current, '#map');
             setTimeout(() => {
                 setShowIndices(true);
             }, 3000);
         });
 
-        socket.on('animation',  (animationData) => {
+        socket.on('animation', (animationData) => {
             if (animation === null) {
-                setAnimation(animationData['animation'])
+                setAnimation(animationData['animation']);
             }
             if (animationTime === null) {
-                setAnimationTime(animationData['time'])
+                setAnimationTime(animationData['time']);
                 setTimeout(() => {
-                    const data = [animationData['question'], animationData['answers'], animationData['correctAnswer']]
-                    socket.emit('animationIsDoneAskQuestion', data)
-                }, animationData['time'] * 1000)
+                    const data = [animationData['question'], animationData['answers'], animationData['correctAnswer']];
+                    socket.emit('animationIsDoneAskQuestion', data);
+                }, animationData['time'] * 1000);
             }
             if (animationQuestion === null) {
-                setAnimationQuestion(animationData['question'])
+                setAnimationQuestion(animationData['question']);
             }
-            if (animationAnswers === []) {
-                setAnimationAnswers(animationData['answers'])
+            if (animationAnswers.length === 0) {
+                setAnimationAnswers(animationData['answers']);
             }
             if (animationCorrectAnswer === null) {
-                setAnimationCorrectAnswer(animationData['correctAnswer'])
+                setAnimationCorrectAnswer(animationData['correctAnswer']);
             }
-        })
-
-
+        });
     }, []);
-
 
     return (
         <>
@@ -103,11 +104,11 @@ const Client3 = () => {
                 <title>Animation</title>
             </Head>
 
-            <ShowRules rules={rules}/>
+            <ShowRules rules={rules} rulesRef={rulesRef} />
 
-            <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme}/>
+            <SelectThemeRandomly themes={themes} selectedTheme={selectedTheme} ref={themeRef} />
 
-            <ThemeExplanation explanation={themeExplanation}/>
+            <ThemeExplanation explanation={themeExplanation} ref={themeExplanationRef} />
 
             <div>
                 {currentAudio && <AudioPlayer src={currentAudio.url} />}
@@ -130,23 +131,23 @@ const Client3 = () => {
                     </div>
                 )}
             </div>
-
         </>
     );
 
     function getThemeRandomly() {
         const randomIndex = Math.floor(Math.random() * themes.length);
         const selectedTheme = themes[randomIndex];
-        const data = [selectedTheme, randomIndex]
+        const data = [selectedTheme, randomIndex];
         socket.emit('themeIsRandomlyChosen', data);
         console.log("Theme choisi : ", selectedTheme);
     }
 
     function hideAndShowSection(hideSection, showSection) {
-        document.querySelector(hideSection).classList.add('hide');
-        document.querySelector(showSection).classList.remove('hide');
+        hideSection.classList.add('hide');
+        showSection.classList.remove('hide');
     }
-
 };
 
 export default Client3;
+
+
