@@ -15,15 +15,14 @@ export default function StudentTablet2() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [themeSelected, setThemeSelected] = useState(false);
-    const [themeExplanationDone, setThemeExplanationDone] = useState(false);
+    const [currentScreen, setCurrentScreen] = useState("teams");
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
 
     useEffect(() => {
         if (teamSelected) {
-            socket.emit("teamChosenGroupeTwo", teamSelected);
+            socket.emit("teamChosenGroupeOne", teamSelected);
         }
     }, [teamSelected]);
 
@@ -34,36 +33,38 @@ export default function StudentTablet2() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-        socket.emit("registerStudent2");
+        socket.emit("registerStudent1");
 
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
+            setCurrentScreen("rules");
         });
 
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
-            setThemeSelected(true);
-        });
-
-        socket.on("themeIsSelectedShowThemeExplanation", () => {
-            setThemeExplanationDone(true);
+            setCurrentScreen("theme");
         });
 
         socket.on("startTurnByTurn", (data) => {
             setTurnByTurnData(data);
-            setThemeExplanationDone(false);
+            setCurrentScreen("turnByTurn");
         });
 
         socket.on("animation", () => {
             setAnimationInProgress(true);
+            setCurrentScreen("animation");
         });
 
         socket.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
             setAnimationInProgress(false);
+            setCurrentScreen("animationQuestion");
         });
 
-
     }, []);
+
+    function handleThemesButtonClicked() {
+        setCurrentScreen("themeExplanation");
+    }
 
     return (
         <>
@@ -71,32 +72,37 @@ export default function StudentTablet2() {
                 <title>Tablette groupe 2</title>
             </Head>
 
-            {!teamsDone && (
+            {currentScreen === "teams" && (
                 <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
             )}
 
-            {teamsDone && !themeSelected && (
-                <ThemeScreen onThemeSelected={setThemeSelected} />
+            {currentScreen === "rules" && teamsDone && (
+                <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
             )}
 
-            {teamsDone && themeSelected && !themeExplanationDone && (
-                <ThemeExplanationScreen onExplanationDone={setThemeExplanationDone} />
+            {currentScreen === "theme" && (
+                <ThemeScreen onThemesButtonClicked={handleThemesButtonClicked} />
             )}
 
-            {teamsDone && themeSelected && themeExplanationDone && (
+            {currentScreen === "themeExplanation" && (
+                <ThemeExplanationScreen />
+            )}
+
+            {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
             )}
 
-            {teamsDone && themeSelected && themeExplanationDone && animationInProgress && (
+            {currentScreen === "animation" && (
                 <AnimationScreen />
             )}
 
-            {teamsDone && themeSelected && themeExplanationDone && !animationInProgress && (
+            {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
             )}
         </>
     );
 }
+
 
 
 

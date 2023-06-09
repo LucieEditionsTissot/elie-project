@@ -15,7 +15,7 @@ function ThemeScreen({ onThemesButtonClicked }) {
     }
 
     return (
-        <section id="themeScreen" className="hide">
+        <section id="themeScreen">
             <h1>Selection du thème en cours de manière aléatoire</h1>
             <button ref={validateButtonRef} onClick={handleThemesButtonClicked}>
                 J'ai compris

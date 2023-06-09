@@ -10,7 +10,7 @@ function ShowRules({ rules }) {
     }, []);
 
     return (
-        <section id="rules" ref={rulesRef} className="hide">
+        <section id="rules" ref={rulesRef}>
             <h1>Affichage des règles blablabla</h1>
             {Array.isArray(rules) && rules.length > 0 ? (
                 <ul>

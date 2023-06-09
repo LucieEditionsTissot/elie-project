@@ -185,9 +185,8 @@ io.on("connection", (socket) => {
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
-    socket.on("mediaLoader", (audio, video) => {
 
-    })
+
     socket.on("teamChosen", (index) => {
         console.log(index);
         socket.broadcast.emit("teamChosen", index);

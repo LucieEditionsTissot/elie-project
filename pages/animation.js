@@ -68,35 +68,26 @@ const Client3 = () => {
 
         socket.on('startTurnByTurn', () => {
             hideAndShowSection(themeExplanationRef, null);
-            setTimeout(() => {
-                setShowIndices(true);
-            }, 3000);
+            setShowIndices(true);
         });
 
         socket.on('animation', (animationData) => {
-            if (animation === null) {
-                setAnimation(animationData['animation']);
-            }
-            if (animationTime === null) {
-                setAnimationTime(animationData['time']);
-                setTimeout(() => {
-                    const data = [
-                        animationData['question'],
-                        animationData['answers'],
-                        animationData['correctAnswer'],
-                    ];
-                    socket.emit('animationIsDoneAskQuestion', data);
-                }, animationData['time'] * 1000);
-            }
-            if (animationQuestion === null) {
-                setAnimationQuestion(animationData['question']);
-            }
-            if (animationAnswers.length === 0) {
-                setAnimationAnswers(animationData['answers']);
-            }
-            if (animationCorrectAnswer === null) {
-                setAnimationCorrectAnswer(animationData['correctAnswer']);
-            }
+            setAnimation(animationData['animation']);
+            setAnimationTime(animationData['time']);
+            setTimeout(() => {
+                const data = [
+                    animationData['question'],
+                    animationData['answers'],
+                    animationData['correctAnswer'],
+                ];
+                socket.emit('animationIsDoneAskQuestion', data);
+            }, animationData['time'] * 1000);
+        });
+
+        socket.on('animationQuestion', (questionData) => {
+            setAnimationQuestion(questionData['question']);
+            setAnimationAnswers(questionData['answers']);
+            setAnimationCorrectAnswer(questionData['correctAnswer']);
         });
     }, []);
 
@@ -142,13 +133,24 @@ const Client3 = () => {
             </div>
 
             <div className="global-wrapper">
-                <h5 className="type">Animation</h5>
+                {animation && (
+                    <div>
+                        <h5 className="type">Animation</h5>
+                        <div>
+                            <h6>{animationQuestion}</h6>
+                            {animationAnswers.map((answer, index) => (
+                                <button key={index}>{answer}</button>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
 export default Client3;
+
 
 
 

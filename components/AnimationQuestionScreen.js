@@ -15,7 +15,6 @@ function AnimationQuestionScreen(props) {
         setQuestion(props.data[0])
         setAnswers(props.data[1])
         setCorrectAnswer(props.data[2])
-
     }, [props.data])
 
     function handleAnswerClick(e, id) {
@@ -89,7 +88,7 @@ function AnimationQuestionScreen(props) {
     });
 
     return (
-        <section id={"animationQuestionScreen"} className={"hide"}>
+        <section id={"animationQuestionScreen"}>
 
             <h1>{question}</h1>
 
@@ -107,7 +106,6 @@ function AnimationQuestionScreen(props) {
                 ) : (
                     ""
                 )}
-
             </div>
 
             <div className={"validateButton"} onClick={() => handleCLickOnValidateButton()}>Valider</div>

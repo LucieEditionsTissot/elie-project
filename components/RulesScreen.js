@@ -21,7 +21,7 @@ function RulesScreen({ onRulesButtonClicked }) {
     }
 
     return (
-        <section id={"rulesScreen"} className={"hide"}>
+        <section id={"rulesScreen"}>
             <h1>Explication des règles en cours</h1>
             <button ref={validateButtonRef}>J'ai compris</button>
             <p className={"paragraph"} ref={rulesParagraphRef}></p>

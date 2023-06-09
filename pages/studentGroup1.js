@@ -62,6 +62,10 @@ export default function StudentTablet1() {
 
     }, []);
 
+    function handleThemesButtonClicked() {
+        setCurrentScreen("themeExplanation");
+    }
+
     return (
         <>
             <Head>
@@ -77,7 +81,7 @@ export default function StudentTablet1() {
             )}
 
             {currentScreen === "theme" && (
-                <ThemeScreen />
+                <ThemeScreen onThemesButtonClicked={handleThemesButtonClicked} />
             )}
 
             {currentScreen === "themeExplanation" && (
@@ -98,6 +102,7 @@ export default function StudentTablet1() {
         </>
     );
 }
+
 
 
 
