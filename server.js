@@ -21,14 +21,10 @@ const getApiAndEmit = (socket) => {
 let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
-
 let numberOfRulesUnderstood = 0
-
 let randomTheme = ""
 const themeTimer = 5000
-
 let numberOfChosenAnimals = 0
-
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
 
@@ -193,12 +189,14 @@ io.on("connection", (socket) => {
 
     })
     socket.on("teamChosen", (index) => {
+        console.log(index);
         socket.broadcast.emit("teamChosen", index);
     })
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
         numberOfTeamSelected++
+        console.log(numberOfTeamSelected + "Groupe 1");
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -207,6 +205,7 @@ io.on("connection", (socket) => {
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
         numberOfTeamSelected++
+        console.log(numberOfTeamSelected + "Groupe 2");
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }

@@ -18,7 +18,9 @@ export default function StudentTablet2() {
     const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
 
     useEffect(() => {
-        socket.emit("teamChosenGroupeTwo", teamSelected)
+        if (teamSelected) {
+            socket.emit("teamChosenGroupeTwo", teamSelected)
+        }
     }, [teamSelected])
 
     useEffect(() => {

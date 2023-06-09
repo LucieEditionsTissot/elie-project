@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Head from 'next/head';
-import VideoPlayer from '../pages/components/VideoPlayer';
-import SelectThemeRandomly from "./components/SelectThemeRandomly";
-import ShowRules from "./components/ShowRules";
-import ThemeExplanation from "./components/ThemeExplanation";
-import ShowMap from "./components/ShowMap";
-import AudioPlayer from "./components/AudioPlayer";
+import VideoPlayer from '../components/VideoPlayer';
+import SelectThemeRandomly from "../components/SelectThemeRandomly";
+import ShowRules from "../components/ShowRules";
+import ThemeExplanation from "../components/ThemeExplanation";
+import AudioPlayer from "../components/AudioPlayer";
 
 const socket = io('localhost:3000')
 

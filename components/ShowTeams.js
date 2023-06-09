@@ -9,6 +9,7 @@ function ShowTeams({teamSelected, onTeamSelected}) {
     const colors = ["purple", "cyan", "yellow", "red", "green", "orange", "pink", "midnightblue"];
 
     function handleClickOnTeam(index) {
+        console.log(teamSelected)
         if (teamSelected === null) {
             const card = document.querySelector(`.card[id='${index}']`);
             if (card) {
@@ -23,6 +24,7 @@ function ShowTeams({teamSelected, onTeamSelected}) {
         const teamSelectedByClient = document.querySelector(".card.selected");
         if (teamSelected === null && !teamSelectedByClient.classList.contains("selectedByOtherTeam")) {
             const teamIndex = teamSelectedByClient.id;
+            console.log(teamIndex);
             onTeamSelected(teamIndex);
             const validateButton = document.querySelector(".validateButton");
             validateButton.style.display = "none";
@@ -30,6 +32,7 @@ function ShowTeams({teamSelected, onTeamSelected}) {
     }
 
     socket.on("teamChosen", function (index) {
+        console.log(teamSelected);
         const cards = document.querySelectorAll(".card");
         const teamAlreadySelected = document.querySelector(`.card[id='${index}']`);
         if (teamAlreadySelected && !teamAlreadySelected.classList.contains("selectedByOtherTeam")) {
