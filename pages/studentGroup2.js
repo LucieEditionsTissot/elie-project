@@ -62,7 +62,6 @@ export default function StudentTablet2() {
             setAnimationInProgress(false);
         });
 
-        // Autres listeners...
 
     }, []);
 
