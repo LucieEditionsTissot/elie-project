@@ -60,8 +60,6 @@ export default function StudentTablet1() {
             setCurrentScreen("animationQuestion");
         });
 
-        // Autres listeners...
-
     }, []);
 
     return (

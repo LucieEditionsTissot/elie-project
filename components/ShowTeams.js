@@ -9,7 +9,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     const cardRefs = useRef([]);
 
     useEffect(() => {
-        cardRefs.current = cardRefs.current.slice(0, teams.length); // Maintain refs array length
+        cardRefs.current = cardRefs.current.slice(0, teams.length);
     }, [teams]);
 
     function handleClickOnTeam(index) {
