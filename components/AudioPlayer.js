@@ -5,7 +5,13 @@ const AudioPlayer = ({ src }) => {
     const soundRef = useRef(null);
 
     useEffect(() => {
-        const sound = new Howl({ src: [src] });
+        const sound = new Howl({
+            src: [src],
+            html5: true,
+            autoplay: true,
+            loop: false,
+            volume: 1,
+        });
         soundRef.current = sound;
 
         sound.play();

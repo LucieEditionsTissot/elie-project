@@ -22,7 +22,7 @@ export default function StudentTablet2() {
 
     useEffect(() => {
         if (teamSelected) {
-            socket.emit("teamChosenGroupeOne", teamSelected);
+            socket.emit("teamChosenGroupeTwo", teamSelected);
         }
     }, [teamSelected]);
 
@@ -33,7 +33,7 @@ export default function StudentTablet2() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-        socket.emit("registerStudent1");
+        socket.emit("registerStudent2");
 
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
@@ -44,22 +44,21 @@ export default function StudentTablet2() {
             setCurrentScreen("theme");
         });
 
-        socket.on("startTurnByTurn", (data) => {
+        socket.on("startTurnByTurnGroupTwo", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
 
-        socket.on("animation", () => {
+        socket.on("animationGroupTwo", () => {
             setAnimationInProgress(true);
             setCurrentScreen("animation");
         });
 
-        socket.on("askQuestion", (data) => {
+        socket.on("askQuestionGroupTwo", (data) => {
             setAnimationQuestionData(data);
             setAnimationInProgress(false);
             setCurrentScreen("animationQuestion");
         });
-
     }, []);
 
     function handleThemesButtonClicked() {
@@ -84,17 +83,13 @@ export default function StudentTablet2() {
                 <ThemeScreen onThemesButtonClicked={handleThemesButtonClicked} />
             )}
 
-            {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen />
-            )}
+            {currentScreen === "themeExplanation" && <ThemeExplanationScreen />}
 
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
             )}
 
-            {currentScreen === "animation" && (
-                <AnimationScreen />
-            )}
+            {currentScreen === "animation" && <AnimationScreen />}
 
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
@@ -102,6 +97,7 @@ export default function StudentTablet2() {
         </>
     );
 }
+
 
 
 

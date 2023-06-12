@@ -133,51 +133,171 @@ io.on("connection", (socket) => {
     });
 
 
-    const events = [
-        { clientId: 1, type: 'audio', url: 'audio1.mp3' },
-        { clientId: 1, type: 'video', url: 'video1.mp4' },
-    ];
-
-    // TEAMS /////////////////////////////////////////
-
-    //// Créer des types à partager entre le front et le back, les events, liste des clients et liste des events.
-    // Passer les id des vidéos et des audios côté front,
-    // se servir des composants bas niveaux et leur faire changer les id à chaque évènements et renvoyer les vidéos et ou audio selon l'id de leur client de destination
-
-    //// Clients : Student1, Student2, CentralAnimation
-    //// Types : Audio, Vidéos
-    //// Composant bas niveau : AudioPlayer, VideoPlayer
-    //// Events :
-    // Start : Démarrage de la map sur client central, chargement de l'audio1 et de la map1,
-    // Rules : Audio1 pause, chargement de l'audio 2 et map 2 pour l'explication des règles
-    // Theme chosen : Audio 2 pause, redémarrage de l'audio 1 et de la vidéo 1
-    // Indice 1 : Pause de la vidéo 1, Démarrage de la vidéo 3, possibilité de restart
-    // Fin de l'indice : Pause de la vidéo 3 démarrage de la vidéo 1
-    // Indice numéro 2 : Lancement de l'audio 2-1 Student1, lancement de l'audio 2-2 Student2, possibilité de restart
-    // Fin de l'indice : Pause des audios 2-1 & 2-2
-    // Indice numéro 3 : Lancement des audios 3-1 pour Student1 & 3-2 pour Student2, pause de la vidéo 1 et lancement de la vidéo 4,
-    // Fin de l'indice : Pause des audios 3-1 & 3-2, pause de la vidéo 4, lancement de la vidéo 1
-    // Réponse : Fin de la vidéo 1, lancement de la vidéo 5, lancement de l'audio 4 (indices communs & vidéo interaction),
-    // Solution : Fin vidéo 5 et audio 4, lancement de la vidéo 6 et audio 5,
-    // Animation final : Fin de l'audio 5 et boucle sur la vidéo 6.
-
     io.emit("startExperience", teams);
-
-
-    socket.emit('eventList', events);
-
-    socket.on('start', () => {
-        io.to('client3').emit('loadAudio', { id: 1, url: 'audio1.mp3' });
-        io.to('client3').emit('loadMap', { id: 1, url: 'map1.jpg' });
+// Séquence 1: Ambiance
+    socket.on('startAmbiance', () => {
+        io.to('client3').emit('loadMap', { id: 1, url: 'video/Anim_indice_01_003.mp4' });
+        io.to('client3').emit('loadAudio', { id: 1, url: 'audio/Corbeau.mov' });
     });
 
-    socket.on('rules', () => {
+// Séquence 2: Rules
+    socket.on('startRules', () => {
         io.to('client3').emit('pauseAudio', { id: 1 });
-
-
-        io.to('client3').emit('loadAudio', { id: 2, url: 'audio2.mp3' });
-        io.to('client3').emit('loadMap', { id: 2, url: 'map2.jpg' });
+        io.to('client3').emit('loadAudio', { id: 2, url: 'audio/Corbeau.mov'  });
+        io.to('client3').emit('loadMap', { id: 2, url: 'video/Anim_indice_01_003.mp4' });
     });
+
+// Séquence 3: Theme chosen
+    socket.on('startThemeChosen', () => {
+        io.to('client3').emit('pauseAudio', { id: 2 });
+        io.to('client3').emit('loadAudio', { id: 3, url: 'audio3.mp3' });
+        io.to('client3').emit('loadMap', { id: 3, url: 'video/Anim_indice_01_003.mp4' });
+    });
+
+// Séquence 4: Theme Explication
+    socket.on('startThemeExplanation', () => {
+        io.to('client3').emit('loadAudio', { id: 4, url: 'audio4.mp3' });
+        io.to('client3').emit('loadMap', { id: 4, url: 'video/Anim_indice_01_003.mp4' });
+    });
+
+// Séquence 5: Ambiance
+    socket.on('startAmbiance2', () => {
+        io.to('client3').emit('pauseAudio', { id: 4 });
+        io.to('client3').emit('loadAudio', { id: 1, url: 'audio1.mp3' });
+        io.to('client3').emit('loadMap', { id: 1, url: 'video/Anim_indice_01_003.mp4' });
+    });
+
+// Séquence 6: Indice 1
+    socket.on('startIndice1', () => {
+        io.to('client3').emit('loadAudio', { id: 5, url: 'audio5.mp3' });
+        io.to('client3').emit('loadVideo', { id: 5, url: 'video/Anim_indice_01_003.mp4' });
+        setTimeout(() => {
+            io.to('client3').emit('pauseAudio', { id: 5 });
+            io.to('client3').emit('pauseVideo', { id: 5 });
+        }, 4000);
+
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                io.to('client3').emit('loadAudio', { id: 6, url: 'audio6.mp3' });
+                io.to('client3').emit('loadVideo', { id: 6, url: 'video/Anim_indice_01_003.mp4' });
+            }, 4000 + i * 10000);
+        }
+
+        setTimeout(() => {
+            io.to('client3').emit('loadAudio', { id: 7, url: 'audio7.mp3' });
+            io.to('client3').emit('loadVideo', { id: 7, url: 'video/Anim_indice_01_003.mp4' });
+            setTimeout(() => {
+                io.to('client3').emit('pauseAudio', { id: 7 });
+                io.to('client3').emit('pauseVideo', { id: 7 });
+            }, 3000);
+        }, 4000 + 4 * 10000);
+    });
+
+// Séquence 7: Indice 2
+    socket.on('startIndice2', () => {
+        io.to('client3').emit('loadAudio', { id: 8, url: 'audio8.mp3' });
+        io.to('client3').emit('loadVideo', { id: 8, url: 'video/Anim_indice_01_003.mp4' });
+        setTimeout(() => {
+            io.to('client3').emit('pauseAudio', { id: 8 });
+            io.to('client3').emit('pauseVideo', { id: 8 });
+        }, 4000);
+
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                io.to('client3').emit('loadAudio', { id: 9, url: 'audio9.mp3' });
+                io.to('client3').emit('loadVideo', { id: 9, url: 'video/Anim_indice_01_003.mp4' });
+            }, 4000 + i * 10000);
+        }
+
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                io.to('client1').emit('loadAudio', { id: '9-1', url: 'audio9-1.mp3' });
+                io.to('client2').emit('loadAudio', { id: '9-2', url: 'audio9-2.mp3' });
+            }, 4000 + i * 10000);
+        }
+
+        setTimeout(() => {
+            io.to('client3').emit('loadAudio', { id: 10, url: 'audio10.mp3' });
+            io.to('client3').emit('loadVideo', { id: 10, url: 'video/Anim_indice_01_003.mp4' });
+            setTimeout(() => {
+                io.to('client3').emit('pauseAudio', { id: 10 });
+                io.to('client3').emit('pauseVideo', { id: 10 });
+            }, 3000);
+        }, 4000 + 4 * 10000);
+    });
+
+// Séquence 8: Indice 3
+    socket.on('startIndice3', () => {
+        io.to('client3').emit('loadAudio', { id: 11, url: 'audio11.mp3' });
+        io.to('client3').emit('loadVideo', { id: 11, url: 'video/Anim_indice_01_003.mp4' });
+        setTimeout(() => {
+            io.to('client3').emit('pauseAudio', { id: 11 });
+            io.to('client3').emit('pauseVideo', { id: 11 });
+        }, 4000);
+
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                io.to('client3').emit('loadAudio', { id: 12, url: 'audio12.mp3' });
+                io.to('client3').emit('loadVideo', { id: 12, url: 'video/Anim_indice_01_003.mp4' });
+            }, 4000 + i * 10000);
+        }
+
+        setTimeout(() => {
+            io.to('client3').emit('loadAudio', { id: 13, url: 'audio13.mp3' });
+            io.to('client3').emit('loadVideo', { id: 13, url: 'video/Anim_indice_01_003.mp4' });
+            setTimeout(() => {
+                io.to('client3').emit('pauseAudio', { id: 13 });
+                io.to('client3').emit('pauseVideo', { id: 13 });
+            }, 3000);
+        }, 4000 + 4 * 10000);
+    });
+
+// Séquence 9: Ambiance
+    socket.on('startAmbiance3', () => {
+        io.to('client3').emit('loadAudio', { id: 1, url: 'audio1.mp3' });
+        io.to('client3').emit('loadMap', { id: 1, url: 'video/Anim_indice_01_003.mp4' });
+    });
+
+// Séquence 10: Intéractions
+    socket.on('startInteractions', () => {
+        io.to('client3').emit('loadAudio', { id: 14, url: 'audio14.mp3' });
+        io.to('client3').emit('loadVideo', { id: 14, url: 'video/Anim_indice_01_003.mp4' });
+        setTimeout(() => {
+            io.to('client3').emit('pauseAudio', { id: 14 });
+            io.to('client3').emit('pauseVideo', { id: 14 });
+        }, 4000);
+
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                io.to('client3').emit('loadAudio', { id: 15, url: 'audio15.mp3' });
+                io.to('client3').emit('loadVideo', { id: 15, url: 'video/Anim_indice_01_003.mp4' });
+            }, 4000 + i * 10000);
+        }
+
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                io.to('client1').emit('loadAudio', { id: '16-1', url: 'audio16-1.mp3' });
+                io.to('client2').emit('loadAudio', { id: '16-2', url: 'audio16-2.mp3' });
+            }, 4000 + i * 10000);
+        }
+
+        setTimeout(() => {
+            io.to('client3').emit('loadAudio', { id: 17, url: 'audio17.mp3' });
+            io.to('client3').emit('loadVideo', { id: 17, url: 'video/Anim_indice_01_003.mp4' });
+            setTimeout(() => {
+                io.to('client3').emit('pauseAudio', { id: 17 });
+                io.to('client3').emit('pauseVideo', { id: 17 });
+            }, 3000);
+        }, 4000 + 4 * 10000);
+    });
+
+// Séquence 11: Ambiance
+    socket.on('startAmbiance4', () => {
+        io.to('client3').emit('loadAudio', { id: 1, url: 'audio1.mp3' });
+        io.to('client3').emit('loadMap', { id: 1, url: 'video/Anim_indice_01_003.mp4' });
+    });
+
+
 
     numberOfTeamSelected = 0
     numberOfRulesUnderstood = 0
@@ -185,7 +305,6 @@ io.on("connection", (socket) => {
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
-
 
     socket.on("teamChosen", (index) => {
         console.log(index);
