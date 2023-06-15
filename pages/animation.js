@@ -4,69 +4,52 @@ import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
 
-const socket = io('localhost:3000');
+const socket = io('http://localhost:3000');
 
 const Client3 = () => {
+    const [currentScenario, setCurrentScenario] = useState(null);
+    const [audioLoaded, setAudioLoaded] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
     const [currentVideo, setCurrentVideo] = useState(null);
-    const [contextStarted, setContextStarted] = useState(false);
 
     useEffect(() => {
-        socket.emit("registerAnimationClient");
-
-        socket.on('loadMap', (data) => {
-            console.log('Loading map:', data);
-        });
-
-        socket.on('loadAudio', (data) => {
-            console.log('Loading audio:', data);
-            setCurrentAudio(data);
-
-            if (!contextStarted) {
-                document.addEventListener('click', startAudioContext);
-                document.addEventListener('keydown', startAudioContext);
-                document.addEventListener('touchstart', startAudioContext);
-            }
-        });
-
-        socket.on('pauseAudio', (data) => {
-            console.log('Pausing audio:', data);
-            setCurrentAudio(null);
-        });
-
-        socket.on('loadVideo', (data) => {
-            console.log('Loading video:', data);
-            setCurrentVideo(data);
-        });
-
-        socket.on('pauseVideo', (data) => {
-            console.log('Pausing video:', data);
-            setCurrentVideo(null);
-        });
-
-        setTimeout(() => {
-            socket.emit('startAmbiance');
-        }, 10000);
-
-        return () => {
-
-            document.removeEventListener('click', startAudioContext);
-            document.removeEventListener('keydown', startAudioContext);
-            document.removeEventListener('touchstart', startAudioContext);
-        };
+        socket.emit('registerAnimationClient');
     }, []);
 
+    useEffect(() => {
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+            setVideoLoaded(false);
 
-    const startAudioContext = () => {
-        if (contextStarted) return;
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
 
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const context = new AudioContext();
-        context.resume().then(() => {
-            console.log('Audio context started');
-            setContextStarted(true);
+            const videoElement = document.createElement('video');
+            videoElement.src = scenario.videos[0];
+            videoElement.addEventListener('loadeddata', () => {
+                setVideoLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+            setCurrentVideo(videoElement);
         });
-    };
+    }, []);
+
+    if (!currentScenario || !audioLoaded || !videoLoaded) {
+        return (
+            <>
+                <Head>
+                    <title>Animation</title>
+                </Head>
+
+                <div>Pas chargé</div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -75,14 +58,43 @@ const Client3 = () => {
             </Head>
 
             <div>
-                {currentAudio && <AudioPlayer src={currentAudio.url} />}
-                {currentVideo && <VideoPlayer src={currentVideo.url} />}
+                {currentScenario && currentScenario.id === 1 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} />
+                    </div>
+                )}
+
+                {currentScenario && currentScenario.id === 2 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} />
+                    </div>
+                )}
+
+                {currentScenario && currentScenario.id === 3 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} />
+                    </div>
+                )}
+
+                {currentScenario && currentScenario.id === 4 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} />
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
 export default Client3;
+
+
+
+
 
 
 
