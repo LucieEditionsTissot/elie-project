@@ -172,9 +172,6 @@ io.on("connection", (socket) => {
         }, 30000);
     });
 
-
-
-
     numberOfTeamSelected = 0
     numberOfRulesUnderstood = 0
     numberOfChosenAnimals = 0
@@ -210,7 +207,6 @@ io.on("connection", (socket) => {
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
-            // Fin audio 1 & Vidéo 1, lancement audio 2 & vidéo 2
         }
     }
 
@@ -218,7 +214,6 @@ io.on("connection", (socket) => {
         numberOfRulesUnderstood++
         if (numberOfRulesUnderstood >= 2) {
             io.emit('rulesAreDoneSelectThemeRandomly');
-            // Fin audio 2 & Vidéo 2, lancement audio 1 & vidéo 1
         }
     })
 
@@ -228,7 +223,6 @@ io.on("connection", (socket) => {
         randomTheme = data[0]
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
-            // Fin audio 1 & Vidéo 1, lancement audio 3 & vidéo 3
             setTimeout(() => {
                 const themeIndex = data[1]
                 const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]

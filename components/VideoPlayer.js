@@ -14,11 +14,8 @@ const VideoPlayer = ({ src }) => {
         };
     }, [src]);
 
-    return <video ref={videoRef} controls />;
+    return <video ref={videoRef} controls={false} className="w-full h-full object-cover" />;
+
 };
 
 export default VideoPlayer;
-
-
-
-

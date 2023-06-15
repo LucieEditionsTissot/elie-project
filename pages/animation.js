@@ -3,6 +3,8 @@ import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
+import Images from "../components/Images";
+import Header from "../components/Header";
 
 const socket = io('http://localhost:3000');
 
@@ -39,50 +41,63 @@ const Client3 = () => {
         });
     }, []);
 
+    useEffect(() => {
+        if (currentVideo) {
+            currentVideo.play();
+        }
+
+        return () => {
+            if (currentVideo) {
+                currentVideo.pause();
+            }
+        };
+    }, [currentVideo]);
+
+
+
     if (!currentScenario || !audioLoaded || !videoLoaded) {
         return (
             <>
-                <Head>
-                    <title>Animation</title>
-                </Head>
-
-                <div>Pas chargé</div>
+                <Images src="/images/0000.png" />
             </>
         );
     }
 
     return (
         <>
-            <Head>
-                <title>Animation</title>
-            </Head>
+            <div className="relative">
+
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <Images src="/images/0000.png" className="w-full h-full" />
+                </div>
+            </div>
 
             <div>
                 {currentScenario && currentScenario.id === 1 && (
                     <div>
                         <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
                     </div>
                 )}
 
                 {currentScenario && currentScenario.id === 2 && (
                     <div>
                         <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
                     </div>
                 )}
 
                 {currentScenario && currentScenario.id === 3 && (
                     <div>
                         <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
                     </div>
                 )}
 
                 {currentScenario && currentScenario.id === 4 && (
                     <div>
                         <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
                     </div>
                 )}
             </div>
@@ -91,14 +106,3 @@ const Client3 = () => {
 };
 
 export default Client3;
-
-
-
-
-
-
-
-
-
-
-
