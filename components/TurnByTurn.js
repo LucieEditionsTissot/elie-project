@@ -1,45 +1,45 @@
 import { useState, useEffect } from 'react';
-import socket from "prop-types/prop-types";
+import socket from 'prop-types/prop-types';
 
-const animalNames = [
-    'Chat',
-    'Chien',
-    'Lion',
-    'Tigre',
-    'Ours',
-    'Souris',
-    'Éléphant',
-    'Girafe',
-    'Hibou',
-    'Papillon'
-];
-
-const playerNames = ['Joueur 1', 'Joueur 2', 'Joueur 3'];
-
-const TurnByTurn = () => {
+const TurnByTurn = (props) => {
     const [cards, setCards] = useState([]);
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
     const [selectedCards, setSelectedCards] = useState([]);
     const [message, setMessage] = useState('');
     const [timer, setTimer] = useState(10);
     const [validationEnabled, setValidationEnabled] = useState(false);
+    const [teams, setTeams] = useState([]);
+    const [actualTeamName, setActualTeamName] = useState('');
+    const [actualTeamMembers, setActualTeamMembers] = useState([]);
+    const [stateOfTheGame, setStateOfTheGame] = useState(null);
+    const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
+    const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
+    const [globalTimer, setGlobalTimer] = useState(15);
+    const [data, setData] = useState([]);
+    const [randomTheme, setRandomTheme] = useState("");
+    const [teamIndex, setTeamIndex] = useState(null);
+    const [animals, setAnimals] = useState({});
+    const [correctAnswer, setCorrectAnswer] = useState("");
+    const [isValueSubmit, setIsValueSubmit] = useState(false);
 
     useEffect(() => {
-        const initialCards = animalNames.map(name => ({
-            name,
-            selected: false,
-            selectedBy: null
-        }));
-
-        setCards(initialCards);
-    }, []);
+        setData(props.data)
+        setTeams(props.data[0])
+        setRandomTheme(props.data[3])
+        setTeamIndex(props.data[Number(props.client)])
+        const animalData = props.data[4]
+        if (animalData) {
+            setAnimals(animalData[props.groupName]["animals"])
+            setCorrectAnswer(animalData[props.groupName]["answer"])
+        }
+    }, [props.data])
 
     useEffect(() => {
         let interval;
 
         if (currentPlayerIndex === 0 || currentPlayerIndex === 1) {
             interval = setInterval(() => {
-                setTimer(prevTimer => prevTimer - 1);
+                setTimer((prevTimer) => prevTimer - 1);
             }, 1000);
         }
 
@@ -51,7 +51,7 @@ const TurnByTurn = () => {
     }, [currentPlayerIndex, timer]);
 
     useEffect(() => {
-        const remainingDeselectedCards = cards.filter(card => !card.selected);
+        const remainingDeselectedCards = cards.filter((card) => !card.selected);
 
         if (currentPlayerIndex === 2 && remainingDeselectedCards.length === 1) {
             setValidationEnabled(true);
@@ -60,15 +60,15 @@ const TurnByTurn = () => {
         }
     }, [cards, currentPlayerIndex]);
 
-    const handleCardClick = index => {
+    const handleCardClick = (index) => {
         const card = cards[index];
 
         if (card.selected && card.selectedBy !== currentPlayerIndex) {
             if (currentPlayerIndex === 1 || currentPlayerIndex === 2) {
                 card.selected = false;
                 card.selectedBy = null;
-                setSelectedCards(prevSelectedCards =>
-                    prevSelectedCards.filter(cardIndex => cardIndex !== index)
+                setSelectedCards((prevSelectedCards) =>
+                    prevSelectedCards.filter((cardIndex) => cardIndex !== index)
                 );
             } else {
                 setMessage('Cette carte a été sélectionnée par un autre joueur.');
@@ -79,8 +79,8 @@ const TurnByTurn = () => {
         if (card.selected) {
             card.selected = false;
             card.selectedBy = null;
-            setSelectedCards(prevSelectedCards =>
-                prevSelectedCards.filter(cardIndex => cardIndex !== index)
+            setSelectedCards((prevSelectedCards) =>
+                prevSelectedCards.filter((cardIndex) => cardIndex !== index)
             );
         } else {
             if (
@@ -89,11 +89,11 @@ const TurnByTurn = () => {
             ) {
                 card.selected = true;
                 card.selectedBy = currentPlayerIndex;
-                setSelectedCards(prevSelectedCards => [...prevSelectedCards, index]);
+                setSelectedCards((prevSelectedCards) => [...prevSelectedCards, index]);
             } else if (currentPlayerIndex === 2) {
                 card.selected = true;
                 card.selectedBy = currentPlayerIndex;
-                setSelectedCards(prevSelectedCards => [...prevSelectedCards, index]);
+                setSelectedCards((prevSelectedCards) => [...prevSelectedCards, index]);
             } else {
                 setMessage(
                     `Le joueur ${currentPlayerIndex + 1} a déjà sélectionné ${
@@ -107,18 +107,17 @@ const TurnByTurn = () => {
     };
 
     const handlePlayerChange = () => {
-        setCurrentPlayerIndex(prevIndex => (prevIndex + 1) % playerNames.length);
+        setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % props.playerNames.length);
         setSelectedCards([]);
         setMessage('');
         setTimer(10);
     };
 
     const handleValidation = () => {
-        setIsValueSubmit(true)
-        socket.emit("animalChosen", Number(lastCard.id))
+        // Votre code de validation ici
     };
 
-    const currentPlayerName = playerNames[currentPlayerIndex];
+    const currentPlayerName = props.playerNames[currentPlayerIndex];
 
     return (
         <div className="flex flex-col items-center justify-center bg-gray-200 min-h-screen">
@@ -149,6 +148,15 @@ const TurnByTurn = () => {
                     Valider la sélection
                 </button>
             )}
+            <div className="mt-4">
+                <h3>Nom de l'équipe : {actualTeamName}</h3>
+                <h4>Membres de l'équipe :</h4>
+                <ul>
+                    {actualTeamMembers.map((member, index) => (
+                        <li key={index}>{member}</li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

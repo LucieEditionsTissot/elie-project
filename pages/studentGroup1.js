@@ -8,6 +8,7 @@ import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
+import ThemeExplanation from "../components/ThemeExplanation";
 
 const socket = io("localhost:3000");
 
@@ -41,8 +42,13 @@ export default function StudentTablet1() {
             setCurrentScreen("rules");
         });
 
+
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
             setCurrentScreen("theme");
+        });
+        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+            setCurrentScreen("themeExplanation");
+            // Faire quelque chose avec les données de l'explication du thème
         });
 
         socket.on("startTurnByTurnGroupOne", (data) => {
@@ -83,8 +89,9 @@ export default function StudentTablet1() {
             {currentScreen === "theme" && (
                 <ThemeScreen onThemesButtonClicked={handleThemesButtonClicked} />
             )}
-
-            {currentScreen === "themeExplanation" && <ThemeExplanationScreen />}
+            {currentScreen === "themeExplanation" && (
+                <ThemeExplanationScreen/>
+            )}
 
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />

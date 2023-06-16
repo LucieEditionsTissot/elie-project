@@ -40,6 +40,6 @@ export default function TeacherTablet() {
         <Head>
             <title>Tablette professeur</title>
         </Head>
-<TurnByTurn/>
+
     </>
 };
