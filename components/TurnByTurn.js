@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
-import socket from 'prop-types/prop-types';
+import React, {useEffect, useRef, useState} from "react";
+import io from 'socket.io-client';
+import {randomBytes} from "crypto";
+import {pick} from "next/dist/lib/pick";
 
-const TurnByTurn = (props) => {
-    const [cards, setCards] = useState([]);
-    const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-    const [selectedCards, setSelectedCards] = useState([]);
-    const [message, setMessage] = useState('');
-    const [timer, setTimer] = useState(10);
-    const [validationEnabled, setValidationEnabled] = useState(false);
-    const [teams, setTeams] = useState([]);
-    const [actualTeamName, setActualTeamName] = useState('');
-    const [actualTeamMembers, setActualTeamMembers] = useState([]);
+const socket = io('localhost:3000')
+
+function TurnByTurn(props) {
+
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
     const [globalTimer, setGlobalTimer] = useState(15);
+
     const [data, setData] = useState([]);
+    const [teams, setTeams] = useState([]);
     const [randomTheme, setRandomTheme] = useState("");
     const [teamIndex, setTeamIndex] = useState(null);
+    const [actualTeamName, setActualTeamName] = useState("");
+    const [actualTeamMembers, setActualTeamMembers] = useState([]);
     const [animals, setAnimals] = useState({});
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [isValueSubmit, setIsValueSubmit] = useState(false);
@@ -35,130 +35,185 @@ const TurnByTurn = (props) => {
     }, [props.data])
 
     useEffect(() => {
-        let interval;
-
-        if (currentPlayerIndex === 0 || currentPlayerIndex === 1) {
-            interval = setInterval(() => {
-                setTimer((prevTimer) => prevTimer - 1);
-            }, 1000);
+        if (teams && teamIndex !== null) {
+            setActualTeamName(Object.keys(teams)[teamIndex]);
+            setActualTeamMembers(Object.values(teams)[teamIndex]);
+            setStateOfTheGame(0)
         }
-
-        if (timer === 0) {
-            handlePlayerChange();
-        }
-
-        return () => clearInterval(interval);
-    }, [currentPlayerIndex, timer]);
+    }, [teams, teamIndex]);
 
     useEffect(() => {
-        const remainingDeselectedCards = cards.filter((card) => !card.selected);
-
-        if (currentPlayerIndex === 2 && remainingDeselectedCards.length === 1) {
-            setValidationEnabled(true);
-        } else {
-            setValidationEnabled(false);
+        if (stateOfTheGame !== null) {
+            showTipsWaitingScreen("Indice en cours !")
         }
-    }, [cards, currentPlayerIndex]);
+    }, [stateOfTheGame]);
 
-    const handleCardClick = (index) => {
-        const card = cards[index];
+    function handleFlipCard(e) {
+        const element = e.target.closest('.animal')
+        const allCards = document.querySelectorAll(".animal");
+        let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
-        if (card.selected && card.selectedBy !== currentPlayerIndex) {
-            if (currentPlayerIndex === 1 || currentPlayerIndex === 2) {
-                card.selected = false;
-                card.selectedBy = null;
-                setSelectedCards((prevSelectedCards) =>
-                    prevSelectedCards.filter((cardIndex) => cardIndex !== index)
-                );
+        if (!isValueSubmit) {
+            if (allHiddenCards.length < maxNumberOfCard) {
+                element.classList.toggle("hidden");
             } else {
-                setMessage('Cette carte a été sélectionnée par un autre joueur.');
-            }
-            return;
-        }
-
-        if (card.selected) {
-            card.selected = false;
-            card.selectedBy = null;
-            setSelectedCards((prevSelectedCards) =>
-                prevSelectedCards.filter((cardIndex) => cardIndex !== index)
-            );
-        } else {
-            if (
-                (currentPlayerIndex === 0 || currentPlayerIndex === 1) &&
-                selectedCards.length < 3
-            ) {
-                card.selected = true;
-                card.selectedBy = currentPlayerIndex;
-                setSelectedCards((prevSelectedCards) => [...prevSelectedCards, index]);
-            } else if (currentPlayerIndex === 2) {
-                card.selected = true;
-                card.selectedBy = currentPlayerIndex;
-                setSelectedCards((prevSelectedCards) => [...prevSelectedCards, index]);
-            } else {
-                setMessage(
-                    `Le joueur ${currentPlayerIndex + 1} a déjà sélectionné ${
-                        currentPlayerIndex === 2 ? '9' : '3'
-                    } cartes.`
-                );
+                if (element.classList.contains("hidden")) {
+                    element.classList.remove("hidden");
+                }
             }
         }
 
-        setCards([...cards]);
-    };
+        allHiddenCards = document.querySelectorAll(".animal.hidden")
+        const validateButton = document.querySelector("#turnByTurn .validateButton")
 
-    const handlePlayerChange = () => {
-        setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % props.playerNames.length);
-        setSelectedCards([]);
-        setMessage('');
-        setTimer(10);
-    };
+        if (allHiddenCards.length === Object.keys(animals).length - 1) {
+            validateButton.style.display = "block"
+        } else {
+            validateButton.style.display = "none"
+        }
 
-    const handleValidation = () => {
-        // Votre code de validation ici
-    };
+    }
 
-    const currentPlayerName = props.playerNames[currentPlayerIndex];
+    function showTipsWaitingScreen(text) {
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreen.classList.add("is-active")
+        waitingScreenText.innerHTML = text
+
+        console.log("stateOfTheGame", stateOfTheGame)
+
+        setTimeout(() => {
+            showPlayerWaitingScreen()
+        }, 3000)
+    }
+
+    function showPlayerWaitingScreen() {
+
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+        waitingScreen.classList.add("is-active")
+
+        setTimeout(() => {
+            waitingScreen.classList.remove("is-active")
+            pickPhaseAndUpdateDependencies()
+        }, 3000)
+
+    }
+
+    function pickPhaseAndUpdateDependencies() {
+        const timerWrapper = document.querySelector(".timer-wrapper");
+        const timer = document.querySelector(".timer");
+
+        if (stateOfTheGame !== null) {
+            timer.style.animationDuration = `${globalTimer}s`;
+            timer.style.animationPlayState = "running";
+        }
+
+        setTimeout(() => {
+            timer.style.animationPlayState = "paused";
+            if (stateOfTheGame < 1) {
+                setStateOfTheGame(stateOfTheGame + 1)
+                setActualIndexOfMembers(actualIndexOfMembers + 1)
+                if (maxNumberOfCard < 9) {
+                    setMaxNumberOfCard(maxNumberOfCard + 3)
+                }
+            } else {
+                setActualIndexOfMembers(actualIndexOfMembers + 1)
+                updateWaitingScreenForTheLastTime()
+                disableTimer()
+                setMaxNumberOfCard(maxNumberOfCard + 3)
+            }
+        }, globalTimer * 1000);
+
+    }
+
+    function updateWaitingScreenForTheLastTime() {
+
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreenText.innerHTML = "Indice en cours !"
+        waitingScreen.classList.add("is-active")
+
+        setTimeout(() => {
+            if (actualTeamMembers[actualIndexOfMembers + 1]) {
+                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers + 1] + " à toi de jouer !"
+            } else {
+                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+            }
+            setTimeout(() => {
+                waitingScreen.classList.remove("is-active")
+            }, 3000)
+        }, 3000)
+
+    }
+
+    function disableTimer() {
+        const timerWrapper = document.querySelector(".timer-wrapper");
+        const timer = document.querySelector(".timer");
+        timerWrapper.style.display = "none";
+        timer.style.display = "none";
+        timer.style.animationPlayState = "paused";
+    }
+
+    function handleClickOnValidateButton() {
+        const lastCard = document.querySelectorAll(".animal:not(.hidden)")
+        const answerText = document.querySelector(".answerText")
+        if (lastCard.length === 1 && isValueSubmit === false) {
+            setIsValueSubmit(true)
+            socket.emit("animalChosen", Number(lastCard.id))
+            if (Number(lastCard[0].id) === Number(correctAnswer)) {
+                answerText.innerHTML = "Bonne réponse !"
+            } else {
+                answerText.innerHTML = "Mauvaise réponse !"
+            }
+        }
+
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center bg-gray-200 min-h-screen">
-            <h1 className="text-3xl font-bold mb-4">Turn By Turn</h1>
-            <h2 className="text-xl mb-2">Joeur en cours: {currentPlayerName}</h2>
-            {currentPlayerIndex === 0 || currentPlayerIndex === 1 ? (
-                <div className="mb-4">Timer: {timer}</div>
+        <section id={"turnByTurn"} className={"hide"}>
+
+            <h1>Équipe {actualTeamName}</h1>
+
+            {actualTeamMembers !== undefined && actualTeamMembers.length > 0 && stateOfTheGame !== null ? (
+                <h2>A toi de jouer {actualTeamMembers[actualIndexOfMembers]} !</h2>
             ) : null}
-            <div className="grid grid-cols-3 gap-4">
-                {cards.map((card, index) => (
-                    <div
-                        key={index}
-                        className={`card relative w-32 h-32 bg-blue-500 text-white flex items-center justify-center p-4 rounded cursor-pointer transform ${
-                            card.selected ? 'bg-green-500' : ''
-                        } ${card.eliminated ? 'opacity-50' : ''}`}
-                        onClick={() => handleCardClick(index)}
-                    >
-                        {card.name}
-                    </div>
-                ))}
+
+            <div className="animal-wrapper">
+
+                {animals !== undefined && animals.length > 0 ? (
+                    animals.map((animal, index) => (
+                        <div
+                            key={index}
+                            id={index}
+                            className="animal"
+                            onClick={(e) => handleFlipCard(e)}
+                        >
+                            <p>{animal}</p>
+                        </div>
+                    ))
+                ) : null}
             </div>
-            {message && <p className="text-red-500 mt-2">{message}</p>}
-            {currentPlayerIndex === 2 && validationEnabled && (
-                <button
-                    className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
-                    onClick={handleValidation}
-                >
-                    Valider la sélection
-                </button>
-            )}
-            <div className="mt-4">
-                <h3>Nom de l'équipe : {actualTeamName}</h3>
-                <h4>Membres de l'équipe :</h4>
-                <ul>
-                    {actualTeamMembers.map((member, index) => (
-                        <li key={index}>{member}</li>
-                    ))}
-                </ul>
+
+            <div className={"timer-wrapper"}>
+                <div className={"timer"}></div>
             </div>
-        </div>
+
+            <div className={"validateButton"} onClick={() => handleClickOnValidateButton()}>
+                <p>Validate</p>
+            </div>
+
+            <h5 className={"answerText"}></h5>
+
+            <div className={"waitingScreen"}>
+
+                <h4>Premier indice en cours</h4>
+
+            </div>
+
+        </section>
     );
-};
+}
 
 export default TurnByTurn;

@@ -8,7 +8,6 @@ import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
-import ThemeExplanation from "../components/ThemeExplanation";
 
 const socket = io("localhost:3000");
 
@@ -20,9 +19,13 @@ export default function StudentTablet1() {
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
+    const [themeSelected, setThemeSelected] = useState(null);
+    const [themeExplanationFinished, setExplanationFinished] = useState(false);
+    const [animalCards, setAnimalCards] = useState([]);
 
     useEffect(() => {
         socket.emit("registerStudent1");
+
         if (teamSelected) {
             socket.emit("teamChosenGroupeOne", teamSelected);
         }
@@ -35,28 +38,37 @@ export default function StudentTablet1() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-        socket.emit("registerStudent2");
+        socket.emit("registerStudent1");
 
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
         });
-
-
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
+            socket.emit('chooseTheme');
             setCurrentScreen("theme");
+            console.log("ici");
         });
+        socket.on("themeSelected", (data) => {
+            console.log(data.theme);
+            setThemeSelected(data.theme);
+            setTimeout(() => {
+                socket.emit('themeIsRandomlyChosen', data.theme);
+            }, 1000);
+        });
+
         socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+            console.log("coucou")
             setCurrentScreen("themeExplanation");
-            // Faire quelque chose avec les données de l'explication du thème
         });
 
         socket.on("startTurnByTurnGroupOne", (data) => {
+            setExplanationFinished(true);
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
 
-        socket.on("animationGroupOne", () => {
+        socket.on("animationGroupTwo", () => {
             setAnimationInProgress(true);
             setCurrentScreen("animation");
         });
@@ -66,6 +78,8 @@ export default function StudentTablet1() {
             setAnimationInProgress(false);
             setCurrentScreen("animationQuestion");
         });
+
+
     }, []);
 
     function handleThemesButtonClicked() {
@@ -87,12 +101,12 @@ export default function StudentTablet1() {
             )}
 
             {currentScreen === "theme" && (
-                <ThemeScreen onThemesButtonClicked={handleThemesButtonClicked} />
-            )}
-            {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen/>
+                <ThemeScreen themeSelected={themeSelected} />
             )}
 
+            {currentScreen === "themeExplanation" && (
+                <ThemeExplanationScreen themeSelected={themeSelected} />
+            )}
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
@@ -105,9 +119,3 @@ export default function StudentTablet1() {
         </>
     );
 }
-
-
-
-
-
-

@@ -8,6 +8,7 @@ import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
+import ThemeExplanation from "../components/ThemeExplanation";
 
 const socket = io("localhost:3000");
 
@@ -19,8 +20,12 @@ export default function StudentTablet2() {
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
+    const [themeSelected, setThemeSelected] = useState(null);
+    const [themeExplanationFinished, setExplanationFinished] = useState(false);
 
     useEffect(() => {
+        socket.emit("registerStudent2");
+
         if (teamSelected) {
             socket.emit("teamChosenGroupeTwo", teamSelected);
         }
@@ -33,18 +38,32 @@ export default function StudentTablet2() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-        socket.emit("registerStudent2");
+
 
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
         });
-
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
+            socket.emit('chooseTheme');
             setCurrentScreen("theme");
+            console.log("ici");
+        });
+        socket.on("themeSelected", (data) => {
+            console.log(data.theme);
+            setThemeSelected(data.theme);
+            setTimeout(() => {
+                socket.emit('themeIsRandomlyChosen', data.theme);
+            }, 1000);
+        });
+
+        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+            console.log("coucou")
+            setCurrentScreen("themeExplanation");
         });
 
         socket.on("startTurnByTurnGroupTwo", (data) => {
+            setExplanationFinished(true);
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
@@ -54,11 +73,13 @@ export default function StudentTablet2() {
             setCurrentScreen("animation");
         });
 
-        socket.on("askQuestionGroupTwo", (data) => {
+        socket.on("askQuestionGroupOne", (data) => {
             setAnimationQuestionData(data);
             setAnimationInProgress(false);
             setCurrentScreen("animationQuestion");
         });
+
+
     }, []);
 
     function handleThemesButtonClicked() {
@@ -80,10 +101,12 @@ export default function StudentTablet2() {
             )}
 
             {currentScreen === "theme" && (
-                <ThemeScreen onThemesButtonClicked={handleThemesButtonClicked} />
+                <ThemeScreen themeSelected={themeSelected} />
             )}
 
-            {currentScreen === "themeExplanation" && <ThemeExplanationScreen />}
+            {currentScreen === "themeExplanation" && (
+                <ThemeExplanationScreen themeSelected={themeSelected} />
+            )}
 
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
@@ -97,9 +120,3 @@ export default function StudentTablet2() {
         </>
     );
 }
-
-
-
-
-
-

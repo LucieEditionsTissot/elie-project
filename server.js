@@ -23,7 +23,7 @@ let teamGroupTwo = null
 let numberOfTeamSelected = 0
 let numberOfRulesUnderstood = 0
 let randomTheme = ""
-const themeTimer = 5000
+const themeTimer = 1000
 let numberOfChosenAnimals = 0
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
@@ -188,6 +188,7 @@ io.on("connection", (socket) => {
         teamGroupOne = teamChosen;
         numberOfTeamSelected++
         console.log(numberOfTeamSelected + "Groupe 1");
+        console.log(teamGroupOne);
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -197,6 +198,7 @@ io.on("connection", (socket) => {
         teamGroupTwo = teamChosen;
         numberOfTeamSelected++
         console.log(numberOfTeamSelected + "Groupe 2");
+        console.log(teamGroupTwo);
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -218,27 +220,45 @@ io.on("connection", (socket) => {
     })
 
     // THEME /////////////////////////////////////////
+    // THEME /////////////////////////////////////////
 
-    socket.on("themeIsRandomlyChosen", (data) => {
-        randomTheme = data[0]
+    const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
+    const themeScenarios = {
+        mutualisme: "Scénario du mutualisme",
+        predation: "Scénario de la prédation",
+        commensalisme: "Scénario du commensalisme"
+    };
+
+    function chooseRandomTheme() {
+        const randomIndex = Math.floor(Math.random() * themes.length);
+        return themes[randomIndex];
+    }
+
+    socket.on("chooseTheme", () => {
+        const randomTheme = chooseRandomTheme();
+        console.log("Random theme selected: ", randomTheme);
+        io.to("client1").emit("themeSelected", { theme: randomTheme });
+        io.to("client2").emit("themeSelected", { theme: randomTheme });
+    });
+
+    socket.on("themeIsRandomlyChosen", (randomTheme) => {
+        console.log("Random theme: ", randomTheme);
+
         setTimeout(() => {
-            io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
+            io.emit('themeIsSelectedShowThemeExplanation', randomTheme);
+            console.log("Theme scenario: ", themeScenarios[randomTheme]);
             setTimeout(() => {
-                const themeIndex = data[1]
+                const themeIndex = themes.indexOf(randomTheme);
+                const teamGroupOne = animals[randomTheme].teamGroupOne;
+                const teamGroupTwo = animals[randomTheme].teamGroupTwo;
                 const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
-                io.emit('startTurnByTurn', dataTurnByTurn)
-            }, themeTimer)
-        }, themeTimer)
-    })
 
-    // ANIMAL CHOSEN  ////////////////////////////////
+                io.to('client1').emit('startTurnByTurnGroupOne', dataTurnByTurn);
+                io.to('client2').emit('startTurnByTurnGroupTwo', dataTurnByTurn);
+            }, themeTimer);
+        }, themeTimer);
+    });
 
-    socket.on("animalChosen", () => {
-        numberOfChosenAnimals++
-        if (numberOfChosenAnimals >= 2) {
-            io.emit("animation", answersAnimation[randomTheme])
-        }
-    })
 
     // ANIMATION IS DONE  ////////////////////////////
 
