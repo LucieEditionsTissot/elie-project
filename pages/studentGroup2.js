@@ -13,6 +13,7 @@ import AnimalCards from "../components/AnimalCards";
 import ShowAnswer from "../components/ShowAnswer";
 import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
+import Conclusion from "../components/Conclusion";
 
 const socket = io("localhost:3000");
 
@@ -30,6 +31,7 @@ export default function StudentTablet2() {
     const [showAnswer, setShowAnswer] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
+    const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
 
     useEffect(() => {
         socket.emit("registerStudent2");
@@ -79,17 +81,17 @@ export default function StudentTablet2() {
             setInteractionsData(data);
             setCurrentScreen("showInteractions");
         });
+        socket.on("interactionExplained", (data) => {
+            setInteractionsExplainedData(data);
+            setCurrentScreen("understandInteraction");
+        })
 
-
-        socket.on("animation", () => {
-            setAnimationInProgress(true);
-            setCurrentScreen("animation");
-        });
-
-        socket.on("askQuestionGroupOne", (data) => {
+        socket.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
-            setAnimationInProgress(false);
             setCurrentScreen("animationQuestion");
+        });
+        socket.on("conclusion", () => {
+            setCurrentScreen("conclusion");
         });
 
         return () => {
@@ -142,11 +144,14 @@ export default function StudentTablet2() {
                 <UnderstandInteraction themeSelected={themeSelected} />
             )}
 
-            {currentScreen === "animation" && <AnimationScreen />}
 
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
             )}
+            {currentScreen === "conclusion" && (
+                <Conclusion/>
+            )}
+
         </>
     );
 }

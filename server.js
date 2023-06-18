@@ -328,21 +328,18 @@ const animals = {
 
 const answersAnimation = {
     "Mutualisme": {
-        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
         "correctAnswer": 1
     },
     "Predation": {
-        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
         "correctAnswer": 2
     },
     "Commensalisme": {
-        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
@@ -476,11 +473,7 @@ io.on("connection", (socket) => {
             io.emit('themeIsSelectedShowThemeExplanation', theme);
             setTimeout(() => {
                randomTheme = theme
-                console.log(teamGroupOne);
-                console.log(teamGroupTwo);
                 const dataAnimals = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-                console.log(randomTheme);
-                console.log(io.emit('showAnimals', teamGroupOne, teamGroupTwo, animals[randomTheme]))
                 io.emit('showAnimals', dataAnimals);
 
             }, themeTimer);
@@ -494,42 +487,35 @@ io.on("connection", (socket) => {
 
     socket.on("animalChosen", (animalChosen) => {
         animalChosenValue = animalChosen;
-        console.log("ici");
         numberOfChosenAnimals++;
-        console.log(numberOfChosenAnimals)
         if (numberOfChosenAnimals >= 2) {
-            console.log(animals[randomTheme]);
-            console.log( io.emit("showInteractions", animals[randomTheme]));
             io.emit("showInteractions", animals[randomTheme]);
         }
     });
 
-    socket.on("showInteractions", () => {
+    socket.on("undestrandInteraction", () => {
         numberOfButtonClicked++;
         console.log(numberOfButtonClicked);
         if(numberOfButtonClicked >= 2) {
+            console.log(io.emit("interactionExplained", randomTheme));
             io.emit("interactionExplained", randomTheme);
+            console.log(answersAnimation[randomTheme])
             setTimeout(() => {
-                io.emit('animationIsDoneAskQuestion', answersAnimation[randomTheme])
+                io.emit('askQuestion', answersAnimation[randomTheme])
             }, themeTimer);
         }
     })
 
-    // ANIMATION IS DONE  ////////////////////////////
-
     socket.on("animationIsDoneAskQuestion", (data) => {
-        io.emit("askQuestion", data)
+        console.log(io.emit("askQuestion", data))
+        io.emit('askQuestion', data)
     })
 
     // ANIMATION IS ANSWERED  ////////////////////////
     socket.on("animationQuestionIsAnswered", (answerId) => {
-        numberOfAnimationQuestionAnswered++
-        IdOfAnimationQuestionAnswered.push(answerId)
-        socket.broadcast.emit("animationQuestionIsAnswered", answerId);
-        if (numberOfAnimationQuestionAnswered >= 2) {
-            checkIfAnimationQuestionIsCorrect()
-            const data = [isFinalQuestionIsCorrect, answersAnimation[randomTheme].correctAnswer]
-            io.emit("revealAnimationCorrectAnswer", data)
+        numberOfAnimationQuestionAnswered++;
+        if(numberOfAnimationQuestionAnswered >=2) {
+            io.emit("conclusion");
         }
     })
 
