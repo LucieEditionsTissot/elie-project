@@ -136,10 +136,6 @@ export default function StudentTablet2() {
                 <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
             )}
 
-            {currentScreen === "showAnswer" && (
-                <ShowAnswer data={showAnswer} client={2} groupName={"teamGroupTwo"} />
-            )}
-
             {currentScreen === "animation" && <AnimationScreen />}
 
             {currentScreen === "animationQuestion" && (

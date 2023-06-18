@@ -26,7 +26,7 @@ export default function StudentTablet1() {
     const [turnByTurnFinished, setTurnByTurnFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
     const [showAnswer, setShowAnswer] = useState(false);
-    const [correctAnswer, setCorrectAnswer] = useState("");
+    const [selectedCard, setSelectedCard] = useState(null);
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -65,7 +65,7 @@ export default function StudentTablet1() {
         });
         socket.on("showAnimals", (data) => {
             setExplanationFinished(true);
-            setAnimalCards(data);
+            setSelectedCard(data)
             setCurrentScreen("animals");
         });
 
@@ -126,10 +126,6 @@ export default function StudentTablet1() {
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
-            {currentScreen === "showAnswer" && (
-                <ShowAnswer data={showAnswer} client={1} groupName={"teamGroupOne"}/>
-
-            )}
 
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />

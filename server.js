@@ -497,9 +497,7 @@ io.on("connection", (socket) => {
         numberOfChosenAnimals++;
         if (numberOfChosenAnimals >= 2) {
             console.log(animals[randomTheme]);
-            const dataAnwser = [teams, teamGroupOne, teamGroupTwo, randomTheme, animalChosen]
-            console.log(dataAnwser)
-            io.emit("showAnswer",  (dataAnwser) );
+            io.emit("showAnswer",  (animalChosen) );
         }
     });
 

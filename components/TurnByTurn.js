@@ -1,7 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
-import {randomBytes} from "crypto";
-import {pick} from "next/dist/lib/pick";
 
 const socket = io('localhost:3000')
 
@@ -160,14 +158,9 @@ function TurnByTurn(props) {
         const lastCard = document.querySelectorAll(".animal:not(.hidden)")
         const answerText = document.querySelector(".answerText")
         if (lastCard.length === 1 && isValueSubmit === false) {
-            setIsValueSubmit(true);
-            const animalChosen = Number(lastCard[0].id);
+            setIsValueSubmit(true)
+            const animalChosen = Number(lastCard.id)
             socket.emit("animalChosen", animalChosen)
-            if (Number(lastCard[0].id) === Number(correctAnswer)) {
-                answerText.innerHTML = "Bonne réponse !"
-            } else {
-                answerText.innerHTML = "Mauvaise réponse !"
-            }
         }
 
     }
