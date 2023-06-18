@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
+import ShowAnswer from "./ShowAnswer";
 
 const socket = io('localhost:3000')
 
@@ -19,6 +20,7 @@ function TurnByTurn(props) {
     const [animals, setAnimals] = useState({});
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [isValueSubmit, setIsValueSubmit] = useState(false);
+    const [isAnimalChosen, setAnimalChosen] = useState(null);
 
     useEffect(() => {
         setData(props.data)
@@ -159,8 +161,9 @@ function TurnByTurn(props) {
         const answerText = document.querySelector(".answerText")
         if (lastCard.length === 1 && isValueSubmit === false) {
             setIsValueSubmit(true)
-            const animalChosen = Number(lastCard.id)
-            socket.emit("animalChosen", animalChosen)
+            const animalChosen = lastCard[0].innerText;
+            setAnimalChosen(animalChosen);
+            socket.emit("animalChosen", Number(lastCard[0].id));
         }
 
     }
@@ -198,7 +201,7 @@ function TurnByTurn(props) {
                 <p>Validate</p>
             </div>
 
-            <h5 className={"answerText"}></h5>
+            {isValueSubmit && isAnimalChosen && <ShowAnswer correctAnswer={isAnimalChosen}/> }
 
             <div className={"waitingScreen"}>
 

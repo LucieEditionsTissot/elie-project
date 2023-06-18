@@ -27,7 +27,7 @@ let numberOfRulesUnderstood = 0
 const themeTimer = 5000
 let randomTheme = null;
 let numberOfChosenAnimals = 0
-
+let numberOfButtonClicked =0;
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
 
@@ -416,6 +416,7 @@ io.on("connection", (socket) => {
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
+    numberOfButtonClicked =0;
 
 
     socket.on("teamChosen", (index) => {
@@ -495,11 +496,24 @@ io.on("connection", (socket) => {
         animalChosenValue = animalChosen;
         console.log("ici");
         numberOfChosenAnimals++;
+        console.log(numberOfChosenAnimals)
         if (numberOfChosenAnimals >= 2) {
             console.log(animals[randomTheme]);
-            io.emit("showAnswer",  (animalChosen) );
+            console.log( io.emit("showInteractions", animals[randomTheme]));
+            io.emit("showInteractions", animals[randomTheme]);
         }
     });
+
+    socket.on("showInteractions", () => {
+        numberOfButtonClicked++;
+        console.log(numberOfButtonClicked);
+        if(numberOfButtonClicked >= 2) {
+            io.emit("interactionExplained", randomTheme);
+            setTimeout(() => {
+                io.emit('animationIsDoneAskQuestion', answersAnimation[randomTheme])
+            }, themeTimer);
+        }
+    })
 
     // ANIMATION IS DONE  ////////////////////////////
 

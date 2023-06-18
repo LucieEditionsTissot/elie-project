@@ -11,6 +11,8 @@ import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import ThemeExplanation from "../components/ThemeExplanation";
 import AnimalCards from "../components/AnimalCards";
 import ShowAnswer from "../components/ShowAnswer";
+import ShowInteractions from "../components/ShowInteractions";
+import UnderstandInteraction from "../components/UnderstandInteraction";
 
 const socket = io("localhost:3000");
 
@@ -27,6 +29,7 @@ export default function StudentTablet2() {
     const [animalCards, setAnimalCards] = useState([]);
     const [showAnswer, setShowAnswer] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState("");
+    const [interactionsData, setInteractionsData] = useState(null);
 
     useEffect(() => {
         socket.emit("registerStudent2");
@@ -72,6 +75,11 @@ export default function StudentTablet2() {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
+        socket.on("showInteractions", (data) => {
+            setInteractionsData(data);
+            setCurrentScreen("showInteractions");
+        });
+
 
         socket.on("animation", () => {
             setAnimationInProgress(true);
@@ -84,13 +92,6 @@ export default function StudentTablet2() {
             setCurrentScreen("animationQuestion");
         });
 
-        socket.on("showAnswer", (data) => {
-            setShowAnswer(true);
-            setCorrectAnswer(data.correctAnswer);
-            setCurrentScreen("showAnswer");
-        });
-
-        // Clean up listeners when component unmounts
         return () => {
             socket.off("teamsAreDoneShowRules");
             socket.off("rulesAreDoneSelectThemeRandomly");
@@ -104,9 +105,6 @@ export default function StudentTablet2() {
         };
     }, []);
 
-    function handleThemesButtonClicked() {
-        setCurrentScreen("themeExplanation");
-    }
 
     return (
         <>
@@ -134,6 +132,14 @@ export default function StudentTablet2() {
 
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
+            )}
+
+            {currentScreen === "showInteractions" && (
+                <ShowInteractions data={interactionsData} />
+            )}
+
+            {currentScreen === "understandInteraction" && (
+                <UnderstandInteraction themeSelected={themeSelected} />
             )}
 
             {currentScreen === "animation" && <AnimationScreen />}

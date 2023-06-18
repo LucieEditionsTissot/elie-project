@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 const socket = io('localhost:3000');
 
 function AnimalCards(props) {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(props.data);
     const [teams, setTeams] = useState([]);
     const [randomTheme, setRandomTheme] = useState("");
     const [teamIndex, setTeamIndex] = useState(null);
@@ -14,7 +14,6 @@ function AnimalCards(props) {
     const [selectedAnimal, setSelectedAnimal] = useState(null);
 
     useEffect(() => {
-        setData(props.data);
         setTeams(props.data[0]);
         setRandomTheme(props.data[3]);
         setTeamIndex(props.data[Number(props.client)]);

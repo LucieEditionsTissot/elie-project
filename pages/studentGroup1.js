@@ -10,6 +10,7 @@ import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import AnimalCards from "../components/AnimalCards";
 import ShowAnswer from "../components/ShowAnswer";
+import ShowInteractions from "../components/ShowInteractions";
 
 const socket = io("localhost:3000");
 
@@ -25,8 +26,8 @@ export default function StudentTablet1() {
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [turnByTurnFinished, setTurnByTurnFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
-    const [showAnswer, setShowAnswer] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
+    const [interactionsData, setInteractionsData] = useState(null);
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -65,7 +66,7 @@ export default function StudentTablet1() {
         });
         socket.on("showAnimals", (data) => {
             setExplanationFinished(true);
-            setSelectedCard(data)
+            setAnimalCards(data);
             setCurrentScreen("animals");
         });
 
@@ -74,17 +75,15 @@ export default function StudentTablet1() {
             setCurrentScreen("turnByTurn");
         });
 
+        socket.on("showInteractions", (data) => {
+            setInteractionsData(data);
+            setCurrentScreen("showInteractions");
+        });
 
         socket.on("askQuestionGroupOne", (data) => {
             setAnimationQuestionData(data);
             setAnimationInProgress(false);
             setCurrentScreen("animationQuestion");
-        });
-
-        socket.on("showAnswer", (data) => {
-            setTurnByTurnFinished(true);
-            setShowAnswer(data);
-            setCurrentScreen("showAnswer");
         });
 
         return () => {
@@ -94,6 +93,7 @@ export default function StudentTablet1() {
             socket.off("themeIsSelectedShowThemeExplanation");
             socket.off("showAnimals");
             socket.off("startTurnByTurn");
+            socket.off("showInteractions");
             socket.off("animation");
             socket.off("askQuestionGroupOne");
             socket.off("showAnswerGroupOne");
@@ -119,13 +119,16 @@ export default function StudentTablet1() {
             {currentScreen === "themeExplanation" && (
                 <ThemeExplanationScreen themeSelected={themeSelected} />
             )}
+
             {currentScreen === "animals" && (
                 <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"} />
             )}
+
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
+            {currentScreen === "showInteractions" && <ShowInteractions data={interactionsData} />}
 
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
