@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
-import {randomBytes} from "crypto";
-import {pick} from "next/dist/lib/pick";
+import ShowAnswer from "./ShowAnswer";
 
 const socket = io('localhost:3000')
 
@@ -21,6 +20,7 @@ function TurnByTurn(props) {
     const [animals, setAnimals] = useState({});
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [isValueSubmit, setIsValueSubmit] = useState(false);
+    const [isAnimalChosen, setAnimalChosen] = useState(null);
 
     useEffect(() => {
         setData(props.data)
@@ -161,12 +161,9 @@ function TurnByTurn(props) {
         const answerText = document.querySelector(".answerText")
         if (lastCard.length === 1 && isValueSubmit === false) {
             setIsValueSubmit(true)
-            socket.emit("animalChosen", Number(lastCard.id))
-            if (Number(lastCard[0].id) === Number(correctAnswer)) {
-                answerText.innerHTML = "Bonne réponse !"
-            } else {
-                answerText.innerHTML = "Mauvaise réponse !"
-            }
+            const animalChosen = lastCard[0].innerText;
+            setAnimalChosen(animalChosen);
+            socket.emit("animalChosen", Number(lastCard[0].id));
         }
 
     }
@@ -190,7 +187,7 @@ function TurnByTurn(props) {
                             className="animal"
                             onClick={(e) => handleFlipCard(e)}
                         >
-                            <p>{animal}</p>
+                            <p>{animal.name}</p>
                         </div>
                     ))
                 ) : null}
@@ -204,7 +201,7 @@ function TurnByTurn(props) {
                 <p>Validate</p>
             </div>
 
-            <h5 className={"answerText"}></h5>
+            {isValueSubmit && isAnimalChosen && <ShowAnswer correctAnswer={isAnimalChosen}/> }
 
             <div className={"waitingScreen"}>
 

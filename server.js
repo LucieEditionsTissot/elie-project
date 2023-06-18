@@ -24,16 +24,16 @@ let numberOfTeamSelected = 0
 
 let numberOfRulesUnderstood = 0
 
-let randomTheme = ""
 const themeTimer = 5000
-
+let randomTheme = null;
 let numberOfChosenAnimals = 0
-
+let numberOfButtonClicked =0;
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
 
 let isFinalQuestionIsCorrect = true
-
+let isInformationUnderstood = 0
+let animalChosenValue = null;
 const teams = {
     0: ["Lucie", "Yohan", "Jean"],
     1: ["Sacha", "Léo", "Guilhem"],
@@ -61,35 +61,270 @@ const themeExplanation = {
 const animals = {
     "Mutualisme": {
         "teamGroupOne": {
-            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
+            "animals": [
+                {
+                    "name": "Biche",
+                    "explanation": "Explication sur la biche...",
+                    "image": "chemin/vers/image-biche.jpg",
+                    "icon": "chemin/vers/icon-biche.svg"
+                },
+                {
+                    "name": "Truite",
+                    "explanation": "Explication sur la truite...",
+                    "image": "chemin/vers/image-truite.jpg",
+                    "icon": "chemin/vers/icon-truite.svg"
+                },
+                {
+                    "name": "Renard",
+                    "explanation": "Explication sur le renard...",
+                    "image": "chemin/vers/image-renard.jpg",
+                    "icon": "chemin/vers/icon-renard.svg"
+                },
+                {
+                    "name": "Salamandre",
+                    "explanation": "Explication sur la salamandre...",
+                    "image": "chemin/vers/image-salamandre.jpg",
+                    "icon": "chemin/vers/icon-salamandre.svg"
+                },
+                {
+                    "name": "Marmotte",
+                    "explanation": "Explication sur la marmotte...",
+                    "image": "chemin/vers/image-marmotte.jpg",
+                    "icon": "chemin/vers/icon-marmotte.svg"
+                },
+                {
+                    "name": "Cerf",
+                    "explanation": "Explication sur le cerf...",
+                    "image": "chemin/vers/image-cerf.jpg",
+                    "icon": "chemin/vers/icon-cerf.svg"
+                },
+                {
+                    "name": "Crapaud",
+                    "explanation": "Explication sur le crapaud...",
+                    "image": "chemin/vers/image-crapaud.jpg",
+                    "icon": "chemin/vers/icon-crapaud.svg"
+                },
+                {
+                    "name": "Loup",
+                    "explanation": "Explication sur le loup...",
+                    "image": "chemin/vers/image-loup.jpg",
+                    "icon": "chemin/vers/icon-loup.svg"
+                },
+                {
+                    "name": "Lapin",
+                    "explanation": "Explication sur le lapin...",
+                    "image": "chemin/vers/image-lapin.jpg",
+                    "icon": "chemin/vers/icon-lapin.svg"
+                },
+                {
+                    "name": "Aigle",
+                    "explanation": "Explication sur l'aigle...",
+                    "image": "chemin/vers/image-aigle.jpg",
+                    "icon": "chemin/vers/icon-aigle.svg"
+                }
+            ],
             "answer": 7
         },
         "teamGroupTwo": {
-            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
+            "animals": [
+                {
+                    "name": "Lézard",
+                    "explanation": "Explication sur le lézard...",
+                    "image": "chemin/vers/image-lezard.jpg",
+                    "icon": "chemin/vers/icon-lezard.svg"
+                },
+                {
+                    "name": "Biche",
+                    "explanation": "Explication sur la biche...",
+                    "image": "chemin/vers/image-biche.jpg",
+                    "icon": "chemin/vers/icon-biche.svg"
+                },
+                {
+                    "name": "Hibou",
+                    "explanation": "Explication sur le hibou...",
+                    "image": "chemin/vers/image-hibou.jpg",
+                    "icon": "chemin/vers/icon-hibou.svg"
+                },
+                {
+                    "name": "Papillon",
+                    "explanation": "Explication sur le papillon...",
+                    "image": "chemin/vers/image-papillon.jpg",
+                    "icon": "chemin/vers/icon-papillon.svg"
+                },
+                {
+                    "name": "Ecureuil",
+                    "explanation": "Explication sur l'écureuil...",
+                    "image": "chemin/vers/image-ecureuil.jpg",
+                    "icon": "chemin/vers/icon-ecureuil.svg"
+                },
+                {
+                    "name": "Coccinelle",
+                    "explanation": "Explication sur la coccinelle...",
+                    "image": "chemin/vers/image-coccinelle.jpg",
+                    "icon": "chemin/vers/icon-coccinelle.svg"
+                },
+                {
+                    "name": "Faucon",
+                    "explanation": "Explication sur le faucon...",
+                    "image": "chemin/vers/image-faucon.jpg",
+                    "icon": "chemin/vers/icon-faucon.svg"
+                },
+                {
+                    "name": "Chouette",
+                    "explanation": "Explication sur la chouette...",
+                    "image": "chemin/vers/image-chouette.jpg",
+                    "icon": "chemin/vers/icon-chouette.svg"
+                },
+                {
+                    "name": "Rat",
+                    "explanation": "Explication sur le rat...",
+                    "image": "chemin/vers/image-rat.jpg",
+                    "icon": "chemin/vers/icon-rat.svg"
+                },
+                {
+                    "name": "Loup",
+                    "explanation": "Explication sur le loup...",
+                    "image": "chemin/vers/image-loup.jpg",
+                    "icon": "chemin/vers/icon-loup.svg"
+                }
+            ],
             "answer": 4
         }
     },
     "Predation": {
         "teamGroupOne": {
-            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer": 7
+            "animals": [
+                {
+                    "name": "Biche",
+                    "explanation": "Explication sur la biche...",
+                    "image": "chemin/vers/image-biche.jpg",
+                    "icon": "chemin/vers/icon-biche.svg"
+                },
+                {
+                    "name": "Truite",
+                    "explanation": "Explication sur la truite...",
+                    "image": "chemin/vers/image-truite.jpg",
+                    "icon": "chemin/vers/icon-truite.svg"
+                },
+                {
+                    "name": "Renard",
+                    "explanation": "Explication sur le renard...",
+                    "image": "chemin/vers/image-renard.jpg",
+                    "icon": "chemin/vers/icon-renard.svg"
+                },
+                {
+                    "name": "Salamandre",
+                    "explanation": "Explication sur la salamandre...",
+                    "image": "chemin/vers/image-salamandre.jpg",
+                    "icon": "chemin/vers/icon-salamandre.svg"
+                },
+                {
+                    "name": "Marmotte",
+                    "explanation": "Explication sur la marmotte...",
+                    "image": "chemin/vers/image-marmotte.jpg",
+                    "icon": "chemin/vers/icon-marmotte.svg"
+                },
+                {
+                    "name": "Cerf",
+                    "explanation": "Explication sur le cerf...",
+                    "image": "chemin/vers/image-cerf.jpg",
+                    "icon": "chemin/vers/icon-cerf.svg"
+                },
+                {
+                    "name": "Crapaud",
+                    "explanation": "Explication sur le crapaud...",
+                    "image": "chemin/vers/image-crapaud.jpg",
+                    "icon": "chemin/vers/icon-crapaud.svg"
+                },
+                {
+                    "name": "Loup",
+                    "explanation": "Explication sur le loup...",
+                    "image": "chemin/vers/image-loup.jpg",
+                    "icon": "chemin/vers/icon-loup.svg"
+                },
+                {
+                    "name": "Lapin",
+                    "explanation": "Explication sur le lapin...",
+                    "image": "chemin/vers/image-lapin.jpg",
+                    "icon": "chemin/vers/icon-lapin.svg"
+                },
+                {
+                    "name": "Aigle",
+                    "explanation": "Explication sur l'aigle...",
+                    "image": "chemin/vers/image-aigle.jpg",
+                    "icon": "chemin/vers/icon-aigle.svg"
+                }
+            ],
+            "answer": 9
         },
         "teamGroupTwo": {
-            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer": 4
-        }
-    },
-    "Commensalisme": {
-        "teamGroupOne": {
-            "animals": ["Biche", "Truite", "Renard", "Salamandre", "Marmotte", "Cerf", "Crapaud", "Loup", "Lapin", "Aigle"],
-            "answer": 7
-        },
-        "teamGroupTwo": {
-            "animals": ["Lézard", "Biche", "Hibou", "Mouton", "Corbeau", "Chat", "Oie", "Chevreuil", "Canard", "Vache"],
-            "answer": 4
+            "animals": [
+                {
+                    "name": "Lézard",
+                    "explanation": "Explication sur le lézard...",
+                    "image": "chemin/vers/image-lezard.jpg",
+                    "icon": "chemin/vers/icon-lezard.svg"
+                },
+                {
+                    "name": "Biche",
+                    "explanation": "Explication sur la biche...",
+                    "image": "chemin/vers/image-biche.jpg",
+                    "icon": "chemin/vers/icon-biche.svg"
+                },
+                {
+                    "name": "Hibou",
+                    "explanation": "Explication sur le hibou...",
+                    "image": "chemin/vers/image-hibou.jpg",
+                    "icon": "chemin/vers/icon-hibou.svg"
+                },
+                {
+                    "name": "Papillon",
+                    "explanation": "Explication sur le papillon...",
+                    "image": "chemin/vers/image-papillon.jpg",
+                    "icon": "chemin/vers/icon-papillon.svg"
+                },
+                {
+                    "name": "Ecureuil",
+                    "explanation": "Explication sur l'écureuil...",
+                    "image": "chemin/vers/image-ecureuil.jpg",
+                    "icon": "chemin/vers/icon-ecureuil.svg"
+                },
+                {
+                    "name": "Coccinelle",
+                    "explanation": "Explication sur la coccinelle...",
+                    "image": "chemin/vers/image-coccinelle.jpg",
+                    "icon": "chemin/vers/icon-coccinelle.svg"
+                },
+                {
+                    "name": "Faucon",
+                    "explanation": "Explication sur le faucon...",
+                    "image": "chemin/vers/image-faucon.jpg",
+                    "icon": "chemin/vers/icon-faucon.svg"
+                },
+                {
+                    "name": "Chouette",
+                    "explanation": "Explication sur la chouette...",
+                    "image": "chemin/vers/image-chouette.jpg",
+                    "icon": "chemin/vers/icon-chouette.svg"
+                },
+                {
+                    "name": "Rat",
+                    "explanation": "Explication sur le rat...",
+                    "image": "chemin/vers/image-rat.jpg",
+                    "icon": "chemin/vers/icon-rat.svg"
+                },
+                {
+                    "name": "Loup",
+                    "explanation": "Explication sur le loup...",
+                    "image": "chemin/vers/image-loup.jpg",
+                    "icon": "chemin/vers/icon-loup.svg"
+                }
+            ],
+            "answer": 6
         }
     }
-}
+};
+
 
 const answersAnimation = {
     "Mutualisme": {
@@ -114,7 +349,6 @@ const answersAnimation = {
         "correctAnswer": 3
     }
 }
-
 io.on("connection", (socket) => {
 
     if (interval) {
@@ -182,17 +416,16 @@ io.on("connection", (socket) => {
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
+    numberOfButtonClicked =0;
+
 
     socket.on("teamChosen", (index) => {
-        console.log(index);
         socket.broadcast.emit("teamChosen", index);
     })
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
         numberOfTeamSelected++
-        console.log(numberOfTeamSelected + "Groupe 1");
-        console.log(teamGroupOne);
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -201,8 +434,6 @@ io.on("connection", (socket) => {
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
         numberOfTeamSelected++
-        console.log(numberOfTeamSelected + "Groupe 2");
-        console.log(teamGroupTwo);
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -224,14 +455,8 @@ io.on("connection", (socket) => {
     })
 
     // THEME /////////////////////////////////////////
-    // THEME /////////////////////////////////////////
 
     const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
-    const themeScenarios = {
-        mutualisme: "Scénario du mutualisme",
-        predation: "Scénario de la prédation",
-        commensalisme: "Scénario du commensalisme"
-    };
 
     function chooseRandomTheme() {
         const randomIndex = Math.floor(Math.random() * themes.length);
@@ -239,35 +464,54 @@ io.on("connection", (socket) => {
     }
 
     socket.on("chooseTheme", () => {
-        const randomTheme = chooseRandomTheme();
-        console.log("Random theme selected: ", randomTheme);
-        io.to("client1").emit("themeSelected", { theme: randomTheme });
-        io.to("client2").emit("themeSelected", { theme: randomTheme });
+        const theme = chooseRandomTheme();
+       randomTheme = theme
+        io.to("client1").emit("themeSelected", { theme: theme });
+        io.to("client2").emit("themeSelected", { theme: theme });
     });
 
-    socket.on("themeIsRandomlyChosen", (randomTheme) => {
-        console.log("Random theme: ", randomTheme);
+    socket.on("themeIsRandomlyChosen", (theme) => {
 
         setTimeout(() => {
-            io.emit('themeIsSelectedShowThemeExplanation', randomTheme);
-            console.log("Theme scenario: ", themeScenarios[randomTheme]);
+            io.emit('themeIsSelectedShowThemeExplanation', theme);
             setTimeout(() => {
-                const themeIndex = randomTheme[1];
-                console.log(teams[teamGroupOne]);
-                console.log(teams[teamGroupTwo]);
-                console.log(Object.values(animals)[themeIndex]);
-                console.log(animals[randomTheme]);
-                const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-            io.emit('startTurnByTurn', dataTurnByTurn);
+               randomTheme = theme
+                console.log(teamGroupOne);
+                console.log(teamGroupTwo);
+                const dataAnimals = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+                console.log(randomTheme);
+                console.log(io.emit('showAnimals', teamGroupOne, teamGroupTwo, animals[randomTheme]))
+                io.emit('showAnimals', dataAnimals);
+
             }, themeTimer);
         }, themeTimer);
     });
+    socket.on("startGame", (randomTheme) => {
+        const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+        io.emit('startTurnByTurn', dataTurnByTurn);
+    })
     // ANIMAL CHOSEN  ////////////////////////////////
 
-    socket.on("animalChosen", () => {
-        numberOfChosenAnimals++
+    socket.on("animalChosen", (animalChosen) => {
+        animalChosenValue = animalChosen;
+        console.log("ici");
+        numberOfChosenAnimals++;
+        console.log(numberOfChosenAnimals)
         if (numberOfChosenAnimals >= 2) {
-            io.emit("animation", answersAnimation[randomTheme])
+            console.log(animals[randomTheme]);
+            console.log( io.emit("showInteractions", animals[randomTheme]));
+            io.emit("showInteractions", animals[randomTheme]);
+        }
+    });
+
+    socket.on("showInteractions", () => {
+        numberOfButtonClicked++;
+        console.log(numberOfButtonClicked);
+        if(numberOfButtonClicked >= 2) {
+            io.emit("interactionExplained", randomTheme);
+            setTimeout(() => {
+                io.emit('animationIsDoneAskQuestion', answersAnimation[randomTheme])
+            }, themeTimer);
         }
     })
 
@@ -278,7 +522,6 @@ io.on("connection", (socket) => {
     })
 
     // ANIMATION IS ANSWERED  ////////////////////////
-
     socket.on("animationQuestionIsAnswered", (answerId) => {
         numberOfAnimationQuestionAnswered++
         IdOfAnimationQuestionAnswered.push(answerId)
