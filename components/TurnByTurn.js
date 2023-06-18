@@ -160,8 +160,9 @@ function TurnByTurn(props) {
         const lastCard = document.querySelectorAll(".animal:not(.hidden)")
         const answerText = document.querySelector(".answerText")
         if (lastCard.length === 1 && isValueSubmit === false) {
-            setIsValueSubmit(true)
-            socket.emit("animalChosen", Number(lastCard.id))
+            setIsValueSubmit(true);
+            const animalChosen = Number(lastCard[0].id);
+            socket.emit("animalChosen", animalChosen)
             if (Number(lastCard[0].id) === Number(correctAnswer)) {
                 answerText.innerHTML = "Bonne réponse !"
             } else {
@@ -190,7 +191,7 @@ function TurnByTurn(props) {
                             className="animal"
                             onClick={(e) => handleFlipCard(e)}
                         >
-                            <p>{animal}</p>
+                            <p>{animal.name}</p>
                         </div>
                     ))
                 ) : null}

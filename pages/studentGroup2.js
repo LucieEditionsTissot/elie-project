@@ -9,6 +9,8 @@ import TurnByTurn from "../components/TurnByTurn";
 import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import ThemeExplanation from "../components/ThemeExplanation";
+import AnimalCards from "../components/AnimalCards";
+import ShowAnswer from "../components/ShowAnswer";
 
 const socket = io("localhost:3000");
 
@@ -22,6 +24,9 @@ export default function StudentTablet2() {
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
+    const [animalCards, setAnimalCards] = useState([]);
+    const [showAnswer, setShowAnswer] = useState(false);
+    const [correctAnswer, setCorrectAnswer] = useState("");
 
     useEffect(() => {
         socket.emit("registerStudent2");
@@ -38,37 +43,37 @@ export default function StudentTablet2() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-
-
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
         });
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
-            socket.emit('chooseTheme');
+            socket.emit("chooseTheme");
             setCurrentScreen("theme");
-            console.log("ici");
         });
         socket.on("themeSelected", (data) => {
-            console.log(data.theme);
             setThemeSelected(data.theme);
             setTimeout(() => {
-                socket.emit('themeIsRandomlyChosen', data.theme);
+                socket.emit("themeIsRandomlyChosen", data.theme);
             }, 1000);
         });
 
         socket.on("themeIsSelectedShowThemeExplanation", (data) => {
-            console.log("coucou")
             setCurrentScreen("themeExplanation");
         });
 
-        socket.on("startTurnByTurn", (data) => {
+        socket.on("showAnimals", (data) => {
             setExplanationFinished(true);
+            setAnimalCards(data);
+            setCurrentScreen("animals");
+        });
+
+        socket.on("startTurnByTurn", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
 
-        socket.on("animationGroupTwo", () => {
+        socket.on("animation", () => {
             setAnimationInProgress(true);
             setCurrentScreen("animation");
         });
@@ -79,7 +84,24 @@ export default function StudentTablet2() {
             setCurrentScreen("animationQuestion");
         });
 
+        socket.on("showAnswer", (data) => {
+            setShowAnswer(true);
+            setCorrectAnswer(data.correctAnswer);
+            setCurrentScreen("showAnswer");
+        });
 
+        // Clean up listeners when component unmounts
+        return () => {
+            socket.off("teamsAreDoneShowRules");
+            socket.off("rulesAreDoneSelectThemeRandomly");
+            socket.off("themeSelected");
+            socket.off("themeIsSelectedShowThemeExplanation");
+            socket.off("showAnimals");
+            socket.off("startTurnByTurn");
+            socket.off("animation");
+            socket.off("askQuestionGroupOne");
+            socket.off("showAnswer");
+        };
     }, []);
 
     function handleThemesButtonClicked() {
@@ -100,16 +122,22 @@ export default function StudentTablet2() {
                 <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
             )}
 
-            {currentScreen === "theme" && (
-                <ThemeScreen themeSelected={themeSelected} />
-            )}
+            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected} />}
 
             {currentScreen === "themeExplanation" && (
                 <ThemeExplanationScreen themeSelected={themeSelected} />
             )}
 
+            {currentScreen === "animals" && (
+                <AnimalCards data={animalCards} client={2} groupName={"teamGroupTwo"} />
+            )}
+
             {currentScreen === "turnByTurn" && (
                 <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
+            )}
+
+            {currentScreen === "showAnswer" && (
+                <ShowAnswer data={showAnswer} client={2} groupName={"teamGroupTwo"} />
             )}
 
             {currentScreen === "animation" && <AnimationScreen />}
