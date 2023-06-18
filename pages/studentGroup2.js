@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
-import ShowTeams from "./components/ShowTeams";
-import ThemeScreen from "./components/ThemeScreen";
-import RulesScreen from "./components/RulesScreen";
-import ThemeExplanationScreen from "./components/ThemeExplanationScreen";
-import TurnByTurn from "./components/TurnByTurn";
-import AnimationScreen from "./components/AnimationScreen";
-import AnimationQuestionScreen from "./components/AnimationQuestionScreen";
+import ShowTeams from "../components/ShowTeams";
+import ThemeScreen from "../components/ThemeScreen";
+import RulesScreen from "../components/RulesScreen";
+import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
+import TurnByTurn from "../components/TurnByTurn";
+import AnimationScreen from "../components/AnimationScreen";
+import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 
 const socket = io('localhost:3000')
 
