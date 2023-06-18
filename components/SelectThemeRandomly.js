@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from "react";
 function SelectThemeRandomly(props) {
 
     return (
-        <section id={"theme"} className={"hide"}>
+        <section id={"theme"}>
 
             <h1>Selection du thème en cours</h1>
 

@@ -35,14 +35,14 @@ let IdOfAnimationQuestionAnswered = []
 let isFinalQuestionIsCorrect = true
 
 const teams = {
-    "Violette": ["Lucie", "Yohan", "Jean"],
-    "Cyan": ["Sacha", "Léo", "Guilhem"],
-    "Jaune": ["Léa", "Baptiste", "Timothée"],
-    "Rouge": ["Raphaël", "Virgile", "Mathieu"],
-    "Verte": ["Alma", "Jeanne", "Emma"],
-    "Orange": ["Rose", "Gabrielle", "Inès"],
-    "Rose": ["Paul", "Léon", "Lucas"],
-    "Minuit": ["Alice", "Lou", "Théo"]
+    0: ["Lucie", "Yohan", "Jean"],
+    1: ["Sacha", "Léo", "Guilhem"],
+    2: ["Léa", "Baptiste", "Timothée"],
+    3: ["Raphaël", "Virgile", "Mathieu"],
+    4: ["Alma", "Jeanne", "Emma"],
+    5: ["Rose", "Gabrielle", "Inès"],
+    6: ["Paul", "Léon", "Lucas"],
+    7: ["Alice", "Lou", "Théo"]
 }
 
 const rules = {
@@ -93,21 +93,21 @@ const animals = {
 
 const answersAnimation = {
     "Mutualisme": {
-        "animation": "video/Anim_indice_01_003.mp4",
+        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
         "correctAnswer": 1
     },
     "Predation": {
-        "animation": "video/Anim_indice_01_003.mp4",
+        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
         "correctAnswer": 2
     },
     "Commensalisme": {
-        "animation": "video/Anim_indice_01_003.mp4",
+        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
@@ -136,9 +136,45 @@ io.on("connection", (socket) => {
         console.log('Client 3 enregistré :', socket.id);
     });
 
-    // TEAMS /////////////////////////////////////////
 
     io.emit("startExperience", teams);
+    socket.on('registerAnimationClient', () => {
+        console.log('Animation client registered');
+
+        const ambiance = {
+            id: 1,
+            audios: ['audio/Corbeau.mov'],
+            videos: ['video/Ambience.mp4'],
+        };
+        socket.emit('scenario', ambiance);
+
+        setTimeout(() => {
+            const scenario2 = {
+                id: 2,
+                audios: ['audio/loup.mov'],
+                videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4'],
+            };
+            socket.emit('scenario', scenario2);
+        }, 10000);
+
+        setTimeout(() => {
+            const scenario3 = {
+                id: 3,
+                audios: ['audio/Corbeau.mov'],
+                videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+            };
+            socket.emit('scenario', scenario3);
+        }, 20000);
+
+        setTimeout(() => {
+            const scenario4 = {
+                id: 4,
+                audios: ['audio/loup.mov'],
+                videos: ['video/indices/indice1/LC_C_outro_indice_01.mp4'],
+            };
+            socket.emit('scenario', scenario4);
+        }, 30000);
+    });
 
     numberOfTeamSelected = 0
     numberOfRulesUnderstood = 0
@@ -148,12 +184,15 @@ io.on("connection", (socket) => {
     isFinalQuestionIsCorrect = true
 
     socket.on("teamChosen", (index) => {
+        console.log(index);
         socket.broadcast.emit("teamChosen", index);
     })
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
         numberOfTeamSelected++
+        console.log(numberOfTeamSelected + "Groupe 1");
+        console.log(teamGroupOne);
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -162,6 +201,8 @@ io.on("connection", (socket) => {
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
         numberOfTeamSelected++
+        console.log(numberOfTeamSelected + "Groupe 2");
+        console.log(teamGroupTwo);
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
@@ -183,19 +224,44 @@ io.on("connection", (socket) => {
     })
 
     // THEME /////////////////////////////////////////
+    // THEME /////////////////////////////////////////
 
-    socket.on("themeIsRandomlyChosen", (data) => {
-        randomTheme = data[0]
+    const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
+    const themeScenarios = {
+        mutualisme: "Scénario du mutualisme",
+        predation: "Scénario de la prédation",
+        commensalisme: "Scénario du commensalisme"
+    };
+
+    function chooseRandomTheme() {
+        const randomIndex = Math.floor(Math.random() * themes.length);
+        return themes[randomIndex];
+    }
+
+    socket.on("chooseTheme", () => {
+        const randomTheme = chooseRandomTheme();
+        console.log("Random theme selected: ", randomTheme);
+        io.to("client1").emit("themeSelected", { theme: randomTheme });
+        io.to("client2").emit("themeSelected", { theme: randomTheme });
+    });
+
+    socket.on("themeIsRandomlyChosen", (randomTheme) => {
+        console.log("Random theme: ", randomTheme);
+
         setTimeout(() => {
-            io.emit('themeIsSelectedShowThemeExplanation', themeExplanation[randomTheme])
+            io.emit('themeIsSelectedShowThemeExplanation', randomTheme);
+            console.log("Theme scenario: ", themeScenarios[randomTheme]);
             setTimeout(() => {
-                const themeIndex = data[1]
-                const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
-                io.emit('startTurnByTurn', dataTurnByTurn)
-            }, themeTimer)
-        }, themeTimer)
-    })
-
+                const themeIndex = randomTheme[1];
+                console.log(teams[teamGroupOne]);
+                console.log(teams[teamGroupTwo]);
+                console.log(Object.values(animals)[themeIndex]);
+                console.log(animals[randomTheme]);
+                const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+            io.emit('startTurnByTurn', dataTurnByTurn);
+            }, themeTimer);
+        }, themeTimer);
+    });
     // ANIMAL CHOSEN  ////////////////////////////////
 
     socket.on("animalChosen", () => {

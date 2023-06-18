@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -8,55 +8,83 @@ import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
+import ThemeExplanation from "../components/ThemeExplanation";
 
-const socket = io('localhost:3000')
+const socket = io("localhost:3000");
 
 export default function StudentTablet2() {
-    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
+    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
+    const [teamsDone, setTeamsDone] = useState(false);
+    const [currentScreen, setCurrentScreen] = useState("teams");
     const [turnByTurnData, setTurnByTurnData] = useState({});
-    const [animationQuestionScreen, setAnimationQuestionScreen] = useState([]);
-
-    useEffect(() => {
-        socket.emit("teamChosenGroupeTwo", teamSelected)
-    }, [teamSelected])
-
-    useEffect(() => {
-        if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood")
-        }
-    }, [rulesButtonClicked])
+    const [animationInProgress, setAnimationInProgress] = useState(false);
+    const [animationQuestionData, setAnimationQuestionData] = useState([]);
+    const [themeSelected, setThemeSelected] = useState(null);
+    const [themeExplanationFinished, setExplanationFinished] = useState(false);
 
     useEffect(() => {
         socket.emit("registerStudent2");
 
-        socket.on('teamsAreDoneShowRules',  () => {
-            hideAndShowSection("#teams", "#rulesScreen")
-        })
+        if (teamSelected) {
+            socket.emit("teamChosenGroupeTwo", teamSelected);
+        }
+    }, [teamSelected]);
 
-        socket.on('rulesAreDoneSelectThemeRandomly',  () => {
-            hideAndShowSection('#rulesScreen', '#themeScreen')
-        })
+    useEffect(() => {
+        if (rulesButtonClicked) {
+            socket.emit("rulesAreUnderstood");
+        }
+    }, [rulesButtonClicked]);
 
-        socket.on('themeIsSelectedShowThemeExplanation',  () => {
-            hideAndShowSection('#themeScreen', '#themeExplanationScreen')
-        })
+    useEffect(() => {
 
-        socket.on('startTurnByTurn',  (data) => {
-            setTurnByTurnData(data)
-            hideAndShowSection('#themeExplanationScreen', '#turnByTurn')
-        })
 
-        socket.on('animation',  () => {
-            hideAndShowSection('#turnByTurn', '#animationScreen')
-        })
+        socket.on("teamsAreDoneShowRules", () => {
+            setTeamsDone(true);
+            setCurrentScreen("rules");
+        });
+        socket.on("rulesAreDoneSelectThemeRandomly", () => {
+            socket.emit('chooseTheme');
+            setCurrentScreen("theme");
+            console.log("ici");
+        });
+        socket.on("themeSelected", (data) => {
+            console.log(data.theme);
+            setThemeSelected(data.theme);
+            setTimeout(() => {
+                socket.emit('themeIsRandomlyChosen', data.theme);
+            }, 1000);
+        });
 
-        socket.on('askQuestion',  (data) => {
-            setAnimationQuestionScreen(data)
-            hideAndShowSection('#animationScreen', '#animationQuestionScreen')
-        })
+        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+            console.log("coucou")
+            setCurrentScreen("themeExplanation");
+        });
+
+        socket.on("startTurnByTurn", (data) => {
+            setExplanationFinished(true);
+            setTurnByTurnData(data);
+            setCurrentScreen("turnByTurn");
+        });
+
+        socket.on("animationGroupTwo", () => {
+            setAnimationInProgress(true);
+            setCurrentScreen("animation");
+        });
+
+        socket.on("askQuestionGroupOne", (data) => {
+            setAnimationQuestionData(data);
+            setAnimationInProgress(false);
+            setCurrentScreen("animationQuestion");
+        });
+
 
     }, []);
+
+    function handleThemesButtonClicked() {
+        setCurrentScreen("themeExplanation");
+    }
 
     return (
         <>
@@ -64,29 +92,31 @@ export default function StudentTablet2() {
                 <title>Tablette groupe 2</title>
             </Head>
 
-            <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+            {currentScreen === "teams" && (
+                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+            )}
 
-            <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
+            {currentScreen === "rules" && teamsDone && (
+                <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
+            )}
 
-            <ThemeScreen/>
+            {currentScreen === "theme" && (
+                <ThemeScreen themeSelected={themeSelected} />
+            )}
 
-            <ThemeExplanationScreen/>
+            {currentScreen === "themeExplanation" && (
+                <ThemeExplanationScreen themeSelected={themeSelected} />
+            )}
 
-            <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"}/>
+            {currentScreen === "turnByTurn" && (
+                <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"} />
+            )}
 
-            <AnimationScreen/>
+            {currentScreen === "animation" && <AnimationScreen />}
 
-            <AnimationQuestionScreen data={animationQuestionScreen}/>
-
+            {currentScreen === "animationQuestion" && (
+                <AnimationQuestionScreen data={animationQuestionData} />
+            )}
         </>
     );
-
-    function hideAndShowSection(hideSection, showSection) {
-        document.querySelector(hideSection).classList.add('hide');
-        document.querySelector(showSection).classList.remove('hide');
-    }
-
 }
-
-
-

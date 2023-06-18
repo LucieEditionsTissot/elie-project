@@ -172,7 +172,7 @@ function TurnByTurn(props) {
     }
 
     return (
-        <section id={"turnByTurn"} className={"hide"}>
+        <section id={"turnByTurn"}>
 
             <h1>Équipe {actualTeamName}</h1>
 
