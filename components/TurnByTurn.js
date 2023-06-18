@@ -32,8 +32,10 @@ function TurnByTurn(props) {
     const answerTextRef = useRef(null);
 
     useEffect(() => {
+
         setData(props.data);
         setTeams(props.data[0]);
+        console.log(props.data)
         setRandomTheme(props.data[3]);
         setTeamIndex(props.data[Number(props.client)]);
         const animalData = props.data[4];
@@ -45,8 +47,14 @@ function TurnByTurn(props) {
 
     useEffect(() => {
         if (teams && teamIndex !== null) {
-            setActualTeamName(Object.keys(teams)[teamIndex]);
-            setActualTeamMembers(Object.values(teams)[teamIndex]);
+            console.log(teams);
+            const teamNames = Object.keys(teams);
+            console.log(Object.keys(teams))
+            console.log(Object.values(teams)[teamIndex])
+            setActualTeamName(teamNames[teamIndex]);
+            console.log(teamNames[teamIndex]);
+            const teamMembers = Object.values(teams)[teamIndex];
+            setActualTeamMembers(teamMembers);
             setStateOfTheGame(0);
         }
     }, [teams, teamIndex]);

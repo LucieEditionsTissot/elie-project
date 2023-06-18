@@ -21,10 +21,14 @@ const getApiAndEmit = (socket) => {
 let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
+
 let numberOfRulesUnderstood = 0
+
 let randomTheme = ""
-const themeTimer = 1000
+const themeTimer = 5000
+
 let numberOfChosenAnimals = 0
+
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
 
@@ -89,21 +93,21 @@ const animals = {
 
 const answersAnimation = {
     "Mutualisme": {
-        "animation": "video/Anim_indice_01_003.mp4",
+        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
         "correctAnswer": 1
     },
     "Predation": {
-        "animation": "video/Anim_indice_01_003.mp4",
+        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
         "correctAnswer": 2
     },
     "Commensalisme": {
-        "animation": "video/Anim_indice_01_003.mp4",
+        "animation": "video-1.mp4",
         "time": 5,
         "question": "Qu'avez vous compris ?",
         "answers": ["Les animaux se mangent entre eux", "Les animaux se nourrissent les uns des autres", "Les animaux se protègent les uns des autres", "Les animaux se reproduisent entre eux"],
@@ -251,10 +255,12 @@ io.on("connection", (socket) => {
                 const themeIndex = themes.indexOf(randomTheme);
                 const teamGroupOne = animals[randomTheme].teamGroupOne;
                 const teamGroupTwo = animals[randomTheme].teamGroupTwo;
+                console.log(teams[teamGroupOne]);
+                console.log(teams[teamGroupTwo]);
+                console.log(Object.values(animals)[themeIndex]);
                 const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
 
-                io.to('client1').emit('startTurnByTurnGroupOne', dataTurnByTurn);
-                io.to('client2').emit('startTurnByTurnGroupTwo', dataTurnByTurn);
+            io.emit('startTurnByTurn', dataTurnByTurn);
             }, themeTimer);
         }, themeTimer);
     });

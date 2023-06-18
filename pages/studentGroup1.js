@@ -62,7 +62,7 @@ export default function StudentTablet1() {
             setCurrentScreen("themeExplanation");
         });
 
-        socket.on("startTurnByTurnGroupOne", (data) => {
+        socket.on("startTurnByTurn", (data) => {
             setExplanationFinished(true);
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
