@@ -26,6 +26,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
             const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
             if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
                 const teamIndex = selectedCard.id;
+                console.log(teamIndex)
                 onTeamSelected(teamIndex);
             }
         }

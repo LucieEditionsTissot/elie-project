@@ -35,14 +35,14 @@ let IdOfAnimationQuestionAnswered = []
 let isFinalQuestionIsCorrect = true
 
 const teams = {
-    "Violette": ["Lucie", "Yohan", "Jean"],
-    "Cyan": ["Sacha", "Léo", "Guilhem"],
-    "Jaune": ["Léa", "Baptiste", "Timothée"],
-    "Rouge": ["Raphaël", "Virgile", "Mathieu"],
-    "Verte": ["Alma", "Jeanne", "Emma"],
-    "Orange": ["Rose", "Gabrielle", "Inès"],
-    "Rose": ["Paul", "Léon", "Lucas"],
-    "Minuit": ["Alice", "Lou", "Théo"]
+    0: ["Lucie", "Yohan", "Jean"],
+    1: ["Sacha", "Léo", "Guilhem"],
+    2: ["Léa", "Baptiste", "Timothée"],
+    3: ["Raphaël", "Virgile", "Mathieu"],
+    4: ["Alma", "Jeanne", "Emma"],
+    5: ["Rose", "Gabrielle", "Inès"],
+    6: ["Paul", "Léon", "Lucas"],
+    7: ["Alice", "Lou", "Théo"]
 }
 
 const rules = {
@@ -252,19 +252,24 @@ io.on("connection", (socket) => {
             io.emit('themeIsSelectedShowThemeExplanation', randomTheme);
             console.log("Theme scenario: ", themeScenarios[randomTheme]);
             setTimeout(() => {
-                const themeIndex = themes.indexOf(randomTheme);
-                const teamGroupOne = animals[randomTheme].teamGroupOne;
-                const teamGroupTwo = animals[randomTheme].teamGroupTwo;
+                const themeIndex = randomTheme[1];
                 console.log(teams[teamGroupOne]);
                 console.log(teams[teamGroupTwo]);
                 console.log(Object.values(animals)[themeIndex]);
-                const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, Object.values(animals)[themeIndex]]
-
+                console.log(animals[randomTheme]);
+                const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
             io.emit('startTurnByTurn', dataTurnByTurn);
             }, themeTimer);
         }, themeTimer);
     });
+    // ANIMAL CHOSEN  ////////////////////////////////
 
+    socket.on("animalChosen", () => {
+        numberOfChosenAnimals++
+        if (numberOfChosenAnimals >= 2) {
+            io.emit("animation", answersAnimation[randomTheme])
+        }
+    })
 
     // ANIMATION IS DONE  ////////////////////////////
 
