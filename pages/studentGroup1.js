@@ -11,6 +11,10 @@ import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import AnimalCards from "../components/AnimalCards";
 import ShowAnswer from "../components/ShowAnswer";
 import ShowInteractions from "../components/ShowInteractions";
+import UnderstandInteraction from "../components/UnderstandInteraction";
+import Conclusion from "../components/Conclusion";
+import StartScreen from "../components/StartScreen";
+import Introduce from "../components/Introduce";
 
 const socket = io("localhost:3000");
 
@@ -25,9 +29,11 @@ export default function StudentTablet1() {
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [turnByTurnFinished, setTurnByTurnFinished] = useState(false);
+    const [teams, setTeams] = useState([]);
     const [animalCards, setAnimalCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
     const [interactionsData, setInteractionsData] = useState(null);
+    const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -42,10 +48,18 @@ export default function StudentTablet1() {
             socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
-
+    function handleStartButtonClick() {
+        socket.emit("startExperience");
+        setCurrentScreen("introduce");
+    }
+    const handleNextClick = () => {
+        socket.emit("showTeams");
+    };
     useEffect(() => {
         socket.emit("registerStudent1");
-
+        socket.on("teams", (data) => {
+        setTeams(data);
+        })
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
@@ -79,11 +93,17 @@ export default function StudentTablet1() {
             setInteractionsData(data);
             setCurrentScreen("showInteractions");
         });
+        socket.on("interactionExplained", (data) => {
+            setInteractionsExplainedData(data);
+            setCurrentScreen("understandInteraction");
+        })
 
-        socket.on("askQuestionGroupOne", (data) => {
+        socket.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
-            setAnimationInProgress(false);
             setCurrentScreen("animationQuestion");
+        });
+        socket.on("conclusion", () => {
+            setCurrentScreen("conclusion");
         });
 
         return () => {
@@ -105,6 +125,9 @@ export default function StudentTablet1() {
             <Head>
                 <title>Tablette groupe 1</title>
             </Head>
+
+            {currentScreen === "start" && <StartScreen onClick={handleStartButtonClick} />}
+            {currentScreen === "introduce" && <Introduce onNextClick={handleNextClick} />}
 
             {currentScreen === "teams" && (
                 <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
@@ -128,11 +151,23 @@ export default function StudentTablet1() {
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
-            {currentScreen === "showInteractions" && <ShowInteractions data={interactionsData} />}
+
+            {currentScreen === "showInteractions" && (
+                <ShowInteractions data={interactionsData} />
+            )}
+
+            {currentScreen === "understandInteraction" && (
+                <UnderstandInteraction themeSelected={themeSelected} />
+            )}
+
 
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
             )}
+            {currentScreen === "conclusion" && (
+                <Conclusion/>
+            )}
+
         </>
     );
 }

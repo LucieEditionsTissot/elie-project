@@ -1,119 +1,90 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io('localhost:3000')
+const socket = io("localhost:3000");
 
 function AnimationQuestionScreen(props) {
-
     const [question, setQuestion] = useState("");
     const [answers, setAnswers] = useState([]);
     const [correctAnswer, setCorrectAnswer] = useState(null);
     const [answerSelected, setAnswerSelected] = useState(null);
     const [answerSelectedByOtherTeam, setAnswerSelectedByOtherTeam] = useState(null);
+    const [infoText, setInfoText] = useState("");
 
     useEffect(() => {
-        setQuestion(props.data[0])
-        setAnswers(props.data[1])
-        setCorrectAnswer(props.data[2])
-    }, [props.data])
+        setQuestion(props.data.question);
+        setAnswers(props.data.answers.map((answer) => ({ text: answer, status: "" })));
+        setCorrectAnswer(props.data.correctAnswer);
+    }, [props.data]);
 
-    function handleAnswerClick(e, id) {
+    function handleAnswerClick(id) {
         if (answerSelected === null) {
-            const allAnswers = document.querySelectorAll("#animationQuestionScreen .answer")
-            const button = document.querySelector("#animationQuestionScreen .validateButton")
-            const answerSelected = e.target
-            if (answerSelected.classList.contains("selected")) {
-                answerSelected.classList.remove("selected")
-                button.style.display = "none"
-            } else {
-                allAnswers.forEach((answer) => {
-                    answer.classList.remove("selected")
-                })
-                answerSelected.classList.add("selected")
-                button.style.display = "block"
-            }
+            setAnswerSelected(id);
         }
     }
 
     function handleCLickOnValidateButton() {
-        const selectedAnswer = document.querySelector("#animationQuestionScreen .answer.selected")
-        if (selectedAnswer) {
-            const answerId = selectedAnswer.id
-            setAnswerSelected(answerId)
-            const button = document.querySelector("#animationQuestionScreen .validateButton")
-            button.style.display = "none"
-            if (answerSelectedByOtherTeam !== null) {
-                const infoText = document.querySelector("#animationQuestionScreen .info")
-                infoText.innerhtml = "En attente de l'autre équipe..."
-            }
-            socket.emit("animationQuestionIsAnswered", answerId, {excludeSelf: true});
+        if (answerSelected !== null) {
+            socket.emit("animationQuestionIsAnswered", answerSelected, { excludeSelf: true });
         }
     }
 
     socket.on("animationQuestionIsAnswered", function (answerId) {
         if (answerSelected === null) {
-            setAnswerSelectedByOtherTeam(answerId)
-            const infoText = document.querySelector("#animationQuestionScreen .info")
-            infoText.textContent = "L'autre équipe a répondu !"
+            setAnswerSelectedByOtherTeam(answerId);
+            setInfoText("L'autre équipe a répondu !");
         }
-        const answerSelectedByTheOtherTeam = document.querySelector("#animationQuestionScreen .answer[id='" + answerId + "'")
-        answerSelectedByTheOtherTeam.classList.add("selectedByTheOtherTeam")
     });
 
     socket.on("revealAnimationCorrectAnswer", function (data) {
-        const finalAnswer = data[0]
-        const animationCorrectAnswer = data[1]
-        const infoText = document.querySelector("#animationQuestionScreen .info")
-        infoText.style.display = "none"
-        const correctAnswerElement = document.querySelector("#animationQuestionScreen .answer[id='" + animationCorrectAnswer + "'")
-        const allAnswers = document.querySelectorAll("#animationQuestionScreen .answer")
-        console.log(animationCorrectAnswer)
-        allAnswers.forEach((answer) => {
-            if (answer.classList.contains("selected") && answer.id !== animationCorrectAnswer || answer.classList.contains("selectedByTheOtherTeam") && answer.id !== animationCorrectAnswer) {
-                answer.classList.remove("selected")
-                answer.classList.remove("selectedByTheOtherTeam")
-                answer.classList.add("wrongAnswer")
+        const finalAnswer = data[0];
+        const animationCorrectAnswer = data[1];
+
+        const updatedAnswers = answers.map((answer, index) => {
+            if (index === animationCorrectAnswer) {
+                return { ...answer, status: "correct" };
             }
-        })
-        setTimeout(() => {
-            allAnswers.forEach((answer) => {
-                answer.classList.remove("wrongAnswer")
-            })
-            setTimeout(() => {
-                if (correctAnswerElement) {
-                    correctAnswerElement.classList.add("correctAnswer")
-                }
-            }, 1000)
-        }, 3000)
+            return answer;
+        });
+
+        setAnswers(updatedAnswers);
     });
 
     return (
-        <section id={"animationQuestionScreen"}>
-
+        <section id="animationQuestionScreen" className="text-center">
             <h1>{question}</h1>
-
-            <p className={"sub-title"}>Réfléchissez ensemble afin de trouver la bonne réponse !</p>
-
-            <div className={"wrapper"}>
-
-                {answers && answers.length > 0 ? (
-                    answers.map((answer, index) => {
-                        return (
-                            <p key={index} id={index} className={"answer"}
-                               onClick={(e) => handleAnswerClick(e, index)}>{answer}</p>
-                        );
-                    })
-                ) : (
-                    ""
-                )}
+            <p className="sub-title">Réfléchissez ensemble afin de trouver la bonne réponse !</p>
+            <div className="grid grid-cols-2 gap-4 mt-6">
+                {answers.map((answer, index) => (
+                    <p
+                        key={index}
+                        className={`py-3 rounded-lg cursor-pointer ${
+                            (index === answerSelected && answerSelected !== null) ||
+                            (index === answerSelectedByOtherTeam && answerSelectedByOtherTeam !== null)
+                                ? "bg-red-500 text-white"
+                                : answer.status === "correct"
+                                    ? "bg-green-500 text-white"
+                                    : "bg-blue-500 text-white"
+                        }`}
+                        onClick={() => handleAnswerClick(index)}
+                    >
+                        {answer.text}
+                    </p>
+                ))}
             </div>
-
-            <div className={"validateButton"} onClick={() => handleCLickOnValidateButton()}>Valider</div>
-
-            <p className={"info"}></p>
-
+            <button
+                className={`mt-4 py-2 px-4 rounded-lg bg-green-500 text-white ${
+                    answerSelected !== null ? "block" : "hidden"
+                }`}
+                onClick={handleCLickOnValidateButton}
+            >
+                Valider
+            </button>
+            {answerSelectedByOtherTeam !== null && (
+                <p className="info mt-4">{infoText}</p>
+            )}
         </section>
-    )
+    );
 }
 
 export default AnimationQuestionScreen;
