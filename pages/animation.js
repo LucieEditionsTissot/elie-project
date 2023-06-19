@@ -4,7 +4,6 @@ import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
 import Images from "../components/Images";
-import Header from "../components/Header";
 
 const socket = io('http://localhost:3000');
 
@@ -14,6 +13,9 @@ const Client3 = () => {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
     const [currentVideo, setCurrentVideo] = useState(null);
+    const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+    const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
+    const [scenario7Ended, setScenario7Ended] = useState(false);
 
     useEffect(() => {
         socket.emit('registerAnimationClient');
@@ -24,6 +26,7 @@ const Client3 = () => {
             setCurrentScenario(scenario);
             setAudioLoaded(false);
             setVideoLoaded(false);
+            setScenario7Ended(false);
 
             const audioElement = new Audio(scenario.audios[0]);
             audioElement.addEventListener('canplaythrough', () => {
@@ -38,6 +41,13 @@ const Client3 = () => {
 
             setCurrentAudio(audioElement);
             setCurrentVideo(videoElement);
+
+            if (scenario.videos.length > 1) {
+                setCurrentVideoIndex(0);
+            }
+            if (scenario.audios.length > 1) {
+                setCurrentAudioIndex(0);
+            }
         });
     }, []);
 
@@ -52,6 +62,41 @@ const Client3 = () => {
             }
         };
     }, [currentVideo]);
+
+    useEffect(() => {
+        if (currentScenario && videoLoaded && currentScenario.videos.length > 1) {
+            const videoCount = currentScenario.videos.length;
+
+            const handleVideoEnded = () => {
+                setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoCount);
+
+                if (currentScenario && currentScenario.id === 7) {
+                    setScenario7Ended(true);
+                    socket.emit('scenario7Ended');
+                }
+            };
+
+            const videoElement = document.createElement('video');
+            videoElement.src = currentScenario.videos[currentVideoIndex];
+            videoElement.addEventListener('loadeddata', () => {
+                setVideoLoaded(true);
+                videoElement.play();
+                videoElement.addEventListener('ended', handleVideoEnded);
+            });
+
+            return () => {
+                videoElement.removeEventListener('ended', handleVideoEnded);
+                videoElement.pause();
+            };
+        }
+    }, [currentScenario, videoLoaded, currentVideoIndex]);
+
+    useEffect(() => {
+
+        if (scenario7Ended) {
+            socket.emit("loop")
+        }
+    }, [scenario7Ended]);
 
 
 
@@ -95,6 +140,36 @@ const Client3 = () => {
                 )}
 
                 {currentScenario && currentScenario.id === 4 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
+                    </div>
+                )}
+                {currentScenario && currentScenario.id === 5 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
+                    </div>
+                )}
+                {currentScenario && currentScenario.id === 6 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
+                    </div>
+                )}
+                {currentScenario && currentScenario.id === 7 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos[currentVideoIndex]} className="fixed top-0 left-0 w-screen h-screen" />
+                    </div>
+                )}
+                {currentScenario && currentScenario.id === 8 && (
+                    <div>
+                        <AudioPlayer src={currentScenario.audios} />
+                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
+                    </div>
+                )}
+                {currentScenario && currentScenario.id === 9 && (
                     <div>
                         <AudioPlayer src={currentScenario.audios} />
                         <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />

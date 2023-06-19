@@ -14,6 +14,7 @@ import ShowAnswer from "../components/ShowAnswer";
 import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
+import AudioPlayer from "../components/AudioPlayer";
 
 const socket = io("localhost:3000");
 
@@ -32,6 +33,11 @@ export default function StudentTablet2() {
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
+    const [audioScenario, setAudioScenario] = useState(null);
+    const [currentScenario, setCurrentScenario] = useState(null);
+    const [audioLoaded, setAudioLoaded] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
+    const [currentAudio, setCurrentAudio] = useState(null);
 
     useEffect(() => {
         socket.emit("registerStudent2");
@@ -46,6 +52,21 @@ export default function StudentTablet2() {
             socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
+
+    useEffect(() => {
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+    }, []);
 
     useEffect(() => {
         socket.on("teamsAreDoneShowRules", () => {
@@ -113,7 +134,9 @@ export default function StudentTablet2() {
             <Head>
                 <title>Tablette groupe 2</title>
             </Head>
-
+            {currentScenario && currentScenario.id === 12  || currentScenario.id === 15 && (
+                <AudioPlayer src={currentScenario.audios} />
+            )}
             {currentScreen === "teams" && (
                 <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
             )}

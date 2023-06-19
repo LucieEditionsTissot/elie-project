@@ -9,7 +9,7 @@ function TurnByTurn(props) {
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
-    const [globalTimer, setGlobalTimer] = useState(15);
+    const [globalTimer, setGlobalTimer] = useState(30);
 
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -44,7 +44,12 @@ function TurnByTurn(props) {
 
     useEffect(() => {
         if (stateOfTheGame !== null) {
-            showTipsWaitingScreen("Indice en cours !")
+            showTipsWaitingScreen("Indice en cours !");
+            if (stateOfTheGame === 1) {
+                socket.emit("indice2");
+            } else if (stateOfTheGame === 2) {
+                socket.off("indice2");
+            }
         }
     }, [stateOfTheGame]);
 
@@ -120,6 +125,7 @@ function TurnByTurn(props) {
                 }
             } else {
                 setActualIndexOfMembers(actualIndexOfMembers + 1)
+                setStateOfTheGame(stateOfTheGame + 1)
                 updateWaitingScreenForTheLastTime()
                 disableTimer()
                 setMaxNumberOfCard(maxNumberOfCard + 3)

@@ -15,6 +15,7 @@ import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
 import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
+import AudioPlayer from "../components/AudioPlayer";
 
 const socket = io("localhost:3000");
 
@@ -28,12 +29,17 @@ export default function StudentTablet1() {
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
-    const [turnByTurnFinished, setTurnByTurnFinished] = useState(false);
-    const [teams, setTeams] = useState([]);
     const [animalCards, setAnimalCards] = useState([]);
-    const [selectedCard, setSelectedCard] = useState(null);
+    const [showAnswer, setShowAnswer] = useState(false);
+    const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
+    const [audioScenario, setAudioScenario] = useState(null);
+    const [currentScenario, setCurrentScenario] = useState(null);
+    const [audioLoaded, setAudioLoaded] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
+    const [currentAudio, setCurrentAudio] = useState(null);
+
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -42,7 +48,20 @@ export default function StudentTablet1() {
             socket.emit("teamChosenGroupeOne", teamSelected);
         }
     }, [teamSelected]);
+    useEffect(() => {
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
 
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+    }, []);
     useEffect(() => {
         if (rulesButtonClicked) {
             socket.emit("rulesAreUnderstood");
@@ -58,7 +77,7 @@ export default function StudentTablet1() {
     useEffect(() => {
         socket.emit("registerStudent1");
         socket.on("teams", (data) => {
-        setTeams(data);
+            setTeams(data);
         })
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
@@ -122,9 +141,9 @@ export default function StudentTablet1() {
 
     return (
         <>
-            <Head>
-                <title>Tablette groupe 1</title>
-            </Head>
+            {currentScenario && currentScenario.id === 11 || currentScenario.id === 14 && (
+                <AudioPlayer src={currentScenario.audios} />
+            )}
 
             {currentScreen === "start" && <StartScreen onClick={handleStartButtonClick} />}
             {currentScreen === "introduce" && <Introduce onNextClick={handleNextClick} />}
