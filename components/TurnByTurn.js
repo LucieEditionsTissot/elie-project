@@ -48,7 +48,7 @@ function TurnByTurn(props) {
             if (stateOfTheGame === 1) {
                 socket.emit("indice2");
             } else if (stateOfTheGame === 2) {
-                socket.off("indice2");
+               return socket.off("indice2");
             }
         }
     }, [stateOfTheGame]);

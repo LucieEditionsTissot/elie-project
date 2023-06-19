@@ -134,7 +134,7 @@ export default function StudentTablet2() {
             <Head>
                 <title>Tablette groupe 2</title>
             </Head>
-            {currentScenario && currentScenario.id === 12  || currentScenario.id === 15 && (
+            {currentScenario && currentScenario.id === 12 && (
                 <AudioPlayer src={currentScenario.audios} />
             )}
             {currentScreen === "teams" && (

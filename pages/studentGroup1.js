@@ -141,7 +141,7 @@ export default function StudentTablet1() {
 
     return (
         <>
-            {currentScenario && currentScenario.id === 11 || currentScenario.id === 14 && (
+            {currentScenario && currentScenario.id === 11 && (
                 <AudioPlayer src={currentScenario.audios} />
             )}
 
