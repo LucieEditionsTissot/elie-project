@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
+import TurnByTurn from "../components/TurnByTurn";
 
 const socket = io("localhost:3000", {
     query: {group: "teacher"},
@@ -39,26 +40,6 @@ export default function TeacherTablet() {
         <Head>
             <title>Tablette professeur</title>
         </Head>
-        <div className={"global-wrapper"}>
-            <h5 className={"type"}>Tablette professeur</h5>
-            <h3 className={"theme"}>Thèmes sur le mutualisme :</h3>
-            <div className={"themeWrapper"}>
-                <h2 onClick={(e) => handleThemeChoice("ocean", e)}>Océan</h2>
-                <h2 onClick={(e) => handleThemeChoice("foret", e)}>Forêt</h2>
-                <h2 onClick={(e) => handleThemeChoice("montagne", e)}>Montagne</h2>
-                <h2 onClick={(e) => handleThemeChoice("prairie", e)}>Prairie</h2>
-                <h2 onClick={(e) => handleThemeChoice("jardin", e)}>Jardin</h2>
-            </div>
-            {selectedTheme && (
-                <>
-                    <div className={"answerWrapper"}>
-                        <h5>Les réponses sont : </h5>
-                        {reponsesCorrectes.map((reponse, index) => (
-                            <p key={index}>{reponse.animal}</p>
-                        ))}
-                    </div>
-                </>
-            )}
-        </div>
+
     </>
 };

@@ -4,6 +4,8 @@
 .idea
 # dotenv environment variables file (build for Zeit Now)
 .DS_Store
+/public/audio/*
+/public/video/*
 .env
 .env.build
 # Dependency directories
