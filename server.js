@@ -65,62 +65,62 @@ const animals = {
                 {
                     "name": "Biche",
                     "explanation": "Explication sur la biche...",
-                    "image": "chemin/vers/image-biche.jpg",
-                    "icon": "chemin/vers/icon-biche.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Truite",
                     "explanation": "Explication sur la truite...",
-                    "image": "chemin/vers/image-truite.jpg",
-                    "icon": "chemin/vers/icon-truite.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Renard",
                     "explanation": "Explication sur le renard...",
-                    "image": "chemin/vers/image-renard.jpg",
-                    "icon": "chemin/vers/icon-renard.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Salamandre",
                     "explanation": "Explication sur la salamandre...",
-                    "image": "chemin/vers/image-salamandre.jpg",
-                    "icon": "chemin/vers/icon-salamandre.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Marmotte",
                     "explanation": "Explication sur la marmotte...",
-                    "image": "chemin/vers/image-marmotte.jpg",
-                    "icon": "chemin/vers/icon-marmotte.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Cerf",
                     "explanation": "Explication sur le cerf...",
-                    "image": "chemin/vers/image-cerf.jpg",
-                    "icon": "chemin/vers/icon-cerf.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Crapaud",
                     "explanation": "Explication sur le crapaud...",
-                    "image": "chemin/vers/image-crapaud.jpg",
-                    "icon": "chemin/vers/icon-crapaud.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Loup",
-                    "explanation": "Explication sur le loup...",
-                    "image": "chemin/vers/image-loup.jpg",
-                    "icon": "chemin/vers/icon-loup.svg"
+                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Lapin",
                     "explanation": "Explication sur le lapin...",
-                    "image": "chemin/vers/image-lapin.jpg",
-                    "icon": "chemin/vers/icon-lapin.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Aigle",
                     "explanation": "Explication sur l'aigle...",
-                    "image": "chemin/vers/image-aigle.jpg",
-                    "icon": "chemin/vers/icon-aigle.svg"
+                    "image": "",
+                    "icon": ""
                 }
             ],
             "answer": 7
@@ -130,62 +130,63 @@ const animals = {
                 {
                     "name": "Lézard",
                     "explanation": "Explication sur le lézard...",
-                    "image": "chemin/vers/image-lezard.jpg",
-                    "icon": "chemin/vers/icon-lezard.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Biche",
                     "explanation": "Explication sur la biche...",
-                    "image": "chemin/vers/image-biche.jpg",
-                    "icon": "chemin/vers/icon-biche.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Hibou",
                     "explanation": "Explication sur le hibou...",
-                    "image": "chemin/vers/image-hibou.jpg",
-                    "icon": "chemin/vers/icon-hibou.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Papillon",
                     "explanation": "Explication sur le papillon...",
-                    "image": "chemin/vers/image-papillon.jpg",
-                    "icon": "chemin/vers/icon-papillon.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
-                    "name": "Ecureuil",
+                    "name": "Corbeau",
                     "explanation": "Explication sur l'écureuil...",
-                    "image": "chemin/vers/image-ecureuil.jpg",
-                    "icon": "chemin/vers/icon-ecureuil.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Coccinelle",
                     "explanation": "Explication sur la coccinelle...",
-                    "image": "chemin/vers/image-coccinelle.jpg",
-                    "icon": "chemin/vers/icon-coccinelle.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Faucon",
                     "explanation": "Explication sur le faucon...",
-                    "image": "chemin/vers/image-faucon.jpg",
-                    "icon": "chemin/vers/icon-faucon.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Chouette",
                     "explanation": "Explication sur la chouette...",
-                    "image": "chemin/vers/image-chouette.jpg",
-                    "icon": "chemin/vers/icon-chouette.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Rat",
                     "explanation": "Explication sur le rat...",
-                    "image": "chemin/vers/image-rat.jpg",
-                    "icon": "chemin/vers/icon-rat.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Loup",
-                    "explanation": "Explication sur le loup...",
-                    "image": "chemin/vers/image-loup.jpg",
-                    "icon": "chemin/vers/icon-loup.svg"
+                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
+
+                    "image": "",
+                    "icon": ""
                 }
             ],
             "answer": 4
@@ -197,62 +198,62 @@ const animals = {
                 {
                     "name": "Biche",
                     "explanation": "Explication sur la biche...",
-                    "image": "chemin/vers/image-biche.jpg",
-                    "icon": "chemin/vers/icon-biche.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Truite",
                     "explanation": "Explication sur la truite...",
-                    "image": "chemin/vers/image-truite.jpg",
-                    "icon": "chemin/vers/icon-truite.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Renard",
                     "explanation": "Explication sur le renard...",
-                    "image": "chemin/vers/image-renard.jpg",
-                    "icon": "chemin/vers/icon-renard.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Salamandre",
                     "explanation": "Explication sur la salamandre...",
-                    "image": "chemin/vers/image-salamandre.jpg",
-                    "icon": "chemin/vers/icon-salamandre.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Marmotte",
                     "explanation": "Explication sur la marmotte...",
-                    "image": "chemin/vers/image-marmotte.jpg",
-                    "icon": "chemin/vers/icon-marmotte.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Cerf",
                     "explanation": "Explication sur le cerf...",
-                    "image": "chemin/vers/image-cerf.jpg",
-                    "icon": "chemin/vers/icon-cerf.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Crapaud",
                     "explanation": "Explication sur le crapaud...",
-                    "image": "chemin/vers/image-crapaud.jpg",
-                    "icon": "chemin/vers/icon-crapaud.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Loup",
-                    "explanation": "Explication sur le loup...",
-                    "image": "chemin/vers/image-loup.jpg",
-                    "icon": "chemin/vers/icon-loup.svg"
+                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Lapin",
                     "explanation": "Explication sur le lapin...",
-                    "image": "chemin/vers/image-lapin.jpg",
-                    "icon": "chemin/vers/icon-lapin.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Aigle",
                     "explanation": "Explication sur l'aigle...",
-                    "image": "chemin/vers/image-aigle.jpg",
-                    "icon": "chemin/vers/icon-aigle.svg"
+                    "image": "",
+                    "icon": ""
                 }
             ],
             "answer": 9
@@ -262,62 +263,62 @@ const animals = {
                 {
                     "name": "Lézard",
                     "explanation": "Explication sur le lézard...",
-                    "image": "chemin/vers/image-lezard.jpg",
-                    "icon": "chemin/vers/icon-lezard.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Biche",
                     "explanation": "Explication sur la biche...",
-                    "image": "chemin/vers/image-biche.jpg",
-                    "icon": "chemin/vers/icon-biche.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Hibou",
                     "explanation": "Explication sur le hibou...",
-                    "image": "chemin/vers/image-hibou.jpg",
-                    "icon": "chemin/vers/icon-hibou.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Papillon",
                     "explanation": "Explication sur le papillon...",
-                    "image": "chemin/vers/image-papillon.jpg",
-                    "icon": "chemin/vers/icon-papillon.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Ecureuil",
                     "explanation": "Explication sur l'écureuil...",
-                    "image": "chemin/vers/image-ecureuil.jpg",
-                    "icon": "chemin/vers/icon-ecureuil.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Coccinelle",
                     "explanation": "Explication sur la coccinelle...",
-                    "image": "chemin/vers/image-coccinelle.jpg",
-                    "icon": "chemin/vers/icon-coccinelle.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Faucon",
                     "explanation": "Explication sur le faucon...",
-                    "image": "chemin/vers/image-faucon.jpg",
-                    "icon": "chemin/vers/icon-faucon.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Chouette",
                     "explanation": "Explication sur la chouette...",
-                    "image": "chemin/vers/image-chouette.jpg",
-                    "icon": "chemin/vers/icon-chouette.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Rat",
                     "explanation": "Explication sur le rat...",
-                    "image": "chemin/vers/image-rat.jpg",
-                    "icon": "chemin/vers/icon-rat.svg"
+                    "image": "",
+                    "icon": ""
                 },
                 {
                     "name": "Loup",
-                    "explanation": "Explication sur le loup...",
-                    "image": "chemin/vers/image-loup.jpg",
-                    "icon": "chemin/vers/icon-loup.svg"
+                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
+                    "image": "",
+                    "icon": ""
                 }
             ],
             "answer": 6
@@ -346,6 +347,79 @@ const answersAnimation = {
         "correctAnswer": 3
     }
 }
+let regles = {
+    id: 2,
+    audios: ['audio/Regles.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+
+let chooseTheme = {
+    id: 3,
+    audios: ['audio/ambiance.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+let themeIsChosen = {
+    id: 4,
+    audios: ['audio/ambiance.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+let explanation = {
+    id: 5,
+    audios: ['audio/10animaux.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+
+let animalsCards = {
+    id: 6,
+    audios: ['audio/10animaux.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+let indice1 = {
+    id: 7,
+    audios: ['audio/Indice_01.mp3'],
+    videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4','video/indices/indice1/LC_B_anim_indice_01.mp4', 'video/indices/indice1/LC_C_outro_indice_01.mp4'],
+};
+let indice1Loop = {
+    id: 7,
+    audios: ['audio/Indice_01.mp3'],
+    videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+};
+let indice2Client1 = {
+    id: 11,
+    audios: ['audio/Corbeau.mov'],
+};
+let indice2Client2 = {
+    id: 12,
+    audios: ['audio/loup.mov'],
+};
+let interactions = {
+    id: 8,
+    audios: [ 'audio/LeMutualisme.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+
+const scenario9 = {
+    id: 9,
+    audios: ['audio/ambiance.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+const scenario10 = {
+    id: 10,
+    audios: ['audio/ambiance.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+const scenario11 = {
+    id: 13,
+    audios: ['audio/ambiance.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+const scenario12 = {
+    id: 15,
+    audios: ['audio/ambiance.mp3'],
+    videos: ['video/Ambience.mp4'],
+};
+
+
 io.on("connection", (socket) => {
 
     if (interval) {
@@ -374,37 +448,13 @@ io.on("connection", (socket) => {
 
         const ambiance = {
             id: 1,
-            audios: ['audio/Corbeau.mov'],
+            audios: ['audio/ambiance.mp3'],
             videos: ['video/Ambience.mp4'],
         };
-        socket.emit('scenario', ambiance);
 
-        setTimeout(() => {
-            const scenario2 = {
-                id: 2,
-                audios: ['audio/loup.mov'],
-                videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4'],
-            };
-            socket.emit('scenario', scenario2);
-        }, 10000);
+        socket.to('client3').emit( ambiance);
 
-        setTimeout(() => {
-            const scenario3 = {
-                id: 3,
-                audios: ['audio/Corbeau.mov'],
-                videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
-            };
-            socket.emit('scenario', scenario3);
-        }, 20000);
 
-        setTimeout(() => {
-            const scenario4 = {
-                id: 4,
-                audios: ['audio/loup.mov'],
-                videos: ['video/indices/indice1/LC_C_outro_indice_01.mp4'],
-            };
-            socket.emit('scenario', scenario4);
-        }, 30000);
     });
 
     numberOfTeamSelected = 0
@@ -441,12 +491,16 @@ io.on("connection", (socket) => {
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
+            console.log(io.to('client3').emit( regles));
+            io.to('client3').emit(regles);
         }
     }
 
     socket.on("rulesAreUnderstood", () => {
         numberOfRulesUnderstood++
         if (numberOfRulesUnderstood >= 2) {
+            console.log(io.to('client3').emit( chooseTheme));
+            io.to('client3').emit( chooseTheme);
             io.emit('rulesAreDoneSelectThemeRandomly');
         }
     })
@@ -462,33 +516,47 @@ io.on("connection", (socket) => {
 
     socket.on("chooseTheme", () => {
         const theme = chooseRandomTheme();
-       randomTheme = theme
+        randomTheme = theme
         io.to("client1").emit("themeSelected", { theme: theme });
         io.to("client2").emit("themeSelected", { theme: theme });
     });
 
     socket.on("themeIsRandomlyChosen", (theme) => {
-
+        console.log(io.to('client3').emit( themeIsChosen));
+        io.to('client3').emit( themeIsChosen);
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', theme);
+            io.to('client3').emit( explanation);
             setTimeout(() => {
-               randomTheme = theme
+                randomTheme = theme
                 const dataAnimals = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
                 io.emit('showAnimals', dataAnimals);
+                io.to('client3').emit( animalsCards);
 
             }, themeTimer);
         }, themeTimer);
     });
     socket.on("startGame", (randomTheme) => {
         const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+        io.to('client3').emit( indice1);
         io.emit('startTurnByTurn', dataTurnByTurn);
+    });
+    socket.on("loop", () => {
+        io.to('client3').emit( indice1Loop);
     })
+    socket.on("indice2", () => {
+        io.to('client1').emit('scenario', indice2Client1);
+        io.to('client2').emit('scenario', indice2Client2);
+    })
+
+
     // ANIMAL CHOSEN  ////////////////////////////////
 
     socket.on("animalChosen", (animalChosen) => {
         animalChosenValue = animalChosen;
         numberOfChosenAnimals++;
         if (numberOfChosenAnimals >= 2) {
+            io.to('client3').emit(scenario9);
             io.emit("showInteractions", animals[randomTheme]);
         }
     });
@@ -498,6 +566,7 @@ io.on("connection", (socket) => {
         console.log(numberOfButtonClicked);
         if(numberOfButtonClicked >= 2) {
             console.log(io.emit("interactionExplained", randomTheme));
+            io.to('client3').emit(interactions);
             io.emit("interactionExplained", randomTheme);
             console.log(answersAnimation[randomTheme])
             setTimeout(() => {
@@ -508,6 +577,7 @@ io.on("connection", (socket) => {
 
     socket.on("animationIsDoneAskQuestion", (data) => {
         console.log(io.emit("askQuestion", data))
+        io.to('client3').emit(scenario10);
         io.emit('askQuestion', data)
     })
 
@@ -515,6 +585,7 @@ io.on("connection", (socket) => {
     socket.on("animationQuestionIsAnswered", (answerId) => {
         numberOfAnimationQuestionAnswered++;
         if(numberOfAnimationQuestionAnswered >=2) {
+            io.to('client3').emit( scenario11);
             io.emit("conclusion");
         }
     })
