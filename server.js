@@ -349,23 +349,23 @@ const answersAnimation = {
 }
 let regles = {
     id: 2,
-    audios: ['audio/Regles.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 
 let chooseTheme = {
     id: 3,
-    audios: ['audio/ambiance.mp3'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    audios: ['audio/SonsAmbiance.mov'],
+    videos: ['video/Ambience.mp4'],
 };
 let themeIsChosen = {
     id: 4,
-    audios: ['audio/ambiance.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 let explanation = {
     id: 5,
-    audios: ['audio/10animaux.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 
@@ -400,22 +400,22 @@ let interactions = {
 
 const scenario9 = {
     id: 9,
-    audios: ['audio/ambiance.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 const scenario10 = {
     id: 10,
-    audios: ['audio/ambiance.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 const scenario11 = {
     id: 13,
-    audios: ['audio/ambiance.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 const scenario12 = {
     id: 15,
-    audios: ['audio/ambiance.mp3'],
+    audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Anim_Ambiance_Map01.mp4'],
 };
 
@@ -448,7 +448,7 @@ io.on("connection", (socket) => {
 
         const ambiance = {
             id: 1,
-            audios: ['audio/ambiance.mp3'],
+            audios: ['audio/SonsAmbiance.mov'],
             videos: ['video/Anim_Ambiance_Map01.mp4'],
         };
 
