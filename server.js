@@ -30,7 +30,7 @@ let numberOfChosenAnimals = 0
 let numberOfButtonClicked =0;
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
-
+let numberOfCardsView = 0;
 let isFinalQuestionIsCorrect = true
 let isInformationUnderstood = 0
 let animalChosenValue = null;
@@ -464,6 +464,7 @@ io.on("connection", (socket) => {
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
     numberOfButtonClicked =0;
+    numberOfCardsView = 0;
 
 
     socket.on("teamChosen", (index) => {
@@ -538,8 +539,11 @@ io.on("connection", (socket) => {
     });
     socket.on("startGame", (randomTheme) => {
         const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-        io.to('client3').emit( indice1);
-        io.emit('startTurnByTurn', dataTurnByTurn);
+        numberOfCardsView++;
+        if(numberOfCardsView >= 2) {
+            io.to('client3').emit(indice1);
+            io.emit('startTurnByTurn', dataTurnByTurn);
+        }
     });
     socket.on("loop", () => {
         io.to('client3').emit( indice1Loop);
