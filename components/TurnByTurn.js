@@ -82,9 +82,12 @@ function TurnByTurn(props) {
     function showTipsWaitingScreen(text) {
         const waitingScreen = document.querySelector(".waitingScreen")
         const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreen.classList.add("is-active")
-        waitingScreenText.innerHTML = text
-
+        if(waitingScreen) {
+            waitingScreen.classList.add("is-active")
+        }
+        if(waitingScreenText) {
+            waitingScreenText.innerHTML = text
+        }
         console.log("stateOfTheGame", stateOfTheGame)
 
         setTimeout(() => {
