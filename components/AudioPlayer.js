@@ -9,7 +9,7 @@ const AudioPlayer = ({ src }) => {
             src: [src],
             html5: true,
             autoplay: true,
-            loop: false,
+            loop: true,
             volume: 1,
         });
         soundRef.current = sound;
