@@ -444,8 +444,8 @@ io.on("connection", (socket) => {
         }
     })
 
-    // RULES /////////////////////////////////////////
 
+    // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
@@ -477,8 +477,8 @@ io.on("connection", (socket) => {
         io.to("client2").emit("themeSelected", { theme: theme });
     });
 
+
     socket.on("themeIsRandomlyChosen", (theme) => {
-        console.log(io.to('client3').emit( themeIsChosen));
         io.to('client3').emit( themeIsChosen);
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', theme);
@@ -510,7 +510,6 @@ io.on("connection", (socket) => {
 
 
     // ANIMAL CHOSEN  ////////////////////////////////
-
     socket.on("animalChosen", (animalChosen) => {
         animalChosenValue = animalChosen;
         numberOfChosenAnimals++;
@@ -522,12 +521,9 @@ io.on("connection", (socket) => {
 
     socket.on("undestrandInteraction", () => {
         numberOfButtonClicked++;
-        console.log(numberOfButtonClicked);
         if(numberOfButtonClicked >= 2) {
-            console.log(io.emit("interactionExplained", randomTheme));
             io.to('client3').emit(interactions);
             io.emit("interactionExplained", randomTheme);
-            console.log(answersAnimation[randomTheme])
             setTimeout(() => {
                 io.emit('askQuestion', answersAnimation[randomTheme])
             }, themeTimer);
@@ -535,7 +531,6 @@ io.on("connection", (socket) => {
     })
 
     socket.on("animationIsDoneAskQuestion", (data) => {
-        console.log(io.emit("askQuestion", data))
         io.to('client3').emit(scenario10);
         io.emit('askQuestion', data)
     })
