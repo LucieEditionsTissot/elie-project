@@ -20,7 +20,10 @@ import {url} from "./_app";
 
 const socket = io(url);
 
+let connected = false;
+
 export default function StudentTablet1() {
+
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
@@ -41,117 +44,53 @@ export default function StudentTablet1() {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
-    useEffect(() => {
-        socket.emit("registerStudent1");
 
-        if (teamSelected) {
-            socket.emit("teamChosenGroupeOne", teamSelected);
+    socket.on('connect', function () {
+        console.log("Client 1 connected");
+        connected = true;
+    });
+
+
+    socket.on('disconnect', function () {
+        console.log("Client 1 disconnected");
+        connected = false;
+    });
+
+    useEffect(() => {
+        if (connected) {
+            socket.emit("registerStudent1");
+
+            if (teamSelected) {
+                //socket.emit("teamChosenGroupeOne", teamSelected);
+            }
         }
     }, [teamSelected]);
-
     useEffect(() => {
-        socket.on('scenario', (scenario) => {
-            setCurrentScenario(scenario);
-            setAudioLoaded(false);
+        //socket.on('scenario', (scenario) => {
+          //  setCurrentScenario(scenario);
+            //setAudioLoaded(false);
 
-            const audioElement = new Audio(scenario.audios[0]);
-            audioElement.addEventListener('canplaythrough', () => {
-                setAudioLoaded(true);
-            });
+            //const audioElement = new Audio(scenario.audios[0]);
+            //audioElement.addEventListener('canplaythrough', () => {
+              //  setAudioLoaded(true);
+           // });
 
-            setCurrentAudio(audioElement);
+            //setCurrentAudio(audioElement);
 
-        });
+       // });
     }, []);
-
     useEffect(() => {
         if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood");
+           // socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
-
     function handleStartButtonClick() {
-        socket.emit("startExperience");
+        //socket.emit("startExperience");
         setCurrentScreen("introduce");
     }
-
     const handleNextClick = () => {
-        socket.emit("showTeams");
+       // socket.emit("showTeams");
     };
-
-    useEffect(() => {
-
-        socket.emit("registerStudent1");
-
-        socket.on("showTeams", () => {
-            setCurrentScreen("teams");
-        });
-
-        socket.on("teamsAreDoneShowRules", () => {
-            setTeamsDone(true);
-            setCurrentScreen("rules");
-        });
-
-        socket.on("rulesAreDoneSelectThemeRandomly", () => {
-            socket.emit("chooseTheme");
-            setCurrentScreen("theme");
-        });
-
-        socket.on("themeSelected", (data) => {
-            setThemeSelected(data.theme);
-            setTimeout(() => {
-                socket.emit("themeIsRandomlyChosen", data.theme);
-            }, 1000);
-        });
-
-        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
-            setCurrentScreen("themeExplanation");
-        });
-
-        socket.on("showAnimals", (data) => {
-            setExplanationFinished(true);
-            setAnimalCards(data);
-            setCurrentScreen("animals");
-        });
-
-        socket.on("startTurnByTurn", (data) => {
-            setTurnByTurnData(data);
-            setCurrentScreen("turnByTurn");
-        });
-
-        socket.on("showInteractions", (data) => {
-            setInteractionsData(data);
-            setCurrentScreen("showInteractions");
-        });
-
-        socket.on("interactionExplained", (data) => {
-            setInteractionsExplainedData(data);
-            setCurrentScreen("understandInteraction");
-        })
-
-        socket.on("askQuestion", (data) => {
-            setAnimationQuestionData(data);
-            setCurrentScreen("animationQuestion");
-        });
-
-        socket.on("conclusion", () => {
-            setCurrentScreen("conclusion");
-        });
-
-        return () => {
-            socket.off("teamsAreDoneShowRules");
-            socket.off("rulesAreDoneSelectThemeRandomly");
-            socket.off("themeSelected");
-            socket.off("themeIsSelectedShowThemeExplanation");
-            socket.off("showAnimals");
-            socket.off("startTurnByTurn");
-            socket.off("showInteractions");
-            socket.off("animation");
-            socket.off("askQuestionGroupOne");
-            socket.off("showAnswerGroupOne");
-        };
-
-    }, []);
 
     return (
         <>
@@ -189,6 +128,7 @@ export default function StudentTablet1() {
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
+
             {currentScreen === "showInteractions" && (
                 <ShowInteractions data={interactionsData} />
             )}
@@ -197,10 +137,10 @@ export default function StudentTablet1() {
                 <UnderstandInteraction themeSelected={themeSelected} />
             )}
 
+
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
             )}
-
             {currentScreen === "conclusion" && (
                 <Conclusion/>
             )}
