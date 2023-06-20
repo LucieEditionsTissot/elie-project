@@ -350,44 +350,23 @@ io.on("connection", (socket) => {
         socket.join('client1');
         console.log('Client 1 enregistré :', socket.id);
         connectedClient[0] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true) {
-            io.emit("startExperience");
-        }
     });
+
+    if (connectedClient[0] === true && connectedClient[1] === true) {
+        console.log("Tous les clients sont connectés")
+    }
 
     socket.on('registerStudent2', () => {
         socket.join('client2');
         console.log('Client 2 enregistré :', socket.id);
         connectedClient[1] = true;
 
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience");
-        }
-        connectedClient[1] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience");
-        }
     });
 
-    socket.on('registerAnimationClient', () => {
-        socket.join('client3');
-        console.log('Client 3 enregistré :', socket.id);
-    });
 
     socket.on('registerAnimationClient', () => {
         console.log('Animation client registered');
         connectedClient[2] = true;
-
-        const ambiance = {
-            id: 1,
-            audios: ['audio/SonsAmbiance.mov'],
-            videos: ['video/Anim_Ambiance_Map01.mp4'],
-        };
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            socket.to('client3').emit(ambiance);
-        }
     });
 
     numberOfTeamWhoWantsToContinue = 0
@@ -401,8 +380,10 @@ io.on("connection", (socket) => {
     numberOfCardsView = 0
 
     socket.on("wantsToStartExperience", () => {
+        console.log("Ici")
+        console.log(numberOfTeamWhoWantsToContinue++);
         numberOfTeamWhoWantsToContinue++
-        socket.broadcast.emit("otherTeamWantsToContinue")
+        socket.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("launchIntroduction");
             numberOfTeamWhoWantsToContinue = 0
@@ -411,7 +392,7 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToContinueIntroduction", () => {
         numberOfTeamWhoWantsToContinue++
-        socket.broadcast.emit("otherTeamWantsToContinue")
+        socket.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("showTeams", config.teams);
             numberOfTeamWhoWantsToContinue = 0
@@ -437,8 +418,7 @@ io.on("connection", (socket) => {
             teamsAreDoneShowRules()
         }
     })
-
-
+    
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
