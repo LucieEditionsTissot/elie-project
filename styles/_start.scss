@@ -1,0 +1,22 @@
+#startScreen {
+  position: relative;
+
+  .logo {
+    position: relative;
+    height: 320px;
+    width: auto;
+    margin-right: 64px;
+  }
+
+  h1 {
+    position: relative;
+    font-family: "Patsy Sans", sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 46px;
+    letter-spacing: 0.05em;
+    text-align: left;
+    color: $blue;
+  }
+
+}

@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 let interval;
-const teams = require('./config');
+const config = require('./config');
 
 const getApiAndEmit = (socket) => {
     const response = new Date();
@@ -21,7 +21,7 @@ const getApiAndEmit = (socket) => {
 let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
-
+let numberOfTeamWhoWantsToContinue = 0
 let numberOfRulesUnderstood = 0
 
 const themeTimer = 5000
@@ -316,7 +316,6 @@ const animals = {
     }
 };
 
-
 const answersAnimation = {
     "Mutualisme": {
         "time": 5,
@@ -347,18 +346,14 @@ io.on("connection", (socket) => {
         clearInterval(interval);
     }
 
-
     socket.on('registerStudent1', () => {
         socket.join('client1');
         console.log('Client 1 enregistré :', socket.id);
         connectedClient[0] = true;
 
         if (connectedClient[0] === true && connectedClient[1] === true) {
-            console.log("startExperience");
-            io.emit("startExperience", teams);
+            io.emit("startExperience");
         }
-
-
     });
 
     socket.on('registerStudent2', () => {
@@ -381,8 +376,6 @@ io.on("connection", (socket) => {
         console.log('Client 3 enregistré :', socket.id);
     });
 
-
-
     socket.on('registerAnimationClient', () => {
         console.log('Animation client registered');
         connectedClient[2] = true;
@@ -397,6 +390,7 @@ io.on("connection", (socket) => {
         }
     });
 
+    numberOfTeamWhoWantsToContinue = 0
     numberOfTeamSelected = 0
     numberOfRulesUnderstood = 0
     numberOfChosenAnimals = 0
@@ -410,8 +404,8 @@ io.on("connection", (socket) => {
         numberOfTeamWhoWantsToContinue++
         socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
+            io.emit("launchIntroduction");
             numberOfTeamWhoWantsToContinue = 0
-            io.emit("startExperience");
         }
     })
 
@@ -419,8 +413,8 @@ io.on("connection", (socket) => {
         numberOfTeamWhoWantsToContinue++
         socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
+            io.emit("showTeams", config.teams);
             numberOfTeamWhoWantsToContinue = 0
-            io.emit("showTeams", teams);
         }
     })
 

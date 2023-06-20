@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -6,8 +6,11 @@ import ThemeScreen from "../components/ThemeScreen";
 import RulesScreen from "../components/RulesScreen";
 import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
+import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
+import ThemeExplanation from "../components/ThemeExplanation";
 import AnimalCards from "../components/AnimalCards";
+import ShowAnswer from "../components/ShowAnswer";
 import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
@@ -39,20 +42,22 @@ export default function StudentTablet2() {
     const [audioScenario, setAudioScenario] = useState(null);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
-
 
     socket.on('connect', function () {
         console.log("Client 2 connected");
         connected = true;
     });
 
-
     socket.on('disconnect', function () {
         console.log("Client 2 disconnected");
         connected = false;
     });
 
+    useEffect(() => {
+        setOtherTeamWantsToContinue(false)
+    }, [currentScreen]);
 
     useEffect(() => {
         if (connected)
@@ -72,14 +77,21 @@ export default function StudentTablet2() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-            socket.on("reloadClient", () => {
-                window.location.reload();
-            });
-    }, []);
-
-    useEffect(() => {
 
         socket.emit("registerStudent2");
+
+        socket.on("otherTeamWantsToContinue", () => {
+            setOtherTeamWantsToContinue(true)
+        });
+
+        socket.on("startExperience", () => {
+            setCurrentScreen("start");
+            console.log("game should start")
+        });
+
+        socket.on("launchIntroduction", () => {
+            setCurrentScreen("introduce");
+        });
 
         socket.on("showTeams", () => {
             setCurrentScreen("teams");
@@ -136,6 +148,19 @@ export default function StudentTablet2() {
             setCurrentScreen("conclusion");
         });
 
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+
         return () => {
             socket.off("teamsAreDoneShowRules");
             socket.off("rulesAreDoneSelectThemeRandomly");
@@ -148,6 +173,7 @@ export default function StudentTablet2() {
             socket.off("showAnswer");
         };
     }, []);
+
     return (
         <>
             <Head>

@@ -8,3 +8,7 @@ const teams = {
     6: ["Paul", "Léon", "Lucas"],
     7: ["Alice", "Lou", "Théo"]
 }
+
+module.exports = {
+    teams
+}

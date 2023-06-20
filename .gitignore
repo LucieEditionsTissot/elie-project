@@ -3,7 +3,9 @@
 .next
 .idea
 # dotenv environment variables file (build for Zeit Now)
+*/.DS_Store
 .DS_Store
+.DS_Store?
 /public/audio/*
 /public/video/*
 .env
