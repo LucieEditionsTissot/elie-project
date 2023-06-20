@@ -95,11 +95,95 @@ export default function StudentTablet1() {
         }
     }, [teamSelected]);
 
+
     useEffect(() => {
         if (rulesButtonClicked) {
             socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
+
+    function handleStartButtonClick() {
+        socket.emit("startExperience");
+        setCurrentScreen("introduce");
+    }
+
+    const handleNextClick = () => {
+        socket.emit("showTeams");
+    };
+
+    useEffect(() => {
+
+        socket.emit("registerStudent1");
+
+        socket.on("showTeams", () => {
+            setCurrentScreen("teams");
+        });
+
+        socket.on("teamsAreDoneShowRules", () => {
+            setTeamsDone(true);
+            setCurrentScreen("rules");
+        });
+
+        socket.on("rulesAreDoneSelectThemeRandomly", () => {
+            socket.emit("chooseTheme");
+            setCurrentScreen("theme");
+        });
+
+        socket.on("themeSelected", (data) => {
+            setThemeSelected(data.theme);
+            setTimeout(() => {
+                socket.emit("themeIsRandomlyChosen", data.theme);
+            }, 1000);
+        });
+
+        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+            setCurrentScreen("themeExplanation");
+        });
+
+        socket.on("showAnimals", (data) => {
+            setExplanationFinished(true);
+            setAnimalCards(data);
+            setCurrentScreen("animals");
+        });
+
+        socket.on("startTurnByTurn", (data) => {
+            setTurnByTurnData(data);
+            setCurrentScreen("turnByTurn");
+        });
+
+        socket.on("showInteractions", (data) => {
+            setInteractionsData(data);
+            setCurrentScreen("showInteractions");
+        });
+
+        socket.on("interactionExplained", (data) => {
+            setInteractionsExplainedData(data);
+            setCurrentScreen("understandInteraction");
+        })
+
+        socket.on("askQuestion", (data) => {
+            setAnimationQuestionData(data);
+            setCurrentScreen("animationQuestion");
+        });
+
+        socket.on("conclusion", () => {
+            setCurrentScreen("conclusion");
+        });
+
+        return () => {
+            socket.off("teamsAreDoneShowRules");
+            socket.off("rulesAreDoneSelectThemeRandomly");
+            socket.off("themeSelected");
+            socket.off("themeIsSelectedShowThemeExplanation");
+            socket.off("showAnimals");
+            socket.off("startTurnByTurn");
+            socket.off("showInteractions");
+            socket.off("animation");
+            socket.off("askQuestionGroupOne");
+            socket.off("showAnswerGroupOne");
+        };
+
+    }, []);
 
     useEffect(() => {
 
@@ -223,6 +307,7 @@ export default function StudentTablet1() {
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
+
             {currentScreen === "showInteractions" && (
                 <ShowInteractions data={interactionsData} />
             )}
@@ -231,10 +316,10 @@ export default function StudentTablet1() {
                 <UnderstandInteraction themeSelected={themeSelected} />
             )}
 
+
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
             )}
-
             {currentScreen === "conclusion" && (
                 <Conclusion/>
             )}

@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 let interval;
-
+const teams = require('./config');
 
 const getApiAndEmit = (socket) => {
     const response = new Date();
@@ -34,16 +34,6 @@ let numberOfCardsView = 0;
 let isFinalQuestionIsCorrect = true
 let isInformationUnderstood = 0
 let animalChosenValue = null;
-const teams = {
-    0: ["Lucie", "Yohan", "Jean"],
-    1: ["Sacha", "Léo", "Guilhem"],
-    2: ["Léa", "Baptiste", "Timothée"],
-    3: ["Raphaël", "Virgile", "Mathieu"],
-    4: ["Alma", "Jeanne", "Emma"],
-    5: ["Rose", "Gabrielle", "Inès"],
-    6: ["Paul", "Léon", "Lucas"],
-    7: ["Alice", "Lou", "Théo"]
-}
 
 const rules = {
     0: "Règles du jeu :",
@@ -347,41 +337,7 @@ const answersAnimation = {
         "correctAnswer": 3
     }
 }
-let regles = {
-    id: 2,
-    audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Ambience.mp4'],
-};
 
-let chooseTheme = {
-    id: 3,
-    audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Ambience.mp4'],
-};
-
-let themeIsChosen = {
-    id: 4,
-    audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Ambience.mp4'],
-};
-
-let explanation = {
-    id: 5,
-    audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Ambience.mp4'],
-};
-
-let animalsCards = {
-    id: 6,
-    audios: ['audio/10animaux.mp3'],
-    videos: ['video/Ambience.mp4'],
-};
-
-let indice1 = {
-    id: 7,
-    audios: ['audio/Indice_01.mp3'],
-    videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4','video/indices/indice1/LC_B_anim_indice_01.mp4', 'video/indices/indice1/LC_C_outro_indice_01.mp4'],
-};
 
 let connectedClient = [false,false, false];
 
@@ -411,7 +367,7 @@ io.on("connection", (socket) => {
         connectedClient[1] = true;
 
         if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience", teams);
+            io.emit("startExperience");
         }
         connectedClient[1] = true;
 

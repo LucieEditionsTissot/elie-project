@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -75,10 +75,23 @@ export default function StudentTablet2() {
         }
     }, [rulesButtonClicked]);
 
+    useEffect(() => {
+            socket.on("reloadClient", () => {
+                window.location.reload();
+            });
+    }, []);
 
     useEffect(() => {
-        socket.on("reloadClient", () => {
-            window.location.reload();
+
+        socket.emit("registerStudent2");
+
+        socket.on("showTeams", () => {
+            setCurrentScreen("teams");
+        });
+
+        socket.on("teamsAreDoneShowRules", () => {
+            setTeamsDone(true);
+            setCurrentScreen("rules");
         });
 
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
@@ -139,7 +152,6 @@ export default function StudentTablet2() {
             socket.off("showAnswer");
         };
     }, []);
-
     return (
         <>
             <Head>
