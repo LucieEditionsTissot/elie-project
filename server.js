@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 let interval;
-const config = require('./config');
+const teams = require('./config');
 
 const getApiAndEmit = (socket) => {
     const response = new Date();
@@ -337,12 +337,10 @@ const answersAnimation = {
     }
 }
 
+
 let connectedClient = [false,false, false];
 
 io.on("connection", (socket) => {
-
-    let userId;
-    console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
 
     if (interval) {
         clearInterval(interval);
@@ -352,45 +350,19 @@ io.on("connection", (socket) => {
         socket.join('client1');
         console.log('Client 1 enregistré :', socket.id);
         connectedClient[0] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true) {
-            io.emit("startExperience");
-        }
-
-        userId = "client1"
-        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
-
     });
 
+    if (connectedClient[0] === true && connectedClient[1] === true) {
+        console.log("Tous les clients sont connectés")
+    }
 
     socket.on('registerStudent2', () => {
         socket.join('client2');
         console.log('Client 2 enregistré :', socket.id);
         connectedClient[1] = true;
 
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience");
-        }
-        connectedClient[1] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience");
-        }
-
-        userId = "client2"
-        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
-
-        console.log(userId);
-
     });
 
-    socket.on('registerAnimationClient', () => {
-        socket.join('client3');
-        console.log('Client 3 enregistré :', socket.id);
-
-        userId = "client3"
-        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
-    });
 
     socket.on('registerAnimationClient', () => {
         console.log('Animation client registered');
@@ -409,9 +381,9 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToStartExperience", () => {
         console.log("Ici")
-        console.log(numberOfTeamWhoWantsToContinue++);
         numberOfTeamWhoWantsToContinue++
-        socket.broadcast.emit("otherTeamWantsToContinue")
+        console.log(numberOfTeamWhoWantsToContinue++);
+        socket.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("launchIntroduction");
             numberOfTeamWhoWantsToContinue = 0
@@ -420,9 +392,10 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToContinueIntroduction", () => {
         numberOfTeamWhoWantsToContinue++
-        socket.broadcast.emit("otherTeamWantsToContinue")
+        socket.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
-            io.emit("showTeams", config.teams);
+            console.log(io.emit("showTeams", teams.teams));
+            io.emit("showTeams", teams.teams);
             numberOfTeamWhoWantsToContinue = 0
         }
     })
@@ -433,6 +406,7 @@ io.on("connection", (socket) => {
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
+        console.log(teamChosen);
         numberOfTeamSelected++
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
@@ -441,24 +415,21 @@ io.on("connection", (socket) => {
 
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
+        console.log(teamChosen);
         numberOfTeamSelected++
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
     })
-
+    
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
-        if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
-            io.to('client3').emit(regles);
-        }
     }
 
     socket.on("rulesAreUnderstood", () => {
         numberOfRulesUnderstood += 1
         if (numberOfRulesUnderstood >= 2) {
-            io.to('client3').emit( chooseTheme);
             io.emit('rulesAreDoneSelectThemeRandomly');
         }
     })
@@ -479,12 +450,10 @@ io.on("connection", (socket) => {
         io.to("client2").emit("themeSelected", { theme: theme });
     });
 
-
     socket.on("themeIsRandomlyChosen", (theme) => {
-        io.to('client3').emit( themeIsChosen);
+
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', theme);
-            io.to('client3').emit( explanation);
             setTimeout(() => {
                 randomTheme = theme
                 const dataAnimals = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
@@ -555,10 +524,10 @@ io.on("connection", (socket) => {
     }
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
-
     socket.on("disconnect", () => {
+        connectedClient = [false,false, false];
+        io.emit("reloadClient");
         clearInterval(interval);
-        console.log(userId + " disconnected");
     })
 
 });

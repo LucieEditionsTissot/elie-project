@@ -53,7 +53,32 @@ export default function StudentTablet1() {
         connected = false;
     });
 
-    socket.emit("registerStudent1");
+
+    useEffect(() => {
+        socket.on("reloadClient", () => {
+            window.location.reload();
+        });
+        if (connected) {
+            socket.emit("registerStudent1");
+
+        }
+    }, [teamSelected]);
+
+    useEffect(() => {
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+    }, []);
+
 
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
@@ -76,6 +101,8 @@ export default function StudentTablet1() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
+
+        socket.emit("registerStudent1");
 
         socket.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true)
@@ -175,16 +202,14 @@ export default function StudentTablet1() {
     return (
         <>
             <Head>
-                <title>ELIE | Groupe 1</title>
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="mobile-web-app-capable" content="yes" />
+                <title>Tablette groupe 1</title>
             </Head>
 
             <div className="global-container">
 
-                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue ? "show" : ""}`}>
-                    <p>L'autre équipe t'attend</p>
-                </div>
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>

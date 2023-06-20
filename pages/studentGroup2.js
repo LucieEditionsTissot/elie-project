@@ -55,18 +55,18 @@ export default function StudentTablet2() {
         connected = false;
     });
 
-    socket.emit("registerStudent2");
 
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
     }, [currentScreen]);
 
     useEffect(() => {
+        socket.on("reloadClient", () => {
+            window.location.reload();
+        });
         if (connected) {
             socket.emit("registerStudent2");
-            if (teamSelected) {
-                socket.emit("teamChosenGroupeTwo", teamSelected);
-            }
+
         }
 
     }, [teamSelected]);
@@ -175,16 +175,14 @@ export default function StudentTablet2() {
     return (
         <>
             <Head>
-                <title>ELIE | Groupe 2</title>
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="mobile-web-app-capable" content="yes" />
+                <title>Tablette groupe 2</title>
             </Head>
 
             <div className="global-container">
 
-                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue ? "show" : ""}`}>
-                    <p>L'autre équipe t'attend</p>
-                </div>
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>
