@@ -23,7 +23,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     }
 
     function handleClickOnValidateButton() {
-        if (teamSelected === null) {
+        if (teamSelected !== null) {
             const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
             if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
                 const teamIndex = selectedCard.id;
