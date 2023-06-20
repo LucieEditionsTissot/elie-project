@@ -20,8 +20,9 @@ const getApiAndEmit = (socket) => {
 
 let teamGroupOne = null
 let teamGroupTwo = null
-let numberOfTeamSelected = 0
 
+let numberOfTeamWhoWantsToContinue = 0
+let numberOfTeamSelected = 0
 let numberOfRulesUnderstood = 0
 
 const themeTimer = 5000
@@ -398,9 +399,26 @@ io.on("connection", (socket) => {
     numberOfAnimationQuestionAnswered = 0
     IdOfAnimationQuestionAnswered = []
     isFinalQuestionIsCorrect = true
-    numberOfButtonClicked =0;
-    numberOfCardsView = 0;
+    numberOfButtonClicked = 0
+    numberOfCardsView = 0
 
+    socket.on("wantsToStartExperience", () => {
+        numberOfTeamWhoWantsToContinue++
+        socket.broadcast.emit("otherTeamWantsToContinue")
+        if (numberOfTeamWhoWantsToContinue >= 2) {
+            numberOfTeamWhoWantsToContinue = 0
+            io.emit("startExperience");
+        }
+    })
+
+    socket.on("wantsToContinueIntroduction", () => {
+        numberOfTeamWhoWantsToContinue++
+        socket.broadcast.emit("otherTeamWantsToContinue")
+        if (numberOfTeamWhoWantsToContinue >= 2) {
+            numberOfTeamWhoWantsToContinue = 0
+            io.emit("showTeams", teams);
+        }
+    })
 
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);

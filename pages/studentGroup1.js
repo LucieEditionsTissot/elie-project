@@ -23,7 +23,7 @@ const socket = io(url);
 let connected = false;
 
 export default function StudentTablet1() {
-
+    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
@@ -82,23 +82,34 @@ export default function StudentTablet1() {
     }, []);
 
     useEffect(() => {
+        setOtherTeamWantsToContinue(false)
+    }, [currentScreen]);
+
+    useEffect(() => {
+        socket.emit("registerStudent1");
+
+        if (teamSelected) {
+            socket.emit("teamChosenGroupeOne", teamSelected);
+        }
+    }, [teamSelected]);
+
+    useEffect(() => {
         if (rulesButtonClicked) {
             socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
 
-    function handleStartButtonClick() {
-        socket.emit("startExperience");
-        setCurrentScreen("introduce");
-    }
-
-    const handleNextClick = () => {
-        socket.emit("showTeams");
-    };
-
     useEffect(() => {
 
         socket.emit("registerStudent1");
+
+        socket.on("otherTeamWantsToContinue", () => {
+            setOtherTeamWantsToContinue(true)
+        });
+
+        socket.on("startExperience", () => {
+            setCurrentScreen("introduce");
+        });
 
         socket.on("showTeams", () => {
             setCurrentScreen("teams");
@@ -172,56 +183,73 @@ export default function StudentTablet1() {
 
     return (
         <>
-            {currentScenario && currentScenario.id === 11 && (
-                <AudioPlayer src={currentScenario.audios} />
+            <Head>
+                <title>Tablette groupe 1</title>
+            </Head>
+
+            {otherTeamWantsToContinue && (
+                <div className="otherTeamWantsToContinue"></div>
             )}
 
             {currentScreen === "start" && (
-                <StartScreen onClick={handleStartButtonClick} />
+                <StartScreen onClick={handleStartButtonClick}/>
             )}
 
             {currentScreen === "introduce" && (
-                <Introduce onNextClick={handleNextClick} />
+                <Introduce onClick={handleClickOnIntroduceButton}/>
             )}
 
             {currentScreen === "teams" && (
-                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
             )}
 
             {currentScreen === "rules" && teamsDone && (
-                <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
+                <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
             )}
 
-            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected} />}
+            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
 
             {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen themeSelected={themeSelected} />
+                <ThemeExplanationScreen themeSelected={themeSelected}/>
             )}
 
             {currentScreen === "animals" && (
-                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"} />
+                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"}/>
             )}
 
             {currentScreen === "turnByTurn" && (
-                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
+                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
             )}
 
             {currentScreen === "showInteractions" && (
-                <ShowInteractions data={interactionsData} />
+                <ShowInteractions data={interactionsData}/>
             )}
 
             {currentScreen === "understandInteraction" && (
-                <UnderstandInteraction themeSelected={themeSelected} />
+                <UnderstandInteraction themeSelected={themeSelected}/>
             )}
 
             {currentScreen === "animationQuestion" && (
-                <AnimationQuestionScreen data={animationQuestionData} />
+                <AnimationQuestionScreen data={animationQuestionData}/>
             )}
 
             {currentScreen === "conclusion" && (
                 <Conclusion/>
             )}
 
+            {currentScenario && currentScenario.id === 11 && (
+                <AudioPlayer src={currentScenario.audios}/>
+            )}
+
         </>
     );
+
+    function handleStartButtonClick() {
+        socket.emit("wantsToStartExperience");
+    }
+
+    function handleClickOnIntroduceButton() {
+        socket.emit("wantsToContinueIntroduction");
+    }
+
 }
