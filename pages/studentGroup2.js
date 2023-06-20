@@ -60,8 +60,7 @@ export default function StudentTablet2() {
     }, [currentScreen]);
 
     useEffect(() => {
-        if (connected)
-        {
+        if (connected) {
             socket.emit("registerStudent2");
             if (teamSelected) {
                 socket.emit("teamChosenGroupeTwo", teamSelected);
@@ -180,60 +179,64 @@ export default function StudentTablet2() {
                 <title>Tablette groupe 2</title>
             </Head>
 
-            {otherTeamWantsToContinue && (
-                <div className="otherTeamWantsToContinue"></div>
-            )}
+            <div className="global-container">
 
-            {currentScreen === "start" && (
-                <StartScreen onClick={handleStartButtonClick}/>
-            )}
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
-            {currentScreen === "introduce" && (
-                <Introduce onClick={handleClickOnIntroduceButton}/>
-            )}
+                {currentScreen === "start" && (
+                    <StartScreen onClick={handleStartButtonClick}/>
+                )}
 
-            {currentScreen === "teams" && (
-                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
-            )}
+                {currentScreen === "introduce" && (
+                    <Introduce onClick={handleClickOnIntroduceButton}/>
+                )}
 
-            {currentScreen === "rules" && teamsDone && (
-                <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
-            )}
+                {currentScreen === "teams" && (
+                    <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
+                )}
 
-            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
+                {currentScreen === "rules" && teamsDone && (
+                    <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
+                )}
 
-            {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen themeSelected={themeSelected}/>
-            )}
+                {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
 
-            {currentScreen === "animals" && (
-                <AnimalCards data={animalCards} client={2} groupName={"teamGroupTwo"}/>
-            )}
+                {currentScreen === "themeExplanation" && (
+                    <ThemeExplanationScreen themeSelected={themeSelected}/>
+                )}
 
-            {currentScreen === "turnByTurn" && (
-                <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"}/>
-            )}
+                {currentScreen === "animals" && (
+                    <AnimalCards data={animalCards} client={2} groupName={"teamGroupTwo"}/>
+                )}
 
-            {currentScreen === "showInteractions" && (
-                <ShowInteractions data={interactionsData}/>
-            )}
+                {currentScreen === "turnByTurn" && (
+                    <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"}/>
+                )}
 
-            {currentScreen === "understandInteraction" && (
-                <UnderstandInteraction themeSelected={themeSelected}/>
-            )}
+                {currentScreen === "showInteractions" && (
+                    <ShowInteractions data={interactionsData}/>
+                )}
+
+                {currentScreen === "understandInteraction" && (
+                    <UnderstandInteraction themeSelected={themeSelected}/>
+                )}
 
 
-            {currentScreen === "animationQuestion" && (
-                <AnimationQuestionScreen data={animationQuestionData}/>
-            )}
+                {currentScreen === "animationQuestion" && (
+                    <AnimationQuestionScreen data={animationQuestionData}/>
+                )}
 
-            {currentScreen === "conclusion" && (
-                <Conclusion/>
-            )}
+                {currentScreen === "conclusion" && (
+                    <Conclusion/>
+                )}
 
-            {currentScenario && currentScenario.id === 12 && (
-                <AudioPlayer src={currentScenario.audios}/>
-            )}
+                {currentScenario && currentScenario.id === 12 && (
+                    <AudioPlayer src={currentScenario.audios}/>
+                )}
+
+            </div>
 
         </>
     );
