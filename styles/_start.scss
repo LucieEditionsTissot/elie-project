@@ -1,9 +1,11 @@
 #startScreen {
   position: relative;
+  max-width: 80%;
+  margin: 0 auto;
 
   .logo {
     position: relative;
-    height: 320px;
+    height: 90%;
     width: auto;
     margin-right: 64px;
   }
@@ -11,12 +13,45 @@
   h1 {
     position: relative;
     font-family: "Patsy Sans", sans-serif;
-    font-size: 40px;
+    font-size: 5.3vw;
     font-weight: 400;
-    line-height: 46px;
+    line-height: 1.15;
     letter-spacing: 0.05em;
     text-align: left;
     color: $blue;
+  }
+
+  .start-button {
+    position: relative;
+    margin-top: 80px;
+    padding: 28px 57px 28px 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 150px;
+    background: $pink;
+    user-select: none;
+
+    img {
+      position: relative;
+      height: 73px;
+      width: auto;
+      -webkit-user-drag: none;
+    }
+
+    p {
+      position: relative;
+      margin-left: 31px;
+      font-family: "PP Pangram Sans Rounded bold", sans-serif;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 46px;
+      letter-spacing: 0.05em;
+      text-align: left;
+      text-transform: uppercase;
+      color: $wheat;
+    }
+
   }
 
 }

@@ -4,21 +4,26 @@ import Frame from "./Frame";
 function StartScreen({ onClick }) {
     return (
         <>
-            <Frame color={"green"} text={"Introduction"}/>
+            <Frame color={"green"} text={"Elie"}/>
 
             <div className="relative h-full w-full flex flex-col justify-center items-center" id="startScreen">
 
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row justify-center items-center">
 
                     <img src={"images/logo-blue.svg"} alt="Logo" className="logo"/>
 
-                    <h1>Découvrir les interactions du monde vivat</h1>
+                    <h1>Découvrir<br/>les interactions du monde vivat</h1>
 
                 </div>
 
-                <h2>Bienvenue !</h2>
-                <p>Prêt à commencer l'expérience ?</p>
-                <button onClick={onClick}>Commencer</button>
+                <div className="start-button" onClick={onClick}>
+
+                    <img src={"images/start-button-icon.svg"} alt="start button"/>
+
+                    <p>Commencer</p>
+
+                </div>
+
             </div>
 
         </>
