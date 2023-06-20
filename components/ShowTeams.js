@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from 'socket.io-client';
 import {url} from "../pages/_app";
-import teams from '../config';
+import config from '../config';
 
 const socket = io(url);
 
@@ -52,7 +52,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
         <section id="teams">
             <h1>Choisissez votre équipe</h1>
             <div className="teamsWrapper">
-                {Object.keys(teams).map((teamColor, index) => (
+                {Object.keys(config.teams).map((teamColor, index) => (
                     <div
                         ref={ref => (cardRefs.current[index] = ref)}
                         key={index}
@@ -63,7 +63,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
                     >
                         <h2 className="teamName">{teamColor}</h2>
                         <ul>
-                            {teams[teamColor].map((member, index) => (
+                            {config.teams[teamColor].map((member, index) => (
                                 <li key={index}>{member}</li>
                             ))}
                         </ul>

@@ -23,12 +23,11 @@ const socket = io(url);
 let connected = false;
 
 export default function StudentTablet1() {
-
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState("start");
+    const [currentScreen, setCurrentScreen] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -45,18 +44,9 @@ export default function StudentTablet1() {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
-
-    socket.on('connect', function () {
-        console.log("Client 1 connected");
-        connected = true;
-    });
-
-
-    socket.on('disconnect', function () {
-        console.log("Client 1 disconnected");
-        connected = false;
-    });
-
+    useEffect(() => {
+        setOtherTeamWantsToContinue(false)
+    }, [currentScreen]);
 
     useEffect(() => {
         if (connected) {
@@ -69,131 +59,34 @@ export default function StudentTablet1() {
     }, [teamSelected]);
 
     useEffect(() => {
-        socket.on('scenario', (scenario) => {
-            setCurrentScenario(scenario);
-            setAudioLoaded(false);
-
-            const audioElement = new Audio(scenario.audios[0]);
-            audioElement.addEventListener('canplaythrough', () => {
-                setAudioLoaded(true);
-            });
-
-            setCurrentAudio(audioElement);
-
-        });
-    }, []);
-
-    useEffect(() => {
-        setOtherTeamWantsToContinue(false)
-    }, [currentScreen]);
-
-    useEffect(() => {
-        socket.emit("registerStudent1");
-
-        if (teamSelected) {
-            socket.emit("teamChosenGroupeOne", teamSelected);
-        }
-    }, [teamSelected]);
-
-
-    useEffect(() => {
         if (rulesButtonClicked) {
             socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
 
-    function handleStartButtonClick() {
-        socket.emit("startExperience");
-        setCurrentScreen("introduce");
-    }
-
-    const handleNextClick = () => {
-        socket.emit("showTeams");
-    };
-
     useEffect(() => {
 
         socket.emit("registerStudent1");
 
-        socket.on("showTeams", () => {
-            setCurrentScreen("teams");
+        socket.on('connect', function () {
+            console.log("Client 1 connected");
+            connected = true;
         });
 
-        socket.on("teamsAreDoneShowRules", () => {
-            setTeamsDone(true);
-            setCurrentScreen("rules");
+        socket.on('disconnect', function () {
+            console.log("Client 1 disconnected");
+            connected = false;
         });
-
-        socket.on("rulesAreDoneSelectThemeRandomly", () => {
-            socket.emit("chooseTheme");
-            setCurrentScreen("theme");
-        });
-
-        socket.on("themeSelected", (data) => {
-            setThemeSelected(data.theme);
-            setTimeout(() => {
-                socket.emit("themeIsRandomlyChosen", data.theme);
-            }, 1000);
-        });
-
-        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
-            setCurrentScreen("themeExplanation");
-        });
-
-        socket.on("showAnimals", (data) => {
-            setExplanationFinished(true);
-            setAnimalCards(data);
-            setCurrentScreen("animals");
-        });
-
-        socket.on("startTurnByTurn", (data) => {
-            setTurnByTurnData(data);
-            setCurrentScreen("turnByTurn");
-        });
-
-        socket.on("showInteractions", (data) => {
-            setInteractionsData(data);
-            setCurrentScreen("showInteractions");
-        });
-
-        socket.on("interactionExplained", (data) => {
-            setInteractionsExplainedData(data);
-            setCurrentScreen("understandInteraction");
-        })
-
-        socket.on("askQuestion", (data) => {
-            setAnimationQuestionData(data);
-            setCurrentScreen("animationQuestion");
-        });
-
-        socket.on("conclusion", () => {
-            setCurrentScreen("conclusion");
-        });
-
-        return () => {
-            socket.off("teamsAreDoneShowRules");
-            socket.off("rulesAreDoneSelectThemeRandomly");
-            socket.off("themeSelected");
-            socket.off("themeIsSelectedShowThemeExplanation");
-            socket.off("showAnimals");
-            socket.off("startTurnByTurn");
-            socket.off("showInteractions");
-            socket.off("animation");
-            socket.off("askQuestionGroupOne");
-            socket.off("showAnswerGroupOne");
-        };
-
-    }, []);
-
-    useEffect(() => {
-
-        socket.emit("registerStudent1");
 
         socket.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true)
         });
 
         socket.on("startExperience", () => {
+            setCurrentScreen("start");
+        });
+
+        socket.on("launchIntroduction", () => {
             setCurrentScreen("introduce");
         });
 
@@ -252,6 +145,19 @@ export default function StudentTablet1() {
             setCurrentScreen("conclusion");
         });
 
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+
         return () => {
             socket.off("teamsAreDoneShowRules");
             socket.off("rulesAreDoneSelectThemeRandomly");
@@ -278,48 +184,47 @@ export default function StudentTablet1() {
             )}
 
             {currentScreen === "start" && (
-                <StartScreen onClick={handleStartButtonClick} />
+                <StartScreen onClick={handleStartButtonClick}/>
             )}
 
             {currentScreen === "introduce" && (
-                <Introduce onNextClick={handleNextClick} />
+                <Introduce onClick={handleClickOnIntroduceButton}/>
             )}
 
             {currentScreen === "teams" && (
-                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
             )}
 
             {currentScreen === "rules" && teamsDone && (
-                <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
+                <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
             )}
 
-            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected} />}
+            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
 
             {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen themeSelected={themeSelected} />
+                <ThemeExplanationScreen themeSelected={themeSelected}/>
             )}
 
             {currentScreen === "animals" && (
-                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"} />
+                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"}/>
             )}
 
             {currentScreen === "turnByTurn" && (
-                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
+                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
             )}
 
-
             {currentScreen === "showInteractions" && (
-                <ShowInteractions data={interactionsData} />
+                <ShowInteractions data={interactionsData}/>
             )}
 
             {currentScreen === "understandInteraction" && (
-                <UnderstandInteraction themeSelected={themeSelected} />
+                <UnderstandInteraction themeSelected={themeSelected}/>
             )}
-
 
             {currentScreen === "animationQuestion" && (
-                <AnimationQuestionScreen data={animationQuestionData} />
+                <AnimationQuestionScreen data={animationQuestionData}/>
             )}
+
             {currentScreen === "conclusion" && (
                 <Conclusion/>
             )}
