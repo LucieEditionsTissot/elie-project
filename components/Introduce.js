@@ -1,8 +1,12 @@
 import React from "react";
+import io from "socket.io-client";
+import {url} from "../pages/_app";
+
+const socket = io(url);
 
 const Introduce = ({ onNextClick }) => {
     const handleNextClick = () => {
-       socket.emit('showTeams')
+       socket.emit('readyToShowTeams')
     };
 
     return (

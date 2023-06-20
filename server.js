@@ -27,7 +27,7 @@ let numberOfRulesUnderstood = 0
 const themeTimer = 5000
 let randomTheme = null;
 let numberOfChosenAnimals = 0
-let numberOfButtonClicked =0;
+let numberOfButtonClicked = 0;
 let numberOfAnimationQuestionAnswered = 0
 let IdOfAnimationQuestionAnswered = []
 let numberOfCardsView = 0;
@@ -350,7 +350,7 @@ const answersAnimation = {
 let regles = {
     id: 2,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
 
 let chooseTheme = {
@@ -358,67 +358,76 @@ let chooseTheme = {
     audios: ['audio/SonsAmbiance.mov'],
     videos: ['video/Ambience.mp4'],
 };
+
 let themeIsChosen = {
     id: 4,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
+
 let explanation = {
     id: 5,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
 
 let animalsCards = {
     id: 6,
     audios: ['audio/10animaux.mp3'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
+
 let indice1 = {
     id: 7,
     audios: ['audio/Indice_01.mp3'],
     videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4','video/indices/indice1/LC_B_anim_indice_01.mp4', 'video/indices/indice1/LC_C_outro_indice_01.mp4'],
 };
+
 let indice1Loop = {
     id: 7,
     audios: ['audio/Indice_01.mp3'],
     videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
 };
+
 let indice2Client1 = {
     id: 11,
     audios: ['audio/Corbeau.mov'],
 };
+
 let indice2Client2 = {
     id: 12,
     audios: ['audio/loup.mov'],
 };
+
 let interactions = {
     id: 8,
     audios: [ 'audio/LeMutualisme.mp3'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
 
 const scenario9 = {
     id: 9,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
+
 const scenario10 = {
     id: 10,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
+
 const scenario11 = {
     id: 13,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
+
 const scenario12 = {
     id: 15,
     audios: ['audio/SonsAmbiance.mov'],
-    videos: ['video/Anim_Ambiance_Map01.mp4'],
+    videos: ['video/Ambience.mp4'],
 };
-
 
 io.on("connection", (socket) => {
 
@@ -441,19 +450,16 @@ io.on("connection", (socket) => {
         console.log('Client 3 enregistré :', socket.id);
     });
 
-
-    io.emit("startExperience", teams);
     socket.on('registerAnimationClient', () => {
         console.log('Animation client registered');
 
         const ambiance = {
             id: 1,
             audios: ['audio/SonsAmbiance.mov'],
-            videos: ['video/Anim_Ambiance_Map01.mp4'],
+            videos: ['video/Ambience.mp4'],
         };
 
-        socket.to('client3').emit( ambiance);
-
+        socket.to('client3').emit(ambiance);
 
     });
 
@@ -466,6 +472,9 @@ io.on("connection", (socket) => {
     numberOfButtonClicked =0;
     numberOfCardsView = 0;
 
+    socket.on("readyToShowTeams", () => {
+        io.emit("showTeams", teams);
+    })
 
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);
@@ -492,15 +501,13 @@ io.on("connection", (socket) => {
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
-            console.log(io.to('client3').emit( regles));
             io.to('client3').emit(regles);
         }
     }
 
     socket.on("rulesAreUnderstood", () => {
-        numberOfRulesUnderstood++
+        numberOfRulesUnderstood += 1
         if (numberOfRulesUnderstood >= 2) {
-            console.log(io.to('client3').emit( chooseTheme));
             io.to('client3').emit( chooseTheme);
             io.emit('rulesAreDoneSelectThemeRandomly');
         }

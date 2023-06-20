@@ -4,8 +4,9 @@ import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
 import Images from "../components/Images";
+import {url} from "./_app";
 
-const socket = io('http://localhost:3000');
+const socket = io(url);
 
 const Client3 = () => {
     const [currentScenario, setCurrentScenario] = useState(null);
@@ -44,9 +45,6 @@ const Client3 = () => {
 
             if (scenario.videos.length > 1) {
                 setCurrentVideoIndex(0);
-            }
-            if (scenario.audios.length > 1) {
-                setCurrentAudioIndex(0);
             }
         });
     }, []);
@@ -119,6 +117,7 @@ const Client3 = () => {
 
             <div>
                 {currentScenario && currentScenario.id === 1 && (
+
                     <div>
                         <AudioPlayer src={currentScenario.audios} />
                         <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />

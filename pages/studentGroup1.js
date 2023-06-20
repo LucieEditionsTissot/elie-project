@@ -16,14 +16,15 @@ import Conclusion from "../components/Conclusion";
 import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
 import AudioPlayer from "../components/AudioPlayer";
+import {url} from "./_app";
 
-const socket = io("localhost:3000");
+const socket = io(url);
 
 export default function StudentTablet1() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState("teams");
+    const [currentScreen, setCurrentScreen] = useState("start");
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -40,7 +41,6 @@ export default function StudentTablet1() {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
-
     useEffect(() => {
         socket.emit("registerStudent1");
 
@@ -48,6 +48,7 @@ export default function StudentTablet1() {
             socket.emit("teamChosenGroupeOne", teamSelected);
         }
     }, [teamSelected]);
+
     useEffect(() => {
         socket.on('scenario', (scenario) => {
             setCurrentScenario(scenario);
@@ -62,31 +63,40 @@ export default function StudentTablet1() {
 
         });
     }, []);
+
     useEffect(() => {
         if (rulesButtonClicked) {
             socket.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
+
     function handleStartButtonClick() {
         socket.emit("startExperience");
         setCurrentScreen("introduce");
     }
+
     const handleNextClick = () => {
         socket.emit("showTeams");
     };
+
     useEffect(() => {
+
         socket.emit("registerStudent1");
-        socket.on("teams", (data) => {
-            setTeams(data);
-        })
+
+        socket.on("showTeams", () => {
+            setCurrentScreen("teams");
+        });
+
         socket.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
         });
+
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
             socket.emit("chooseTheme");
             setCurrentScreen("theme");
         });
+
         socket.on("themeSelected", (data) => {
             setThemeSelected(data.theme);
             setTimeout(() => {
@@ -97,6 +107,7 @@ export default function StudentTablet1() {
         socket.on("themeIsSelectedShowThemeExplanation", (data) => {
             setCurrentScreen("themeExplanation");
         });
+
         socket.on("showAnimals", (data) => {
             setExplanationFinished(true);
             setAnimalCards(data);
@@ -112,6 +123,7 @@ export default function StudentTablet1() {
             setInteractionsData(data);
             setCurrentScreen("showInteractions");
         });
+
         socket.on("interactionExplained", (data) => {
             setInteractionsExplainedData(data);
             setCurrentScreen("understandInteraction");
@@ -121,6 +133,7 @@ export default function StudentTablet1() {
             setAnimationQuestionData(data);
             setCurrentScreen("animationQuestion");
         });
+
         socket.on("conclusion", () => {
             setCurrentScreen("conclusion");
         });
@@ -137,6 +150,7 @@ export default function StudentTablet1() {
             socket.off("askQuestionGroupOne");
             socket.off("showAnswerGroupOne");
         };
+
     }, []);
 
     return (
@@ -145,8 +159,13 @@ export default function StudentTablet1() {
                 <AudioPlayer src={currentScenario.audios} />
             )}
 
-            {currentScreen === "start" && <StartScreen onClick={handleStartButtonClick} />}
-            {currentScreen === "introduce" && <Introduce onNextClick={handleNextClick} />}
+            {currentScreen === "start" && (
+                <StartScreen onClick={handleStartButtonClick} />
+            )}
+
+            {currentScreen === "introduce" && (
+                <Introduce onNextClick={handleNextClick} />
+            )}
 
             {currentScreen === "teams" && (
                 <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
@@ -170,7 +189,6 @@ export default function StudentTablet1() {
                 <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
-
             {currentScreen === "showInteractions" && (
                 <ShowInteractions data={interactionsData} />
             )}
@@ -179,10 +197,10 @@ export default function StudentTablet1() {
                 <UnderstandInteraction themeSelected={themeSelected} />
             )}
 
-
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData} />
             )}
+
             {currentScreen === "conclusion" && (
                 <Conclusion/>
             )}

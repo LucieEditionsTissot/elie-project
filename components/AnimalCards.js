@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import io from 'socket.io-client';
+import {url} from "../pages/_app";
 
-const socket = io('localhost:3000');
+const socket = io(url);
 
 function AnimalCards(props) {
     const [data, setData] = useState(props.data);

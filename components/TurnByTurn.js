@@ -1,16 +1,17 @@
 import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
 import ShowAnswer from "./ShowAnswer";
+import {url} from "../pages/_app";
 
-const socket = io('localhost:3000')
+const socket = io(url);
+;
 
 function TurnByTurn(props) {
 
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
-    const [globalTimer, setGlobalTimer] = useState(30);
-
+    const [globalTimer, setGlobalTimer] = useState(10);
     const [data, setData] = useState([]);
     const [teams, setTeams] = useState([]);
     const [randomTheme, setRandomTheme] = useState("");
@@ -48,7 +49,7 @@ function TurnByTurn(props) {
             if (stateOfTheGame === 1) {
                 socket.emit("indice2");
             } else if (stateOfTheGame === 2) {
-               return socket.off("indice2");
+                socket.off("indice2");
             }
         }
     }, [stateOfTheGame]);
@@ -82,10 +83,10 @@ function TurnByTurn(props) {
     function showTipsWaitingScreen(text) {
         const waitingScreen = document.querySelector(".waitingScreen")
         const waitingScreenText = document.querySelector(".waitingScreen h4")
-        if(waitingScreen) {
+        if (waitingScreen) {
             waitingScreen.classList.add("is-active")
         }
-        if(waitingScreenText) {
+        if (waitingScreenText) {
             waitingScreenText.innerHTML = text
         }
         console.log("stateOfTheGame", stateOfTheGame)
@@ -99,8 +100,12 @@ function TurnByTurn(props) {
 
         const waitingScreen = document.querySelector(".waitingScreen")
         const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
-        waitingScreen.classList.add("is-active")
+        if (waitingScreen) {
+            waitingScreen.classList.add("is-active")
+        }
+        if (waitingScreenText) {
+            waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+        }
 
         setTimeout(() => {
             waitingScreen.classList.remove("is-active")
@@ -141,17 +146,25 @@ function TurnByTurn(props) {
 
         const waitingScreen = document.querySelector(".waitingScreen")
         const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreenText.innerHTML = "Indice en cours !"
-        waitingScreen.classList.add("is-active")
+        if (waitingScreen) {
+            waitingScreen.classList.add("is-active")
+        }
+        if (waitingScreenText) {
+            waitingScreenText.innerHTML = "Indice en cours !"
+        }
 
         setTimeout(() => {
-            if (actualTeamMembers[actualIndexOfMembers + 1]) {
+            if (actualTeamMembers[actualIndexOfMembers + 1] && waitingScreenText) {
                 waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers + 1] + " à toi de jouer !"
             } else {
-                waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+                if (waitingScreenText) {
+                    waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+                }
             }
             setTimeout(() => {
-                waitingScreen.classList.remove("is-active")
+                if (waitingScreen) {
+                    waitingScreen.classList.remove("is-active")
+                }
             }, 3000)
         }, 3000)
 
@@ -160,9 +173,13 @@ function TurnByTurn(props) {
     function disableTimer() {
         const timerWrapper = document.querySelector(".timer-wrapper");
         const timer = document.querySelector(".timer");
-        timerWrapper.style.display = "none";
-        timer.style.display = "none";
-        timer.style.animationPlayState = "paused";
+        if (timerWrapper) {
+            timerWrapper.style.display = "none";
+        }
+        if (timer) {
+            timer.style.display = "none";
+            timer.style.animationPlayState = "paused";
+        }
     }
 
     function handleClickOnValidateButton() {
@@ -174,7 +191,6 @@ function TurnByTurn(props) {
             setAnimalChosen(animalChosen);
             socket.emit("animalChosen", Number(lastCard[0].id));
         }
-
     }
 
     return (
@@ -210,7 +226,7 @@ function TurnByTurn(props) {
                 <p>Validate</p>
             </div>
 
-            {isValueSubmit && isAnimalChosen && <ShowAnswer correctAnswer={isAnimalChosen}/> }
+            {isValueSubmit && isAnimalChosen && <ShowAnswer correctAnswer={isAnimalChosen}/>}
 
             <div className={"waitingScreen"}>
 

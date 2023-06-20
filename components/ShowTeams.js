@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from 'socket.io-client';
+import {url} from "../pages/_app";
 
-const socket = io('localhost:3000');
+const socket = io(url);
 
 function ShowTeams({ teamSelected, onTeamSelected }) {
     const [teams, setTeams] = useState([]);
@@ -41,7 +42,7 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     });
 
     useEffect(() => {
-        socket.on('startExperience', (teams) => {
+        socket.on('showTeams', (teams) => {
             setTeams(teams);
         });
     }, []);
