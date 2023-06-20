@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import io from 'socket.io-client';
+import {url} from "../pages/_app";
 
-
-const socket = io('localhost:3000')
+const socket = io(url);
 
 function ShowInteractions({ data }) {
     const [selectedAnimal, setSelectedAnimal] = useState(null);
