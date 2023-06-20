@@ -1,3 +1,236 @@
+@font-face {
+  font-family: "PP Pangram Sans Rounded";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Regular.ttf");
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "PP Pangram Sans Rounded medium";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Medium.ttf");
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: "PP Pangram Sans Rounded semi-bold";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Semibold.ttf");
+  font-style: normal;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "PP Pangram Sans Rounded bold";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Bold.ttf");
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Patsy Sans";
+  src: url("../public/font/Patsy/PatsySans.otf");
+  font-style: normal;
+  font-weight: 400;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.global-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 50px 5%;
+  display: flex;
+  flex-direction: column;
+}
+.global-wrapper .type {
+  position: relative;
+  width: fit-content;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: 1px solid #303030;
+  font-size: 20px;
+  color: #303030;
+  background: #e7e7e7;
+}
+.global-wrapper .theme, .global-wrapper .question {
+  position: relative;
+  margin-top: 75px;
+  font-size: 2vw;
+  color: #303030;
+  text-align: center;
+}
+.global-wrapper .info {
+  position: relative;
+  margin-top: 10px;
+  font-size: 1.1vw;
+  text-align: center;
+}
+.global-wrapper .themeWrapper, .global-wrapper .questionWrapper {
+  position: relative;
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.global-wrapper .themeWrapper h2, .global-wrapper .questionWrapper h2 {
+  position: relative;
+  margin: 0 20px;
+  padding: 12px 18px;
+  font-size: 1.5vw;
+  color: #303030;
+  text-align: center;
+  border-radius: 14px;
+  cursor: pointer;
+  border: 1px solid #303030;
+  background: #e7e7e7;
+  transition: all ease-in-out 0.35s;
+}
+.global-wrapper .themeWrapper h2:hover, .global-wrapper .themeWrapper h2.selected, .global-wrapper .questionWrapper h2:hover, .global-wrapper .questionWrapper h2.selected {
+  background: #cecece;
+}
+.global-wrapper .themeWrapper h2.disabled, .global-wrapper .questionWrapper h2.disabled {
+  background: #ffffff;
+  color: #d5d5d5;
+  border: 1px solid #d5d5d5;
+}
+.global-wrapper ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.global-wrapper li {
+  display: block;
+}
+.global-wrapper .buttonValidate {
+  position: relative;
+  margin: 20px auto 0;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 30px;
+  cursor: pointer;
+  user-select: none;
+  background: #ffffff;
+  color: #d5d5d5;
+  border: 1px solid #d5d5d5;
+  transition: all ease-in-out 0.35s;
+}
+.global-wrapper .buttonValidate.readyToClick {
+  background-color: #303030;
+  border: 1px solid #e7e7e7;
+  color: #e7e7e7;
+}
+.global-wrapper .selectedAnimation {
+  position: relative;
+  margin-top: 30px;
+  font-size: 1.2vw;
+  font-weight: 400;
+}
+.global-wrapper .answerWrapper {
+  position: relative;
+  margin: 20px auto 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.global-wrapper .answerWrapper h5 {
+  position: relative;
+  font-weight: 300;
+  font-size: 15px;
+  color: #303030;
+}
+.global-wrapper .answerWrapper p {
+  position: relative;
+  margin: 0 5px;
+  font-weight: 500;
+  font-size: 15px;
+  color: #303030;
+}
+
+body {
+  background-color: #384864;
+}
+
+.global-container {
+  position: fixed;
+  padding: 19px;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  z-index: 5;
+  background-color: #384864;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  z-index: 10;
+  padding: 19px;
+  user-focus: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.frame img {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+}
+.frame h3 {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  font-family: "Patsy Sans", sans-serif;
+  font-size: 33px;
+  font-weight: 400;
+  line-height: 47px;
+  letter-spacing: 0.15em;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  color: #c3e0c7;
+  user-select: none;
+  z-index: 1;
+}
+
+.otherTeamWantsToContinue {
+  position: fixed;
+  top: 0;
+  right: 50px;
+  height: 50px;
+  width: 100px;
+  background-color: red;
+  z-index: 15;
+}
+
+#startScreen {
+  position: relative;
+}
+#startScreen .logo {
+  position: relative;
+  height: 320px;
+  width: auto;
+  margin-right: 64px;
+}
+#startScreen h1 {
+  position: relative;
+  font-family: "Patsy Sans", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 46px;
+  letter-spacing: 0.05em;
+  text-align: left;
+  color: #384864;
+}
+
 header {
   position: relative;
   padding: 20px 0;
@@ -528,148 +761,6 @@ header a:last-child h3 {
   font-size: 2vw;
   font-style: normal;
   text-align: center;
-  color: #303030;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-}
-
-section {
-  transition: opacity 0.35s ease-in-out, visibility 0.35s ease-in-out, z-index 0.35s ease-in-out;
-}
-section.hide {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.otherTeamWantsToContinue {
-  position: fixed;
-  top: 0;
-  right: 50px;
-  height: 50px;
-  width: 100px;
-  background-color: red;
-  z-index: 100;
-}
-
-.global-wrapper {
-  position: relative;
-  width: 100%;
-  padding: 50px 5%;
-  display: flex;
-  flex-direction: column;
-}
-.global-wrapper .type {
-  position: relative;
-  width: fit-content;
-  padding: 10px 20px;
-  border-radius: 14px;
-  border: 1px solid #303030;
-  font-size: 20px;
-  color: #303030;
-  background: #e7e7e7;
-}
-.global-wrapper .theme, .global-wrapper .question {
-  position: relative;
-  margin-top: 75px;
-  font-size: 2vw;
-  color: #303030;
-  text-align: center;
-}
-.global-wrapper .info {
-  position: relative;
-  margin-top: 10px;
-  font-size: 1.1vw;
-  text-align: center;
-}
-.global-wrapper .themeWrapper, .global-wrapper .questionWrapper {
-  position: relative;
-  margin-top: 50px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-.global-wrapper .themeWrapper h2, .global-wrapper .questionWrapper h2 {
-  position: relative;
-  margin: 0 20px;
-  padding: 12px 18px;
-  font-size: 1.5vw;
-  color: #303030;
-  text-align: center;
-  border-radius: 14px;
-  cursor: pointer;
-  border: 1px solid #303030;
-  background: #e7e7e7;
-  transition: all ease-in-out 0.35s;
-}
-.global-wrapper .themeWrapper h2:hover, .global-wrapper .themeWrapper h2.selected, .global-wrapper .questionWrapper h2:hover, .global-wrapper .questionWrapper h2.selected {
-  background: #cecece;
-}
-.global-wrapper .themeWrapper h2.disabled, .global-wrapper .questionWrapper h2.disabled {
-  background: #ffffff;
-  color: #d5d5d5;
-  border: 1px solid #d5d5d5;
-}
-.global-wrapper ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.global-wrapper li {
-  display: block;
-}
-.global-wrapper .buttonValidate {
-  position: relative;
-  margin: 20px auto 0;
-  width: fit-content;
-  padding: 8px 14px;
-  border-radius: 14px;
-  font-size: 30px;
-  cursor: pointer;
-  user-select: none;
-  background: #ffffff;
-  color: #d5d5d5;
-  border: 1px solid #d5d5d5;
-  transition: all ease-in-out 0.35s;
-}
-.global-wrapper .buttonValidate.readyToClick {
-  background-color: #303030;
-  border: 1px solid #e7e7e7;
-  color: #e7e7e7;
-}
-.global-wrapper .selectedAnimation {
-  position: relative;
-  margin-top: 30px;
-  font-size: 1.2vw;
-  font-weight: 400;
-}
-.global-wrapper .answerWrapper {
-  position: relative;
-  margin: 20px auto 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.global-wrapper .answerWrapper h5 {
-  position: relative;
-  font-weight: 300;
-  font-size: 15px;
-  color: #303030;
-}
-.global-wrapper .answerWrapper p {
-  position: relative;
-  margin: 0 5px;
-  font-weight: 500;
-  font-size: 15px;
   color: #303030;
 }
 

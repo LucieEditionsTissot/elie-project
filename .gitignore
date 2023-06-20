@@ -3,7 +3,9 @@
 .next
 .idea
 # dotenv environment variables file (build for Zeit Now)
+*/.DS_Store
 .DS_Store
+.DS_Store?
 /public/audio/*
 /public/video/*
 .env
@@ -15,4 +17,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .replit
-*/.DS_Store

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -27,7 +27,7 @@ export default function StudentTablet1() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState(null);
+    const [currentScreen, setCurrentScreen] = useState("start");
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -180,59 +180,63 @@ export default function StudentTablet1() {
                 <title>Tablette groupe 1</title>
             </Head>
 
-            {otherTeamWantsToContinue && (
-                <div className="otherTeamWantsToContinue"></div>
-            )}
+            <div className="global-container">
 
-            {currentScreen === "start" && (
-                <StartScreen onClick={handleStartButtonClick}/>
-            )}
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
-            {currentScreen === "introduce" && (
-                <Introduce onClick={handleClickOnIntroduceButton}/>
-            )}
+                {currentScreen === "start" && (
+                    <StartScreen onClick={handleStartButtonClick}/>
+                )}
 
-            {currentScreen === "teams" && (
-                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
-            )}
+                {currentScreen === "introduce" && (
+                    <Introduce onClick={handleClickOnIntroduceButton}/>
+                )}
 
-            {currentScreen === "rules" && teamsDone && (
-                <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
-            )}
+                {currentScreen === "teams" && (
+                    <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
+                )}
 
-            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
+                {currentScreen === "rules" && teamsDone && (
+                    <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
+                )}
 
-            {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen themeSelected={themeSelected}/>
-            )}
+                {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
 
-            {currentScreen === "animals" && (
-                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"}/>
-            )}
+                {currentScreen === "themeExplanation" && (
+                    <ThemeExplanationScreen themeSelected={themeSelected}/>
+                )}
 
-            {currentScreen === "turnByTurn" && (
-                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
-            )}
+                {currentScreen === "animals" && (
+                    <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"}/>
+                )}
 
-            {currentScreen === "showInteractions" && (
-                <ShowInteractions data={interactionsData}/>
-            )}
+                {currentScreen === "turnByTurn" && (
+                    <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
+                )}
 
-            {currentScreen === "understandInteraction" && (
-                <UnderstandInteraction themeSelected={themeSelected}/>
-            )}
+                {currentScreen === "showInteractions" && (
+                    <ShowInteractions data={interactionsData}/>
+                )}
 
-            {currentScreen === "animationQuestion" && (
-                <AnimationQuestionScreen data={animationQuestionData}/>
-            )}
+                {currentScreen === "understandInteraction" && (
+                    <UnderstandInteraction themeSelected={themeSelected}/>
+                )}
 
-            {currentScreen === "conclusion" && (
-                <Conclusion/>
-            )}
+                {currentScreen === "animationQuestion" && (
+                    <AnimationQuestionScreen data={animationQuestionData}/>
+                )}
 
-            {currentScenario && currentScenario.id === 11 && (
-                <AudioPlayer src={currentScenario.audios}/>
-            )}
+                {currentScreen === "conclusion" && (
+                    <Conclusion/>
+                )}
+
+                {currentScenario && currentScenario.id === 11 && (
+                    <AudioPlayer src={currentScenario.audios}/>
+                )}
+
+            </div>
 
         </>
     );

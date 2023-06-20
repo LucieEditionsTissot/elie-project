@@ -1,15 +1,56 @@
 $gray: #303030;
 $lightGray : #e7e7e7;
 
-@import "header";
-@import "components";
-@import "teams";
-@import "rules";
-@import "theme";
-@import "map";
-@import "turnByTurn";
-@import "animation";
-@import "animationQuestion";
+@font-face {
+  font-family: "PP Pangram Sans Rounded";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Regular.ttf");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "PP Pangram Sans Rounded medium";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Medium.ttf");
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "PP Pangram Sans Rounded semi-bold";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Semibold.ttf");
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "PP Pangram Sans Rounded bold";
+  src: url("../public/font/Pangram/PPPangramSansRounded-Bold.ttf");
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Patsy Sans";
+  src: url("../public/font/Patsy/PatsySans.otf");
+  font-style: normal;
+  font-weight: 400;
+}
+
+$pink: rgba(215, 102, 119, 1);
+$wheat: rgba(254, 255, 246, 1);
+$light-blue: rgba(131, 159, 220, 1);
+$blue: rgba(56, 72, 100, 1);
+$dark-blue: rgba(50, 64, 90, 1);
+$light-green: rgba(237, 248, 238, 1);
+$green: rgba(195, 224, 199, 1);
+$dark-green: rgba(179, 212, 180, 1);
+$radius: 15px;
+
+$ease-expo-inOut: cubic-bezier(0.87, 0, 0.13, 1);
+$ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+$ease-power4-out: cubic-bezier(0.22, 1, 0.36, 1);
+
 
 * {
   margin: 0;
@@ -18,28 +59,6 @@ $lightGray : #e7e7e7;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-}
-
-section {
-  transition: opacity 0.35s ease-in-out, visibility 0.35s ease-in-out, z-index 0.35s ease-in-out;
-
-  &.hide {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    z-index: -1;
-  }
-
-}
-
-.otherTeamWantsToContinue {
-  position: fixed;
-  top: 0;
-  right: 50px;
-  height: 50px;
-  width: 100px;
-  background-color: red;
-  z-index: 100;
 }
 
 .global-wrapper {
@@ -173,3 +192,19 @@ section {
   }
 
 }
+
+body {
+  background-color: $blue;
+}
+
+@import "general";
+@import "start";
+@import "header";
+@import "components";
+@import "teams";
+@import "rules";
+@import "theme";
+@import "map";
+@import "turnByTurn";
+@import "animation";
+@import "animationQuestion";

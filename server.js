@@ -21,7 +21,7 @@ const getApiAndEmit = (socket) => {
 let teamGroupOne = null
 let teamGroupTwo = null
 let numberOfTeamSelected = 0
-
+let numberOfTeamWhoWantsToContinue = 0
 let numberOfRulesUnderstood = 0
 
 const themeTimer = 5000
@@ -404,8 +404,8 @@ io.on("connection", (socket) => {
         numberOfTeamWhoWantsToContinue++
         socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
-            numberOfTeamWhoWantsToContinue = 0
             io.emit("launchIntroduction");
+            numberOfTeamWhoWantsToContinue = 0
         }
     })
 
@@ -413,8 +413,8 @@ io.on("connection", (socket) => {
         numberOfTeamWhoWantsToContinue++
         socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
-            numberOfTeamWhoWantsToContinue = 0
             io.emit("showTeams", config.teams);
+            numberOfTeamWhoWantsToContinue = 0
         }
     })
 
