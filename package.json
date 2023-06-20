@@ -17,6 +17,7 @@
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.4.3",
     "react-player": "^2.12.0",
+    "sass": "^1.63.4",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },
