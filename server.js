@@ -548,7 +548,7 @@ io.on("connection", (socket) => {
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
-        connectedClient = [false,false];
+        connectedClient = [false,false, false];
         io.emit("reloadClient");
         clearInterval(interval);
     })
