@@ -23,6 +23,7 @@ const socket = io(url);
 let connected = false;
 
 export default function StudentTablet1() {
+
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
@@ -45,7 +46,6 @@ export default function StudentTablet1() {
     const [currentAudio, setCurrentAudio] = useState(null);
 
 
-
     socket.on('connect', function () {
         console.log("Client 1 connected");
         connected = true;
@@ -56,6 +56,8 @@ export default function StudentTablet1() {
         console.log("Client 1 disconnected");
         connected = false;
     });
+
+
     useEffect(() => {
         if (connected) {
             socket.emit("registerStudent1");
@@ -192,45 +194,45 @@ export default function StudentTablet1() {
             )}
 
             {currentScreen === "start" && (
-                <StartScreen onClick={handleStartButtonClick}/>
+                <StartScreen onClick={handleStartButtonClick} />
             )}
 
             {currentScreen === "introduce" && (
-                <Introduce onClick={handleClickOnIntroduceButton}/>
+                <Introduce onNextClick={handleNextClick} />
             )}
 
             {currentScreen === "teams" && (
-                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
+                <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
             )}
 
             {currentScreen === "rules" && teamsDone && (
-                <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
+                <RulesScreen onRulesButtonClicked={setRulesButtonClicked} />
             )}
 
-            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
+            {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected} />}
 
             {currentScreen === "themeExplanation" && (
-                <ThemeExplanationScreen themeSelected={themeSelected}/>
+                <ThemeExplanationScreen themeSelected={themeSelected} />
             )}
 
             {currentScreen === "animals" && (
-                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"}/>
+                <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"} />
             )}
 
             {currentScreen === "turnByTurn" && (
-                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
+                <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"} />
             )}
 
             {currentScreen === "showInteractions" && (
-                <ShowInteractions data={interactionsData}/>
+                <ShowInteractions data={interactionsData} />
             )}
 
             {currentScreen === "understandInteraction" && (
-                <UnderstandInteraction themeSelected={themeSelected}/>
+                <UnderstandInteraction themeSelected={themeSelected} />
             )}
 
             {currentScreen === "animationQuestion" && (
-                <AnimationQuestionScreen data={animationQuestionData}/>
+                <AnimationQuestionScreen data={animationQuestionData} />
             )}
 
             {currentScreen === "conclusion" && (

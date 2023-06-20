@@ -130,8 +130,12 @@ const Client3 = () => {
             //if (scenario.audios.length > 1) {
               //  setCurrentAudioIndex(0);
             //}
-
-   //
+       // });
+   // }; []);
+            if (scenario.videos.length > 1) {
+                setCurrentVideoIndex(0);
+            }
+        });
 
     useEffect(() => {
        // if (currentVideo) {

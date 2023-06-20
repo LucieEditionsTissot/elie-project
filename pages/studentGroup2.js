@@ -75,57 +75,10 @@ export default function StudentTablet2() {
         }
     }, [rulesButtonClicked]);
 
-    useEffect(() => {
-        socket.on('scenario', (scenario) => {
-            setCurrentScenario(scenario);
-            setAudioLoaded(false);
-
-            const audioElement = new Audio(scenario.audios[0]);
-            audioElement.addEventListener('canplaythrough', () => {
-                setAudioLoaded(true);
-            });
-
-            setCurrentAudio(audioElement);
-
-        });
-    }, []);
 
     useEffect(() => {
-        setOtherTeamWantsToContinue(false)
-    }, [currentScreen]);
-
-    useEffect(() => {
-        if (teamSelected) {
-            socket.emit("teamChosenGroupeTwo", teamSelected);
-        }
-
-    }, [teamSelected]);
-
-    useEffect(() => {
-        if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood");
-        }
-    }, [rulesButtonClicked]);
-
-    useEffect(() => {
-
-        socket.emit("registerStudent2");
-
-        socket.on("otherTeamWantsToContinue", () => {
-            setOtherTeamWantsToContinue(true)
-        });
-
-        socket.on("startExperience", () => {
-            setCurrentScreen("introduce");
-        });
-
-        socket.on("showTeams", () => {
-            setCurrentScreen("teams");
-        });
-
-        socket.on("teamsAreDoneShowRules", () => {
-            setTeamsDone(true);
-            setCurrentScreen("rules");
+        socket.on("reloadClient", () => {
+            window.location.reload();
         });
 
         socket.on("rulesAreDoneSelectThemeRandomly", () => {
