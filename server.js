@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 let interval;
-
+const teams = require('./config');
 
 const getApiAndEmit = (socket) => {
     const response = new Date();
@@ -34,16 +34,6 @@ let numberOfCardsView = 0;
 let isFinalQuestionIsCorrect = true
 let isInformationUnderstood = 0
 let animalChosenValue = null;
-const teams = {
-    0: ["Lucie", "Yohan", "Jean"],
-    1: ["Sacha", "Léo", "Guilhem"],
-    2: ["Léa", "Baptiste", "Timothée"],
-    3: ["Raphaël", "Virgile", "Mathieu"],
-    4: ["Alma", "Jeanne", "Emma"],
-    5: ["Rose", "Gabrielle", "Inès"],
-    6: ["Paul", "Léon", "Lucas"],
-    7: ["Alice", "Lou", "Théo"]
-}
 
 const rules = {
     0: "Règles du jeu :",
@@ -377,7 +367,7 @@ io.on("connection", (socket) => {
         connectedClient[1] = true;
 
         if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience", teams);
+            io.emit("startExperience");
         }
     });
 
@@ -411,9 +401,6 @@ io.on("connection", (socket) => {
     numberOfButtonClicked =0;
     numberOfCardsView = 0;
 
-    socket.on("readyToShowTeams", () => {
-        io.emit("showTeams", teams);
-    })
 
     socket.on("teamChosen", (index) => {
         socket.broadcast.emit("teamChosen", index);
