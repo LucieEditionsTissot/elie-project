@@ -44,6 +44,16 @@ export default function StudentTablet1() {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
+    socket.on('connect', function () {
+        console.log("Client 1 connected");
+        connected = true;
+    });
+
+    socket.on('disconnect', function () {
+        console.log("Client 1 disconnected");
+        connected = false;
+    });
+
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
     }, [currentScreen]);
@@ -68,22 +78,13 @@ export default function StudentTablet1() {
 
         socket.emit("registerStudent1");
 
-        socket.on('connect', function () {
-            console.log("Client 1 connected");
-            connected = true;
-        });
-
-        socket.on('disconnect', function () {
-            console.log("Client 1 disconnected");
-            connected = false;
-        });
-
         socket.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true)
         });
 
         socket.on("startExperience", () => {
             setCurrentScreen("start");
+            console.log("game should start")
         });
 
         socket.on("launchIntroduction", () => {

@@ -352,8 +352,7 @@ io.on("connection", (socket) => {
         connectedClient[0] = true;
 
         if (connectedClient[0] === true && connectedClient[1] === true) {
-            console.log("startExperience");
-            io.emit("startExperience", teams);
+            io.emit("startExperience");
         }
     });
 
