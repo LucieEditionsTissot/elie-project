@@ -41,7 +41,6 @@ export default function StudentTablet1() {
     const [audioScenario, setAudioScenario] = useState(null);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
-    const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
     socket.on('connect', function () {
@@ -53,6 +52,35 @@ export default function StudentTablet1() {
         console.log("Client 1 disconnected");
         connected = false;
     });
+
+    socket.on('reloadClient', () => {
+        window.location.reload();
+    })
+    useEffect(() => {
+        if (connected) {
+            socket.emit("registerStudent1");
+
+            if (teamSelected) {
+                socket.emit("teamChosenGroupeOne", teamSelected);
+            }
+        }
+    }, [teamSelected]);
+
+    useEffect(() => {
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+    }, []);
+
 
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
@@ -83,7 +111,6 @@ export default function StudentTablet1() {
         });
 
         socket.on("startExperience", () => {
-            setCurrentScreen("start");
             console.log("game should start")
         });
 
