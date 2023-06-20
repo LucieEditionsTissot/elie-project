@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -6,11 +6,8 @@ import ThemeScreen from "../components/ThemeScreen";
 import RulesScreen from "../components/RulesScreen";
 import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
-import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
-import ThemeExplanation from "../components/ThemeExplanation";
 import AnimalCards from "../components/AnimalCards";
-import ShowAnswer from "../components/ShowAnswer";
 import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
@@ -42,7 +39,6 @@ export default function StudentTablet2() {
     const [audioScenario, setAudioScenario] = useState(null);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
-    const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
 
@@ -76,48 +72,14 @@ export default function StudentTablet2() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-        socket.on('scenario', (scenario) => {
-            setCurrentScenario(scenario);
-            setAudioLoaded(false);
-
-            const audioElement = new Audio(scenario.audios[0]);
-            audioElement.addEventListener('canplaythrough', () => {
-                setAudioLoaded(true);
+            socket.on("reloadClient", () => {
+                window.location.reload();
             });
-
-            setCurrentAudio(audioElement);
-
-        });
     }, []);
-
-    useEffect(() => {
-        setOtherTeamWantsToContinue(false)
-    }, [currentScreen]);
-
-    useEffect(() => {
-        if (teamSelected) {
-            socket.emit("teamChosenGroupeTwo", teamSelected);
-        }
-
-    }, [teamSelected]);
-
-    useEffect(() => {
-        if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood");
-        }
-    }, [rulesButtonClicked]);
 
     useEffect(() => {
 
         socket.emit("registerStudent2");
-
-        socket.on("otherTeamWantsToContinue", () => {
-            setOtherTeamWantsToContinue(true)
-        });
-
-        socket.on("startExperience", () => {
-            setCurrentScreen("introduce");
-        });
 
         socket.on("showTeams", () => {
             setCurrentScreen("teams");
@@ -186,7 +148,6 @@ export default function StudentTablet2() {
             socket.off("showAnswer");
         };
     }, []);
-
     return (
         <>
             <Head>

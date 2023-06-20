@@ -21,68 +21,71 @@ const Client3 = () => {
     const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
     const [scenario7Ended, setScenario7Ended] = useState(false);
 
-    let currentScenarioToPlay = 1;
+    let currentScenarioToPlay = 0;
 
 
-   let scnerarios = {
-         struct : {
-             audios: ['audio/SonsAmbiance.mov'],
-             videos: ['video/Ambience.mp4'],
-         },
-       chooseTheme : {
-           audios: ['audio/SonsAmbiance.mov'],
-           videos: ['video/Ambience.mp4'],
-       },
-       themeIsChosen : {
-           audios: ['audio/SonsAmbiance.mov'],
-           videos: ['video/Anim_Ambiance_Map01.mp4'],
-       },
-       explanation : {
-           audios: ['audio/SonsAmbiance.mov'],
-           videos: ['video/Anim_Ambiance_Map01.mp4'],
-       },
+
+    let scenario1 = {
+       audios : "audio/Corbeau.mov",
+        videos : "video/Ambience.mp4"
     }
 
+    let scenario2 = {
+        audios : "audio/loup.mov",
+        videos : null
 
-    let animalsCards = {
+    }
+    let scenarios3 = {
         audios: ['audio/10animaux.mp3'],
         videos: ['video/Anim_Ambiance_Map01.mp4'],
     };
-    let indice1 = {
+    let scenario4 = {
         audios: ['audio/Indice_01.mp3'],
         videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4', 'video/indices/indice1/LC_B_anim_indice_01.mp4', 'video/indices/indice1/LC_C_outro_indice_01.mp4'],
+
     };
-    let indice1Loop = {
+    let scenario5 = {
         audios: ['audio/Indice_01.mp3'],
         videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
-    let indice2Client1 = {
-        audios: ['audio/Corbeau.mov'],
+    let scenario6 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
-    let indice2Client2 = {
-        audios: ['audio/loup.mov'],
+    let scenario7 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
-    let interactions = {
-        audios: ['audio/LeMutualisme.mp3'],
-        videos: ['video/Anim_Ambiance_Map01.mp4'],
+    let scenario8 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
+    let scenario9 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+    };
+    let scenario10 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+    };
+    let scenario11 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+    };
+    let scenario12 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+    };
+    let scenario13 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+    };
+    let scenario14 = {
+        audios: ['audio/Indice_01.mp3'],
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+    };
+    let scenarios = [scenario1 ,scenario2, scenarios3, scenario4, scenario5, scenario6, scenario7, scenario8, scenario9,  scenario10, scenario11, scenario12, scenario13, scenario14]
 
-    const scenario9 = {
-        audios: ['audio/SonsAmbiance.mov'],
-        videos: ['video/Anim_Ambiance_Map01.mp4'],
-    };
-    const scenario10 = {
-        audios: ['audio/SonsAmbiance.mov'],
-        videos: ['video/Anim_Ambiance_Map01.mp4'],
-    };
-    const scenario11 = {
-        audios: ['audio/SonsAmbiance.mov'],
-        videos: ['video/Anim_Ambiance_Map01.mp4'],
-    };
-    const scenario12 = {
-        audios: ['audio/SonsAmbiance.mov'],
-        videos: ['video/Anim_Ambiance_Map01.mp4'],
-    };
 
     useEffect(() => {
 
@@ -106,14 +109,10 @@ const Client3 = () => {
 
         //socket.on('scenario', (scenario) => {
           //  setCurrentScenario(scenario);
-           // setAudioLoaded(false);
+
            // setVideoLoaded(false);
            // setScenario7Ended(false);
 
-            //const audioElement = new Audio(scenario.audios[0]);
-            //audioElement.addEventListener('canplaythrough', () => {
-              //  setAudioLoaded(true);
-            });
 
            // const videoElement = document.createElement('video');
             //videoElement.src = scenario.videos[0];
@@ -121,7 +120,7 @@ const Client3 = () => {
              //   setVideoLoaded(true);
             //});
 
-            //setCurrentAudio(audioElement);
+
             //setCurrentVideo(videoElement);
 
            // if (scenario.videos.length > 1) {
@@ -132,18 +131,22 @@ const Client3 = () => {
             //}
 
    //
+    }, []);
 
     useEffect(() => {
-       // if (currentVideo) {
-         //   currentVideo.play();
-        //}
+        if(currentAudio) {
+            currentAudio.play();
+        }
+        if (currentVideo) {
+           currentVideo.play();
+        }
 
         return () => {
-          //  if (currentVideo) {
-            //    currentVideo.pause();
-            //}
+           if (currentVideo) {
+               currentVideo.pause();
+           }
         };
-    }, [currentVideo]);
+    }, [currentVideo], [currentAudio]);
 
     useEffect(() => {
         if (currentScenario && videoLoaded && currentScenario.videos.length > 1) {
@@ -171,7 +174,7 @@ const Client3 = () => {
                 videoElement.pause();
             };
         }
-    }, [currentScenario, videoLoaded, currentVideoIndex]);
+    }, [currentScenarioToPlay, videoLoaded, currentVideoIndex]);
 
     useEffect(() => {
 
@@ -180,86 +183,23 @@ const Client3 = () => {
         }
     }, [scenario7Ended]);
 
+    console.log(scenarios[currentScenarioToPlay].audios)
 
-
-    if (!currentScenario || !audioLoaded || !videoLoaded) {
-        return (
-            <>
-                <Images src="/images/0000.png" />
-            </>
-        );
-    }
+    console.log(scenarios[currentScenarioToPlay].videos)
 
     return (
-        <>
-            <div className="relative">
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <Images src="/images/0000.png" className="w-full h-full" />
-                </div>
-            </div>
-
-            <div>
-                {currentScenarioToPlay === 1 && (
+            <>
 
                     <div>
-                        <AudioPlayer src={scnerarios.struct.audios} />
-                        <VideoPlayer src={scnerarios.struct.videos} className="fixed top-0 left-0 w-screen h-screen" />
+                        {scenarios[currentScenarioToPlay].audios &&
+                        <AudioPlayer src={scenarios[currentScenarioToPlay].audios} />
+                        }
+                        {scenarios[currentScenarioToPlay].videos &&
+                         <VideoPlayer src={scenarios[currentScenarioToPlay].videos} className="fixed top-0 left-0 w-screen h-screen" />
+                        }
                     </div>
-                )}
 
-                {currentScenarioToPlay === 1 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-
-                {currentScenarioToPlay === 1 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-
-                {currentScenarioToPlay === 1 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-                {currentScenario && currentScenario.id === 5 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-                {currentScenario && currentScenario.id === 6 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-                {currentScenario && currentScenario.id === 7 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos[currentVideoIndex]} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-                {currentScenario && currentScenario.id === 8 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-                {currentScenario && currentScenario.id === 9 && (
-                    <div>
-                        <AudioPlayer src={currentScenario.audios} />
-                        <VideoPlayer src={currentScenario.videos} className="fixed top-0 left-0 w-screen h-screen" />
-                    </div>
-                )}
-            </div>
-        </>
+            </>
     );
 };
 

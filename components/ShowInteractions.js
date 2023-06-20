@@ -37,9 +37,9 @@ function ShowInteractions({ data }) {
                     className={`animal-wrapper cursor-pointer ${
                         selectedAnimal === teamOneCorrectAnswer ? "border border-blue-500" : "border border-red-500"
                     }`}
-                    onClick={() => handleAnimalClick(teamOneCorrectAnswer)}
                 >
                     <p>{teamOneCorrectAnswer?.name || "Inconnu"}</p>
+                    <img src={teamOneCorrectAnswer.image} alt=""/>
                 </div>
                 <div
                     className={`cursor-pointer ${
@@ -51,19 +51,6 @@ function ShowInteractions({ data }) {
                 </div>
             </div>
 
-            {selectedAnimal && (
-                <div className="mt-4">
-                    <p className="text-lg font-semibold">
-                        Nom de l'animal sélectionné : {selectedAnimal.name}
-                    </p>
-                    <p>{selectedAnimal.explanation}</p>
-                    <img
-                        src={selectedAnimal.image}
-                        alt={selectedAnimal.name}
-                        className="mt-4"
-                    />
-                </div>
-            )}
 
             <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
