@@ -2,9 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
 import ShowAnswer from "./ShowAnswer";
 import {url} from "../pages/_app";
+import teams from '../config';
 
 const socket = io(url);
-;
+
 
 function TurnByTurn(props) {
 
@@ -12,8 +13,6 @@ function TurnByTurn(props) {
     const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
     const [globalTimer, setGlobalTimer] = useState(10);
-    const [data, setData] = useState([]);
-    const [teams, setTeams] = useState([]);
     const [randomTheme, setRandomTheme] = useState("");
     const [teamIndex, setTeamIndex] = useState(null);
     const [actualTeamName, setActualTeamName] = useState("");
@@ -24,8 +23,6 @@ function TurnByTurn(props) {
     const [isAnimalChosen, setAnimalChosen] = useState(null);
 
     useEffect(() => {
-        setData(props.data)
-        setTeams(props.data[0])
         setRandomTheme(props.data[3])
         setTeamIndex(props.data[Number(props.client)])
         const animalData = props.data[4]
@@ -36,7 +33,7 @@ function TurnByTurn(props) {
     }, [props.data])
 
     useEffect(() => {
-        if (teams && teamIndex !== null) {
+        if (teamIndex !== null) {
             setActualTeamName(Object.keys(teams)[teamIndex]);
             setActualTeamMembers(Object.values(teams)[teamIndex]);
             setStateOfTheGame(0)

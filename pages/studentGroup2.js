@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -20,6 +20,8 @@ import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
 
 const socket = io(url);
+
+let connected = false;
 
 export default function StudentTablet2() {
 
@@ -43,9 +45,26 @@ export default function StudentTablet2() {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
+
+    socket.on('connect', function () {
+        console.log("Client 2 connected");
+        connected = true;
+    });
+
+
+    socket.on('disconnect', function () {
+        console.log("Client 2 disconnected");
+        connected = false;
+    });
+
+
     useEffect(() => {
-        if (teamSelected) {
-            socket.emit("teamChosenGroupeTwo", teamSelected);
+        if (connected)
+        {
+            socket.emit("registerStudent2");
+            if (teamSelected) {
+                socket.emit("teamChosenGroupeTwo", teamSelected);
+            }
         }
 
     }, [teamSelected]);

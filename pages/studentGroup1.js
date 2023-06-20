@@ -20,7 +20,10 @@ import {url} from "./_app";
 
 const socket = io(url);
 
+let connected = false;
+
 export default function StudentTablet1() {
+
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
@@ -41,11 +44,25 @@ export default function StudentTablet1() {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
-    useEffect(() => {
-        socket.emit("registerStudent1");
 
-        if (teamSelected) {
-            socket.emit("teamChosenGroupeOne", teamSelected);
+
+    socket.on('connect', function () {
+        console.log("Client 1 connected");
+        connected = true;
+    });
+
+
+    socket.on('disconnect', function () {
+        console.log("Client 1 disconnected");
+        connected = false;
+    });
+    useEffect(() => {
+        if (connected) {
+            socket.emit("registerStudent1");
+
+            if (teamSelected) {
+                socket.emit("teamChosenGroupeOne", teamSelected);
+            }
         }
     }, [teamSelected]);
 

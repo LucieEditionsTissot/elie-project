@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from 'socket.io-client';
 import {url} from "../pages/_app";
+import teams from '../config';
 
 const socket = io(url);
 
 function ShowTeams({ teamSelected, onTeamSelected }) {
-    const [teams, setTeams] = useState([]);
     const colors = ["purple", "cyan", "yellow", "red", "green", "orange", "pink", "midnightblue"];
     const cardRefs = useRef([]);
 
     useEffect(() => {
         cardRefs.current = cardRefs.current.slice(0, teams.length);
-    }, [teams]);
+    }, []);
 
     function handleClickOnTeam(index) {
         if (teamSelected === null) {
@@ -41,11 +41,6 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
         }
     });
 
-    useEffect(() => {
-        socket.on('showTeams', (teams) => {
-            setTeams(teams);
-        });
-    }, []);
 
     useEffect(() => {
         if (teamSelected !== null) {
