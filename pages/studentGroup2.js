@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -24,7 +24,7 @@ const socket = io(url);
 let connected = false;
 
 export default function StudentTablet2() {
-
+    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
@@ -91,8 +91,33 @@ export default function StudentTablet2() {
     }, []);
 
     useEffect(() => {
+        setOtherTeamWantsToContinue(false)
+    }, [currentScreen]);
+
+    useEffect(() => {
+        if (teamSelected) {
+            socket.emit("teamChosenGroupeTwo", teamSelected);
+        }
+
+    }, [teamSelected]);
+
+    useEffect(() => {
+        if (rulesButtonClicked) {
+            socket.emit("rulesAreUnderstood");
+        }
+    }, [rulesButtonClicked]);
+
+    useEffect(() => {
 
         socket.emit("registerStudent2");
+
+        socket.on("otherTeamWantsToContinue", () => {
+            setOtherTeamWantsToContinue(true)
+        });
+
+        socket.on("startExperience", () => {
+            setCurrentScreen("introduce");
+        });
 
         socket.on("showTeams", () => {
             setCurrentScreen("teams");
@@ -162,22 +187,14 @@ export default function StudentTablet2() {
         };
     }, []);
 
-    function handleStartButtonClick() {
-        socket.emit("startExperience");
-        setCurrentScreen("introduce");
-    }
-
-    const handleNextClick = () => {
-        socket.emit("showTeams");
-    };
-
     return (
         <>
             <Head>
                 <title>Tablette groupe 2</title>
             </Head>
-            {currentScenario && currentScenario.id === 12 && (
-                <AudioPlayer src={currentScenario.audios}/>
+
+            {otherTeamWantsToContinue && (
+                <div className="otherTeamWantsToContinue"></div>
             )}
 
             {currentScreen === "start" && (
@@ -185,7 +202,7 @@ export default function StudentTablet2() {
             )}
 
             {currentScreen === "introduce" && (
-                <Introduce onNextClick={handleNextClick}/>
+                <Introduce onClick={handleClickOnIntroduceButton}/>
             )}
 
             {currentScreen === "teams" && (
@@ -222,10 +239,24 @@ export default function StudentTablet2() {
             {currentScreen === "animationQuestion" && (
                 <AnimationQuestionScreen data={animationQuestionData}/>
             )}
+
             {currentScreen === "conclusion" && (
                 <Conclusion/>
             )}
 
+            {currentScenario && currentScenario.id === 12 && (
+                <AudioPlayer src={currentScenario.audios}/>
+            )}
+
         </>
     );
+
+    function handleStartButtonClick() {
+        socket.emit("wantsToStartExperience");
+    }
+
+    function handleClickOnIntroduceButton() {
+        socket.emit("wantsToContinueIntroduction");
+    }
+
 }

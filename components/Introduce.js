@@ -1,13 +1,6 @@
 import React from "react";
-import io from "socket.io-client";
-import {url} from "../pages/_app";
 
-const socket = io(url);
-
-const Introduce = ({ onNextClick }) => {
-    const handleNextClick = () => {
-       socket.emit('readyToShowTeams')
-    };
+const Introduce = (props) => {
 
     return (
         <div>
@@ -15,7 +8,7 @@ const Introduce = ({ onNextClick }) => {
             <p> je vais vous accompagner</p>
             <p> tout au long de cette partie !</p>
                 <p>c’est parti, appuie sur “suivant”</p>
-            <button onClick={handleNextClick}>Suivant</button>
+            <button onClick={props.onClick}>Suivant</button>
         </div>
     );
 };
