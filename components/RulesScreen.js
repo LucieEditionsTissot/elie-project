@@ -1,13 +1,26 @@
 import React, { useEffect, useRef } from "react";
+import socket from 'socket.io-client';
+import { url } from "../pages/_app";
 
 function RulesScreen({ onRulesButtonClicked }) {
     const validateButtonRef = useRef(null);
     const rulesParagraphRef = useRef(null);
 
     useEffect(() => {
+
         if (validateButtonRef.current) {
             validateButtonRef.current.addEventListener("click", handleRulesButtonClicked);
         }
+
+        socket.on("teamReady", handleTeamReady);
+
+        return () => {
+            if (validateButtonRef.current) {
+                validateButtonRef.current.removeEventListener("click", handleRulesButtonClicked);
+            }
+            socket.off("teamReady", handleTeamReady);
+            socket.disconnect();
+        };
     }, []);
 
     function handleRulesButtonClicked() {
@@ -17,6 +30,12 @@ function RulesScreen({ onRulesButtonClicked }) {
         }
         if (rulesParagraphRef.current) {
             rulesParagraphRef.current.textContent = "( En attente de l'autre équipe )";
+        }
+    }
+
+    function handleTeamReady() {
+        if (rulesParagraphRef.current) {
+            rulesParagraphRef.current.textContent = "Les règles ont été expliquées";
         }
     }
 

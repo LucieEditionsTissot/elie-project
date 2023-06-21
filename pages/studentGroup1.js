@@ -6,10 +6,8 @@ import ThemeScreen from "../components/ThemeScreen";
 import RulesScreen from "../components/RulesScreen";
 import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
-import AnimationScreen from "../components/AnimationScreen";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import AnimalCards from "../components/AnimalCards";
-import ShowAnswer from "../components/ShowAnswer";
 import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
@@ -29,7 +27,7 @@ export default function StudentTablet1() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState("answer");
+    const [currentScreen, setCurrentScreen] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -53,34 +51,25 @@ export default function StudentTablet1() {
         connected = false;
     });
 
-    socket.on("reloadClient", () => {
-        window.location.reload();
-    });
-
-    if (connected) {
-        socket.emit("registerStudent1");
-
-    }
-
-    useEffect(() => {
-
-        socket.on('scenario', (scenario) => {
-            setCurrentScenario(scenario);
-            setAudioLoaded(false);
-
-            const audioElement = new Audio(scenario.audios[0]);
-            audioElement.addEventListener('canplaythrough', () => {
-                setAudioLoaded(true);
-            });
-
-            setCurrentAudio(audioElement);
-
+        socket.on("reloadClient", () => {
+            window.location.reload();
         });
-    }, []);
+        if (connected) {
+            socket.emit("registerStudent1");
+
+        }
+
+
 
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
     }, [currentScreen]);
+
+    useEffect(() => {
+            if (teamSelected) {
+                socket.emit("teamChosenGroupeOne", teamSelected);
+            }
+    }, [teamSelected]);
 
     useEffect(() => {
         if (rulesButtonClicked) {
@@ -94,7 +83,7 @@ export default function StudentTablet1() {
         });
 
         socket.on("startExperience", () => {
-            console.log("game can be launched")
+          setCurrentScreen("start")
         });
 
         socket.on("launchIntroduction", () => {
@@ -199,9 +188,9 @@ export default function StudentTablet1() {
 
             <div className="global-container">
 
-                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue ? "show" : ""}`}>
-                    <p>L'autre équipe t'attend</p>
-                </div>
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>
@@ -212,27 +201,19 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected} handleClickOnValidateTeam={() => handleClickOnValidateTeam()}/>
+                    <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
                     <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
-                    //<Interaction title={"Regardez le plateau"} subTitle={"Pour comprendre les règles"} arrow={true} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Règles du jeu"}/>
                 )}
 
-                {currentScreen === "theme" && (
-                    //<ThemeScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Choix du thème"} subTitle={""} arrow={true} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Choix du thème"}/>
-                )}
+                {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
 
                 {currentScreen === "themeExplanation" && (
-                    //<ThemeExplanationScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Mutualisme"}/>
+                    <ThemeExplanationScreen themeSelected={themeSelected}/>
                 )}
 
-                {currentScreen === "animals" && (
-                    <AnimalCards data={animalCards} client={1} groupName={"teamGroupOne"}/>
-                )}
 
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
@@ -273,12 +254,6 @@ export default function StudentTablet1() {
 
     function handleClickOnIntroduceButton() {
         socket.emit("wantsToContinueIntroduction");
-    }
-
-    function handleClickOnValidateTeam() {
-        if (teamSelected !== null) {
-            socket.emit("teamChosenGroupeOne", teamSelected);
-        }
     }
 
 }

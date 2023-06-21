@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+import socket from 'socket.io-client';
 import {url} from "../pages/_app";
 
-const socket = io(url);
+
 
 function AnimationQuestionScreen(props) {
     const [question, setQuestion] = useState("");

@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import io from 'socket.io-client';
-import { url } from "../pages/_app";
 import teams from '../config';
 
-const socket = io(url);
 
 function TurnByTurn(props) {
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
-    const [randomTheme, setRandomTheme] = useState("");
     const [teamIndex, setTeamIndex] = useState(null);
-    const [correctAnswer, setCorrectAnswer] = useState("");
     const [actualTeamName, setActualTeamName] = useState("");
     const [actualTeamMembers, setActualTeamMembers] = useState([]);
     const [animals, setAnimals] = useState({});

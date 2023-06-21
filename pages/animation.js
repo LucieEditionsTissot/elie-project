@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import socket from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
@@ -7,7 +7,7 @@ import Images from "../components/Images";
 import {url} from "./_app";
 
 
-const socket = io(url);
+
 let connected = false;
 
 

@@ -354,29 +354,30 @@ io.on("connection", (socket) => {
     if (interval) {
         clearInterval(interval);
     }
-
+let userId;
 
     socket.on('registerStudent1', () => {
+        userId = socket.id;
         socket.join('client1');
-        console.log('Client 1 enregistré :', socket.id);
+        console.log('Client 1 enregistré :', userId);
         clientConnected.client = true;
         startExperience(socket);
     });
 
 
     socket.on('registerStudent2', () => {
+        userId = socket.id;
         socket.join('client2');
-        console.log('Client 2 enregistré :', socket.id);
+        console.log('Client 2 enregistré :', userId);
         clientConnected.client2 = true;
         startExperience(socket);
 
     });
-
+console.log(socket.id + "connexion");
 
     socket.on('registerAnimationClient', () => {
         socket.join('client3');
         console.log('Animation client registered');
-        connectedClient[2] = true;
     });
 
 
