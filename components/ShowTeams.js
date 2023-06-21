@@ -6,7 +6,6 @@ import teams from '../config';
 const socket = io(url);
 
 function ShowTeams({ teamSelected, onTeamSelected }) {
-    const colors = ["purple", "cyan", "yellow", "red", "green", "orange", "pink", "midnightblue"];
     const cardRefs = useRef([]);
 
     useEffect(() => {
@@ -48,7 +47,6 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
 
     useEffect(() => {
         if (teamSelected !== null) {
-            console.log(socket.emit("teamChosen", teamSelected, { excludeSelf: true }))
             socket.emit("teamChosen", teamSelected, { excludeSelf: true });
         }
     }, [teamSelected]);
@@ -56,18 +54,17 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
         <section id="teams">
             <h1>Choisissez votre équipe</h1>
             <div className="teamsWrapper">
-                {Object.keys(teams.teams).map((teamColor, index) => (
+                {Object.keys(teams.teams).map((team, index) => (
                     <div
                         ref={ref => (cardRefs.current[index] = ref)}
                         key={index}
-                        id={index}
+                        id={team.id}
                         className="card"
-                        style={{ background: colors[index] }}
                         onClick={() => handleClickOnTeam(index)}
                     >
-                        <h2 className="teamName">{teamColor}</h2>
+                        <h2 className="teamName">{team}</h2>
                         <ul>
-                            {teams.teams[teamColor].map((member, index) => (
+                            {teams.teams[team].map((member, index) => (
                                 <li key={index}>{member}</li>
                             ))}
                         </ul>

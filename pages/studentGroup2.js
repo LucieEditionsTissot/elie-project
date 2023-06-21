@@ -55,21 +55,16 @@ export default function StudentTablet2() {
         connected = false;
     });
 
+    if (connected) {
+        socket.emit("registerStudent2");
 
+    }
+    socket.on("disconnect", () => {
+        window.location.reload();
+    });
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
     }, [currentScreen]);
-
-    useEffect(() => {
-        socket.on("reloadClient", () => {
-            window.location.reload();
-        });
-        if (connected) {
-            socket.emit("registerStudent2");
-
-        }
-
-    }, [teamSelected]);
 
     useEffect(() => {
         if (rulesButtonClicked) {
@@ -84,7 +79,7 @@ export default function StudentTablet2() {
         });
 
         socket.on("startExperience", () => {
-            console.log("game should start")
+            console.log("game can be launched")
         });
 
         socket.on("launchIntroduction", () => {

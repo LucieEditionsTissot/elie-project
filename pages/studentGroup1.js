@@ -34,8 +34,6 @@ export default function StudentTablet1() {
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
-    const [showAnswer, setShowAnswer] = useState(false);
-    const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
     const [audioScenario, setAudioScenario] = useState(null);
@@ -53,8 +51,6 @@ export default function StudentTablet1() {
         connected = false;
     });
 
-
-    useEffect(() => {
         socket.on("reloadClient", () => {
             window.location.reload();
         });
@@ -62,9 +58,9 @@ export default function StudentTablet1() {
             socket.emit("registerStudent1");
 
         }
-    }, [teamSelected]);
 
     useEffect(() => {
+
         socket.on('scenario', (scenario) => {
             setCurrentScenario(scenario);
             setAudioLoaded(false);
@@ -85,13 +81,11 @@ export default function StudentTablet1() {
     }, [currentScreen]);
 
     useEffect(() => {
-        if (connected) {
-            socket.emit("registerStudent1");
 
             if (teamSelected) {
                 socket.emit("teamChosenGroupeOne", teamSelected);
             }
-        }
+
     }, [teamSelected]);
 
     useEffect(() => {
@@ -101,15 +95,12 @@ export default function StudentTablet1() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-
-        socket.emit("registerStudent1");
-
         socket.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true)
         });
 
         socket.on("startExperience", () => {
-            console.log("game should start")
+           console.log("game can be launched")
         });
 
         socket.on("launchIntroduction", () => {
