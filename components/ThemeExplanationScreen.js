@@ -1,11 +1,6 @@
-import React, {useEffect, useState} from "react";
-import socket from 'socket.io-client';
-import PropTypes from "prop-types";
-import {url} from "../pages/_app";
+import React from "react";
 
-
-
-const ThemeExplanationScreen = ({ themeSelected }) => {
+const ThemeExplanationScreen = ({socket, themeSelected }) => {
         return (
             <section id="themeExplanationScreen">
                 <h1>{themeSelected}</h1>

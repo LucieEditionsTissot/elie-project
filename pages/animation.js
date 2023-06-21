@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import socket from 'socket.io-client';
-import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
-import Images from "../components/Images";
-import {url} from "./_app";
+import io from "socket.io-client";
+import * as url from "url";
 
 
+const socket = io(url);
 
 let connected = false;
 
@@ -107,30 +106,31 @@ const Client3 = () => {
 
     useEffect(() => {
 
-        //socket.on('scenario', (scenario) => {
-          //  setCurrentScenario(scenario);
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
 
-           // setVideoLoaded(false);
-           // setScenario7Ended(false);
-
-
-           // const videoElement = document.createElement('video');
-            //videoElement.src = scenario.videos[0];
-           // videoElement.addEventListener('loadeddata', () => {
-             //   setVideoLoaded(true);
-            //});
+            setVideoLoaded(false);
+            setScenario7Ended(false);
 
 
-            //setCurrentVideo(videoElement);
+            const videoElement = document.createElement('video');
+            videoElement.src = scenario.videos[0];
+            videoElement.addEventListener('loadeddata', () => {
+                setVideoLoaded(true);
+            });
 
-           // if (scenario.videos.length > 1) {
-             //   setCurrentVideoIndex(0);
-           // }
-            //if (scenario.audios.length > 1) {
-              //  setCurrentAudioIndex(0);
-            //}
 
-   //
+            setCurrentVideo(videoElement);
+
+            if (scenario.videos.length > 1) {
+                setCurrentVideoIndex(0);
+            }
+            if (scenario.audios.length > 1) {
+                setCurrentAudioIndex(0);
+            }
+        });
+
+
     }, []);
 
     useEffect(() => {
@@ -146,7 +146,7 @@ const Client3 = () => {
                currentVideo.pause();
            }
         };
-    }, [currentVideo], [currentAudio]);
+    }, [currentVideo, currentAudio]);
 
     useEffect(() => {
         if (currentScenario && videoLoaded && currentScenario.videos.length > 1) {

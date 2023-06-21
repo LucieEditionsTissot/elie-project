@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
@@ -7,27 +7,25 @@ import RulesScreen from "../components/RulesScreen";
 import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
-import AnimalCards from "../components/AnimalCards";
 import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
 import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
 import AudioPlayer from "../components/AudioPlayer";
-import {url} from "./_app";
-import Interaction from "../components/Interaction";
-import Answer from "../components/Answer";
+import { url } from "./_app";
+import ThemeExplanation from "../components/ThemeExplanation";
 
-const socket = io(url);
-
-let connected = false;
+const socketClient1 = io(url);
 
 export default function StudentTablet1() {
-    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
+    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(
+        false
+    );
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState(null);
+    const [currentScreen, setCurrentScreen] = useState({});
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -35,225 +33,193 @@ export default function StudentTablet1() {
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
     const [interactionsData, setInteractionsData] = useState(null);
-    const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
+    const [interactionsExplainedData, setInteractionsExplainedData] = useState(
+        null
+    );
     const [audioScenario, setAudioScenario] = useState(null);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
-    const [currentAudio, setCurrentAudio] = useState(null);
-
-    socket.on('connect', function () {
-        console.log("Client 1 connected");
-        connected = true;
-    });
-
-    socket.on('disconnect', function () {
-        console.log("Client 1 disconnected");
-        connected = false;
-    });
-
-        socket.on("reloadClient", () => {
-            window.location.reload();
-        });
-        if (connected) {
-            socket.emit("registerStudent1");
-
-        }
-
-
 
     useEffect(() => {
-        setOtherTeamWantsToContinue(false)
+        socketClient1.on("connect", function () {
+            console.log("Client 1 connected");
+            socketClient1.emit("registerStudent1");
+        });
+
+        socketClient1.on("disconnect", function () {
+            console.log("Client 1 disconnected");
+        });
+
+        return () => {
+            socketClient1.off("connect");
+            socketClient1.off("disconnect");
+        };
+    }, []);
+
+    useEffect(() => {
+        setOtherTeamWantsToContinue(false);
     }, [currentScreen]);
 
     useEffect(() => {
-            if (teamSelected) {
-                socket.emit("teamChosenGroupeOne", teamSelected);
-            }
+        if (teamSelected) {
+            socketClient1.emit("teamChosenGroupeOne", teamSelected);
+        }
     }, [teamSelected]);
 
     useEffect(() => {
         if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood");
+            socketClient1.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-        socket.on("otherTeamWantsToContinue", () => {
-            setOtherTeamWantsToContinue(true)
+        socketClient1.on("otherTeamWantsToContinue", () => {
+            setOtherTeamWantsToContinue(true);
         });
 
-        socket.on("startExperience", () => {
-          setCurrentScreen("start")
+        socketClient1.on("startExperience", () => {
+            console.log("ici");
+            setCurrentScreen("start");
         });
 
-        socket.on("launchIntroduction", () => {
+        socketClient1.on("launchIntroduction", () => {
             setCurrentScreen("introduce");
         });
 
-        socket.on("showTeams", () => {
+        socketClient1.on("showTeams", () => {
             setCurrentScreen("teams");
         });
 
-        socket.on("teamsAreDoneShowRules", () => {
+        socketClient1.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
         });
 
-        socket.on("rulesAreDoneSelectThemeRandomly", () => {
-            socket.emit("chooseTheme");
+        socketClient1.on("rulesAreDoneSelectThemeRandomly", () => {
+            socketClient1.emit("chooseTheme");
             setCurrentScreen("theme");
         });
 
-        socket.on("themeSelected", (data) => {
-            setThemeSelected(data.theme);
-            setTimeout(() => {
-                socket.emit("themeIsRandomlyChosen", data.theme);
-            }, 1000);
+        socketClient1.on("themeSelected", (data) => {
+            setThemeSelected(data);
+            console.log(data)
         });
 
-        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+        socketClient1.on("themeIsSelectedShowThemeExplanation", (data) => {
             setCurrentScreen("themeExplanation");
         });
 
-        socket.on("showAnimals", (data) => {
-            setExplanationFinished(true);
-            setAnimalCards(data);
-            setCurrentScreen("animals");
-        });
-
-        socket.on("startTurnByTurn", (data) => {
+        socketClient1.on("startTurnByTurn", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
 
-        socket.on("showInteractions", (data) => {
+        socketClient1.on("showInteractions", (data) => {
             setInteractionsData(data);
             setCurrentScreen("showInteractions");
         });
 
-        socket.on("interactionExplained", (data) => {
+        socketClient1.on("interactionExplained", (data) => {
             setInteractionsExplainedData(data);
             setCurrentScreen("understandInteraction");
-        })
+        });
 
-        socket.on("askQuestion", (data) => {
+        socketClient1.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
             setCurrentScreen("animationQuestion");
         });
 
-        socket.on("conclusion", () => {
+        socketClient1.on("conclusion", () => {
             setCurrentScreen("conclusion");
         });
 
-        socket.on('scenario', (scenario) => {
-            setCurrentScenario(scenario);
-            setAudioLoaded(false);
-
-            const audioElement = new Audio(scenario.audios[0]);
-            audioElement.addEventListener('canplaythrough', () => {
-                setAudioLoaded(true);
-            });
-
-            setCurrentAudio(audioElement);
-
-        });
-
         return () => {
-            socket.off("teamsAreDoneShowRules");
-            socket.off("rulesAreDoneSelectThemeRandomly");
-            socket.off("themeSelected");
-            socket.off("themeIsSelectedShowThemeExplanation");
-            socket.off("showAnimals");
-            socket.off("startTurnByTurn");
-            socket.off("showInteractions");
-            socket.off("animation");
-            socket.off("askQuestionGroupOne");
-            socket.off("showAnswerGroupOne");
+            socketClient1.off("otherTeamWantsToContinue");
+            socketClient1.off("startExperience");
+            socketClient1.off("launchIntroduction");
+            socketClient1.off("showTeams");
+            socketClient1.off("teamsAreDoneShowRules");
+            socketClient1.off("rulesAreDoneSelectThemeRandomly");
+            socketClient1.off("themeSelected");
+            socketClient1.off("themeIsSelectedShowThemeExplanation");
+            socketClient1.off("showAnimals");
+            socketClient1.off("startTurnByTurn");
+            socketClient1.off("showInteractions");
+            socketClient1.off("interactionExplained");
+            socketClient1.off("askQuestion");
+            socketClient1.off("conclusion");
         };
-
     }, []);
 
     return (
         <>
             <Head>
-                <title>ELIE | Groupe 1</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-                <meta name="application-name" content="MyApp" />
-                <meta name="apple-mobile-web-app-title" content="ELIE" />
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="mobile-web-app-capable" content="yes" />
-                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-                <link rel="apple-touch-icon" href="images/logo-blue.svg" />
+                <title>Tablette groupe 1</title>
             </Head>
 
             <div className="global-container">
-
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
-
                 {currentScreen === "start" && (
-                    <StartScreen onClick={handleStartButtonClick}/>
+                    <StartScreen socket={socketClient1}  onClick={handleStartButtonClick}/>
                 )}
 
                 {currentScreen === "introduce" && (
-                    <Introduce onClick={handleClickOnIntroduceButton}/>
+                    <Introduce socket={socketClient1} onClick={handleClickOnIntroduceButton}/>
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
+                    <ShowTeams socket={socketClient1} teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
+                    <RulesScreen socket={socketClient1} onRulesButtonClicked={setRulesButtonClicked} />
                 )}
 
-                {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
+                {currentScreen === "theme" && (
+                    <ThemeScreen socket={socketClient1} themeSelected={themeSelected} />
+                )}
 
                 {currentScreen === "themeExplanation" && (
-                    <ThemeExplanationScreen themeSelected={themeSelected}/>
+                    <ThemeExplanation socket={socketClient1} themeSelected={themeSelected} />
                 )}
 
-
                 {currentScreen === "turnByTurn" && (
-                    <TurnByTurn data={turnByTurnData} client={1} groupName={"teamGroupOne"}/>
+                    <TurnByTurn
+                        socket={socketClient1}
+                        data={turnByTurnData}
+                        client={1}
+                        groupName={"teamGroupOne"}
+                    />
                 )}
 
                 {currentScreen === "showInteractions" && (
-                    <ShowInteractions data={interactionsData}/>
+                    <ShowInteractions data={interactionsData} />
                 )}
 
                 {currentScreen === "understandInteraction" && (
-                    <UnderstandInteraction themeSelected={themeSelected}/>
-                )}
-
-                {currentScreen === "answer" && (
-                    <Answer/>
+                    <UnderstandInteraction themeSelected={themeSelected} />
                 )}
 
                 {currentScreen === "animationQuestion" && (
-                    <AnimationQuestionScreen data={animationQuestionData}/>
+                    <AnimationQuestionScreen data={animationQuestionData} />
                 )}
 
-                {currentScreen === "conclusion" && (
-                    <Conclusion/>
-                )}
+                {currentScreen === "conclusion" && <Conclusion />}
 
                 {currentScenario && currentScenario.id === 11 && (
-                    <AudioPlayer src={currentScenario.audios}/>
+                    <AudioPlayer src={currentScenario.audios} />
                 )}
-
             </div>
-
         </>
     );
 
     function handleStartButtonClick() {
-        socket.emit("wantsToStartExperience");
+        socketClient1.emit("wantsToStartExperience");
     }
 
     function handleClickOnIntroduceButton() {
-        socket.emit("wantsToContinueIntroduction");
+        socketClient1.emit("wantsToContinueIntroduction");
     }
-
 }

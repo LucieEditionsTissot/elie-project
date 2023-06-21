@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import teams from '../config';
 
-
-function TurnByTurn(props) {
+function TurnByTurn({ socket, props }) {
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
     const [teamIndex, setTeamIndex] = useState(null);
     const [actualTeamName, setActualTeamName] = useState("");
     const [actualTeamMembers, setActualTeamMembers] = useState([]);
-    const [animals, setAnimals] = useState({});
+    const [animals, setAnimals] = useState([]);
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
     const [selectedAnimals, setSelectedAnimals] = useState([]);
     const [message, setMessage] = useState("");
@@ -55,10 +54,9 @@ function TurnByTurn(props) {
                     <div
                         key={index}
                         className={`animal-card ${selectedAnimals.includes(animal) ? "selected" : ""}`}
-
                     >
-                        <button onClick={() => handleAnimalClick(animals.id)}>
-                        {animal.name}
+                        <button onClick={() => handleAnimalClick(animal.id)}>
+                            {animal.name}
                         </button>
                     </div>
                 ))}

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import socket from 'socket.io-client';
-import config from '../config';
-import Frame from "./Frame";
+import teams from '../config';
 
 function ShowTeams({ teamSelected, onTeamSelected }) {
     const cardRefs = useRef([]);
@@ -32,11 +31,15 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     }
 
     function handleClickOnValidateButton() {
-        if (teamSelected !== null) {
-            const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
-            if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
-                const teamIndex = selectedCard.id;
-                onTeamSelected(teamIndex);
+        const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
+        if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
+            const teamIndex = selectedCard.id;
+            onTeamSelected(teamIndex);
+
+            if (teamIndex % 2 === 0) {
+                socket.emit("teamChosenGroupeOne", teamIndex);
+            } else {
+                socket.emit("teamChosenGroupeTwo", teamIndex);
             }
         }
     }

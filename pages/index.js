@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import socket from 'socket.io-client';
+import io from 'socket.io-client';
 import Head from "next/head";
 import TurnByTurn from "../components/TurnByTurn";
 

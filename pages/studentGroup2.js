@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import io from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
 import ThemeScreen from "../components/ThemeScreen";
@@ -21,15 +20,14 @@ import Introduce from "../components/Introduce";
 import io from "socket.io-client";
 
 
-const socket = io(url);
-let connected = false;
+const socketClient2 = io(url);
 
 export default function StudentTablet2() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState("start");
+    const [currentScreen, setCurrentScreen] = useState({});
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -45,22 +43,18 @@ export default function StudentTablet2() {
     const [audioLoaded, setAudioLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
 
-
-    socket.on('connect', function () {
+useEffect(() => {
+    socketClient2.on('connect', function () {
         console.log("Client 2 connected");
-        connected = true;
+            socketClient2.emit("registerStudent2");
     });
-
-    socket.on('disconnect', function () {
+    socketClient2.on('disconnect', function () {
         console.log("Client 2 disconnected");
-        connected = false;
     });
 
-    if (connected) {
-        socket.emit("registerStudent2");
+});
 
-    }
-    socket.on("disconnect", () => {
+    socketClient2.on("disconnect", () => {
         window.location.reload();
     });
     useEffect(() => {
@@ -69,80 +63,73 @@ export default function StudentTablet2() {
 
     useEffect(() => {
         if (rulesButtonClicked) {
-            socket.emit("rulesAreUnderstood");
+            socketClient2.emit("rulesAreUnderstood");
         }
     }, [rulesButtonClicked]);
 
     useEffect(() => {
 
-        socket.on("otherTeamWantsToContinue", () => {
+        socketClient2.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true)
         });
 
-        socket.on("startExperience", () => {
-            setCurrentScreen("start")
+        socketClient2.on("startExperience", () => {
+            console.log("ici")
+            setCurrentScreen("start");
         });
 
-        socket.on("launchIntroduction", () => {
+        socketClient2.on("launchIntroduction", () => {
             setCurrentScreen("introduce");
         });
 
-        socket.on("showTeams", () => {
+        socketClient2.on("showTeams", () => {
             setCurrentScreen("teams");
         });
 
-        socket.on("teamsAreDoneShowRules", () => {
+        socketClient2.on("teamsAreDoneShowRules", () => {
             setTeamsDone(true);
             setCurrentScreen("rules");
         });
 
-        socket.on("rulesAreDoneSelectThemeRandomly", () => {
-            socket.emit("chooseTheme");
+        socketClient2.on("rulesAreDoneSelectThemeRandomly", () => {
+            socketClient2.emit("chooseTheme");
             setCurrentScreen("theme");
         });
 
-        socket.on("themeSelected", (data) => {
-            setThemeSelected(data.theme);
-            setTimeout(() => {
-                socket.emit("themeIsRandomlyChosen", data.theme);
-            }, 1000);
+        socketClient2.on("themeSelected", (data) => {
+            setThemeSelected(data);
         });
 
-        socket.on("themeIsSelectedShowThemeExplanation", (data) => {
+        socketClient2.on("themeIsSelectedShowThemeExplanation", (data) => {
             setCurrentScreen("themeExplanation");
         });
 
-        socket.on("showAnimals", (data) => {
-            setExplanationFinished(true);
-            setAnimalCards(data);
-            setCurrentScreen("animals");
-        });
 
-        socket.on("startTurnByTurn", (data) => {
+        socketClient2.on("startTurnByTurn", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
 
-        socket.on("showInteractions", (data) => {
+        socketClient2.on("showInteractions", (data) => {
             setInteractionsData(data);
             setCurrentScreen("showInteractions");
         });
 
-        socket.on("interactionExplained", (data) => {
+        socketClient2.on("interactionExplained", (data) => {
             setInteractionsExplainedData(data);
             setCurrentScreen("understandInteraction");
         })
 
-        socket.on("askQuestion", (data) => {
+        socketClient2.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
             setCurrentScreen("animationQuestion");
         });
 
-        socket.on("conclusion", () => {
+        socketClient2.on("conclusion", () => {
             setCurrentScreen("conclusion");
         });
 
-        socket.on('scenario', (scenario) => {
+        socketClient2.on('scenario', (scenario) => {
             setCurrentScenario(scenario);
             setAudioLoaded(false);
 
@@ -156,30 +143,22 @@ export default function StudentTablet2() {
         });
 
         return () => {
-            socket.off("teamsAreDoneShowRules");
-            socket.off("rulesAreDoneSelectThemeRandomly");
-            socket.off("themeSelected");
-            socket.off("themeIsSelectedShowThemeExplanation");
-            socket.off("showAnimals");
-            socket.off("startTurnByTurn");
-            socket.off("animation");
-            socket.off("askQuestionGroupOne");
-            socket.off("showAnswer");
+            socketClient2.off("teamsAreDoneShowRules");
+            socketClient2.off("rulesAreDoneSelectThemeRandomly");
+            socketClient2.off("themeSelected");
+            socketClient2.off("themeIsSelectedShowThemeExplanation");
+            socketClient2.off("showAnimals");
+            socketClient2.off("startTurnByTurn");
+            socketClient2.off("animation");
+            socketClient2.off("askQuestionGroupOne");
+            socketClient2.off("showAnswer");
         };
     }, []);
 
     return (
         <>
             <Head>
-                <title>ELIE | Groupe 2</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-                <meta name="application-name" content="MyApp" />
-                <meta name="apple-mobile-web-app-title" content="ELIE" />
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="mobile-web-app-capable" content="yes" />
-                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-                <link rel="apple-touch-icon" href="images/logo-blue.svg" />
-                <meta name="theme-color" content="#fff" />
+                <title>Tablette groupe 2</title>
             </Head>
 
             <div className="global-container">
@@ -189,33 +168,36 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "start" && (
-                    <StartScreen onClick={handleStartButtonClick}/>
+                    <StartScreen socket={socketClient2} onClick={handleStartButtonClick}/>
                 )}
 
                 {currentScreen === "introduce" && (
-                    <Introduce onClick={handleClickOnIntroduceButton}/>
+                    <Introduce socket={socketClient2} onClick={handleClickOnIntroduceButton}/>
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams teamSelected={teamSelected} onTeamSelected={setTeamSelected}/>
+                    <ShowTeams
+                        socket={socketClient2}
+                        teamSelected={teamSelected}
+                        onTeamSelected={setTeamSelected}
+                    />
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    <RulesScreen onRulesButtonClicked={setRulesButtonClicked}/>
+                    <RulesScreen socket={socketClient2} onRulesButtonClicked={setRulesButtonClicked} />
                 )}
 
-                {currentScreen === "theme" && <ThemeScreen themeSelected={themeSelected}/>}
+                {currentScreen === "theme" &&
+                    <ThemeScreen socket={socketClient2} themeSelected={themeSelected} />
+                }
 
                 {currentScreen === "themeExplanation" && (
-                    <ThemeExplanationScreen themeSelected={themeSelected}/>
+                    <ThemeExplanation socket={socketClient2} themeSelected={themeSelected}/>
                 )}
 
-                {currentScreen === "animals" && (
-                    <AnimalCards data={animalCards} client={2} groupName={"teamGroupTwo"}/>
-                )}
 
                 {currentScreen === "turnByTurn" && (
-                    <TurnByTurn data={turnByTurnData} client={2} groupName={"teamGroupTwo"}/>
+                    <TurnByTurn socket={socketClient2} data={turnByTurnData} client={2} groupName={"teamGroupTwo"}/>
                 )}
 
                 {currentScreen === "showInteractions" && (
@@ -226,9 +208,6 @@ export default function StudentTablet2() {
                     <UnderstandInteraction themeSelected={themeSelected}/>
                 )}
 
-                {currentScreen === "answer" && (
-                    <Answer/>
-                )}
 
                 {currentScreen === "animationQuestion" && (
                     <AnimationQuestionScreen data={animationQuestionData}/>
@@ -248,11 +227,11 @@ export default function StudentTablet2() {
     );
 
     function handleStartButtonClick() {
-        socket.emit("wantsToStartExperience");
+        socketClient2.emit("wantsToStartExperience");
     }
 
     function handleClickOnIntroduceButton() {
-        socket.emit("wantsToContinueIntroduction");
+        socketClient2.emit("wantsToContinueIntroduction");
     }
 
 }

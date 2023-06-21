@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import Frame from "./Frame";
 import Deco from "./Deco";
-import socket from 'socket.io-client';
-import { url } from "../pages/_app";
 
-function StartScreen({ onClick }) {
+function StartScreen({socket, onClick }) {
 
     function handleClick() {
         const button = document.querySelector(".start-button");

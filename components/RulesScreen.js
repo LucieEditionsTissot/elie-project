@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import socket from 'socket.io-client';
 import { url } from "../pages/_app";
 
-function RulesScreen({ onRulesButtonClicked }) {
+function RulesScreen({ socket, onRulesButtonClicked }) {
     const validateButtonRef = useRef(null);
     const rulesParagraphRef = useRef(null);
 
