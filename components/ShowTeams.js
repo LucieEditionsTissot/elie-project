@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import io from 'socket.io-client';
 import {url} from "../pages/_app";
 import config from '../config';
+import Frame from "./Frame";
 
 const socket = io(url);
 
-function ShowTeams({ teamSelected, onTeamSelected }) {
-    const colors = ["purple", "cyan", "yellow", "red", "green", "orange", "pink", "midnightblue"];
+function ShowTeams({teamSelected, onTeamSelected}) {
     const cardRefs = useRef([]);
 
     useEffect(() => {
-        cardRefs.current = cardRefs.current.slice(0, teams.length);
+        cardRefs.current = cardRefs.current.slice(0, config.teams.length);
     }, []);
 
     function handleClickOnTeam(index) {
@@ -44,36 +44,51 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
 
     useEffect(() => {
         if (teamSelected !== null) {
-            socket.emit("teamChosen", teamSelected, { excludeSelf: true });
+            socket.emit("teamChosen", teamSelected, {excludeSelf: true});
         }
     }, [teamSelected]);
 
     return (
         <section id="teams">
-            <h1>Choisissez votre équipe</h1>
-            <div className="teamsWrapper">
-                {Object.keys(config.teams).map((teamColor, index) => (
-                    <div
-                        ref={ref => (cardRefs.current[index] = ref)}
-                        key={index}
-                        id={index}
-                        className="card"
-                        style={{ background: colors[index] }}
-                        onClick={() => handleClickOnTeam(index)}
-                    >
-                        <h2 className="teamName">{teamColor}</h2>
-                        <ul>
-                            {config.teams[teamColor].map((member, index) => (
-                                <li key={index}>{member}</li>
-                            ))}
-                        </ul>
+
+            <Frame color={"green"} crop={false} text={"Introduction"}/>
+
+            <div className="template-wrapper">
+
+                <div className="top-part">
+
+                    <div className="left-part">
+                        <h3>Pour commencer,</h3>
+                        <h3>Choisissez votre équipe !</h3>
                     </div>
-                ))}
+
+                    <div className="button-next flex flex-row justify-center items-center rounded-full" onClick={() => handleClickOnValidateButton()}>
+                        <p>Suivant</p>
+                        <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
+                    </div>
+
+                </div>
+
+                <div className="bottom-part teams-wrapper">
+
+                    {Object.keys(config.teams).map((teamName, index) => (
+                        <div ref={ref => (cardRefs.current[index] = ref)} key={index} id={index} className="card" onClick={() => handleClickOnTeam(index)}>
+                            <h2 className="team-name">{teamName}</h2>
+                            <ul>
+                                {config.teams[teamName].map((member, index) => (
+                                    <li key={index}>{member}</li>
+                                ))}
+                            </ul>
+                            <img src={"images/logo-crop-leaves.svg"} alt="Logo" className="logo"/>
+                        </div>
+                    ))}
+
+                </div>
+
             </div>
-            <div className="validateButton" onClick={handleClickOnValidateButton}>
-                <p>Valider</p>
-            </div>
+
         </section>
+
     );
 }
 

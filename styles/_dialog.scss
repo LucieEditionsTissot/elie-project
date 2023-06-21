@@ -1,0 +1,86 @@
+#dialog {
+  position: fixed;
+  padding: 16px;
+  top: 50%;
+  left: 50%;
+  max-width: 58%;
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid $wheat;
+  transform: translate(-50%, -50%);
+
+  div {
+    position: relative;
+    padding: 30px 30px 30px 45px;
+    border-radius: 20px;
+    background-color: $wheat;
+
+    p {
+      position: relative;
+      width: 100%;
+      font-family: "PP Pangram Sans Rounded bold", sans-serif;
+      font-size: 3vw;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: 0.05em;
+      text-align: left;
+      color: $blue;
+
+      span {
+        color: $pink;
+        text-transform: uppercase;
+      }
+
+      &:first-child {
+        margin-bottom: 20px;
+      }
+
+    }
+
+    .logo {
+      position: absolute;
+      bottom: -30px;
+      left: -95px;
+      height: 130px;
+      width: auto;
+      z-index: 1;
+    }
+
+  }
+
+}
+
+.button-next-intro {
+  position: absolute;
+  top: 11vh;
+  right: 8vw;
+  padding: 15px 20px 15px 25px;
+  background-color: $pink;
+  opacity: 1;
+  transition: opacity 0.8s $ease-power4-out;
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  p {
+    position: relative;
+    margin-right: 10px;
+    font-family: "PP Pangram Sans Rounded bold", sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+    color: $wheat;
+  }
+
+  img {
+    position: relative;
+    height: 29px;
+    width: auto;
+  }
+
+}

@@ -4,7 +4,7 @@ function Frame(props) {
 
     return (
        <div className="frame">
-           <img src={"/images/frame-" + props.color + ".png"} alt="Frame" />
+           <img src={`/images/frame-${props.color}${props.crop ? "-crop" : ""}.png`} alt="Frame" />
            <h3>{props.text}</h3>
        </div>
     );

@@ -337,10 +337,12 @@ const answersAnimation = {
     }
 }
 
-
 let connectedClient = [false,false, false];
 
 io.on("connection", (socket) => {
+
+    let userId;
+    console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
 
     if (interval) {
         clearInterval(interval);
@@ -350,19 +352,45 @@ io.on("connection", (socket) => {
         socket.join('client1');
         console.log('Client 1 enregistré :', socket.id);
         connectedClient[0] = true;
+
+        if (connectedClient[0] === true && connectedClient[1] === true) {
+            io.emit("startExperience");
+        }
+
+        userId = "client1"
+        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
+
     });
 
-    if (connectedClient[0] === true && connectedClient[1] === true) {
-        console.log("Tous les clients sont connectés")
-    }
 
     socket.on('registerStudent2', () => {
         socket.join('client2');
         console.log('Client 2 enregistré :', socket.id);
         connectedClient[1] = true;
 
+        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
+            io.emit("startExperience");
+        }
+        connectedClient[1] = true;
+
+        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
+            io.emit("startExperience");
+        }
+
+        userId = "client2"
+        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
+
+        console.log(userId);
+
     });
 
+    socket.on('registerAnimationClient', () => {
+        socket.join('client3');
+        console.log('Client 3 enregistré :', socket.id);
+
+        userId = "client3"
+        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
+    });
 
     socket.on('registerAnimationClient', () => {
         console.log('Animation client registered');
@@ -383,7 +411,7 @@ io.on("connection", (socket) => {
         console.log("Ici")
         console.log(numberOfTeamWhoWantsToContinue++);
         numberOfTeamWhoWantsToContinue++
-        socket.emit("otherTeamWantsToContinue")
+        socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("launchIntroduction");
             numberOfTeamWhoWantsToContinue = 0
@@ -392,7 +420,7 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToContinueIntroduction", () => {
         numberOfTeamWhoWantsToContinue++
-        socket.emit("otherTeamWantsToContinue")
+        socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("showTeams", config.teams);
             numberOfTeamWhoWantsToContinue = 0
@@ -418,7 +446,7 @@ io.on("connection", (socket) => {
             teamsAreDoneShowRules()
         }
     })
-    
+
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
         if (numberOfTeamSelected >= 2) {
@@ -527,10 +555,10 @@ io.on("connection", (socket) => {
     }
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
+
     socket.on("disconnect", () => {
-        connectedClient = [false,false, false];
-        io.emit("reloadClient");
         clearInterval(interval);
+        console.log(userId + " disconnected");
     })
 
 });

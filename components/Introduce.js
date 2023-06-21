@@ -1,15 +1,38 @@
 import React from "react";
+import Frame from "./Frame";
+import Deco from "./Deco";
 
-const Introduce = (props) => {
+function Introduce(props) {
+
+    function handleClick() {
+        const button = document.querySelector(".button-next-intro")
+        if (!button.classList.contains("disabled")) {
+            props.onClick()
+            button.classList.add("disabled")
+        }
+    }
 
     return (
-        <div>
-            <p>Salut ! je suis elie,</p>
-            <p> je vais vous accompagner</p>
-            <p> tout au long de cette partie !</p>
-                <p>c’est parti, appuie sur “suivant”</p>
-            <button onClick={props.onClick}>Suivant</button>
-        </div>
+        <>
+            <section id="introduce">
+                <Frame color={"green"} crop={false} text={"Introduction"}/>
+                <div id={"dialog"}>
+                    <div className="flex flex-col justify-center items-start">
+                        <p>Salut ! Je suis <span>Elie,</span><br/>je vais vous accompagner tout au long de cette partie !</p>
+                        <p>Appuyez sur "<span>SUIVANT</span>"<br/> pour continuer.</p>
+                        <img src={"images/logo-rounded.svg"} alt="Logo rounded icon" className="logo"/>
+                    </div>
+                </div>
+                <div className="button-next-intro flex flex-row justify-center items-center rounded-full"
+                     onClick={() => handleClick()}>
+                    <p>Suivant</p>
+                    <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
+                </div>
+                <Deco/>
+
+            </section>
+        </>
+
     );
 };
 

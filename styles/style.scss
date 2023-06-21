@@ -61,6 +61,40 @@ $ease-power4-out: cubic-bezier(0.22, 1, 0.36, 1);
   -webkit-tap-highlight-color: transparent;
 }
 
+html, body {
+  overscroll-behavior: none;
+}
+
+body {
+  background-color: $blue;
+  padding: 12px;
+  height: 100dvh;
+  width: 100dvw;
+  overflow: hidden;
+
+  #__next {
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+}
+
+
+@import "general";
+@import "start";
+@import "dialog";
+@import "header";
+@import "components";
+@import "teams";
+@import "rules";
+@import "theme";
+@import "map";
+@import "turnByTurn";
+@import "animation";
+@import "animationQuestion";
+
 .global-wrapper {
   position: relative;
   width: 100%;
@@ -192,19 +226,3 @@ $ease-power4-out: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
 }
-
-body {
-  background-color: $blue;
-}
-
-@import "general";
-@import "start";
-@import "header";
-@import "components";
-@import "teams";
-@import "rules";
-@import "theme";
-@import "map";
-@import "turnByTurn";
-@import "animation";
-@import "animationQuestion";
