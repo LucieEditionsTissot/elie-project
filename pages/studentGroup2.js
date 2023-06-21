@@ -55,21 +55,16 @@ export default function StudentTablet2() {
         connected = false;
     });
 
-    socket.emit("registerStudent2");
+    if (connected) {
+        socket.emit("registerStudent2");
 
+    }
+    socket.on("disconnect", () => {
+        window.location.reload();
+    });
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
     }, [currentScreen]);
-
-    useEffect(() => {
-        if (connected) {
-            socket.emit("registerStudent2");
-            if (teamSelected) {
-                socket.emit("teamChosenGroupeTwo", teamSelected);
-            }
-        }
-
-    }, [teamSelected]);
 
     useEffect(() => {
         if (rulesButtonClicked) {
@@ -84,7 +79,7 @@ export default function StudentTablet2() {
         });
 
         socket.on("startExperience", () => {
-            console.log("game should start")
+            console.log("game can be launched")
         });
 
         socket.on("launchIntroduction", () => {
@@ -175,16 +170,14 @@ export default function StudentTablet2() {
     return (
         <>
             <Head>
-                <title>ELIE | Groupe 2</title>
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="mobile-web-app-capable" content="yes" />
+                <title>Tablette groupe 2</title>
             </Head>
 
             <div className="global-container">
 
-                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue ? "show" : ""}`}>
-                    <p>L'autre équipe t'attend</p>
-                </div>
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>

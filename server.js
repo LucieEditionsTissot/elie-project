@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 let interval;
-const config = require('./config');
+const teams = require('./config');
 
 const getApiAndEmit = (socket) => {
     const response = new Date();
@@ -337,81 +337,56 @@ const answersAnimation = {
     }
 }
 
-let connectedClient = [false,false, false];
+
+
+let clientConnected = { client : false, client2 : false };
+let currentState = {}
+
+
+const startExperience = (socket)=> {
+    if (clientConnected.client === true && clientConnected.client2 === true) {
+        console.log("Tous les clients sont connectés")
+        socket.emit("startExperience");
+    }
+}
 
 io.on("connection", (socket) => {
-
-    let userId;
-    console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
 
     if (interval) {
         clearInterval(interval);
     }
 
+
     socket.on('registerStudent1', () => {
         socket.join('client1');
         console.log('Client 1 enregistré :', socket.id);
-        connectedClient[0] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true) {
-            io.emit("startExperience");
-        }
-
-        userId = "client1"
-        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
-
+        clientConnected.client = true;
+        startExperience(socket);
     });
+
 
 
     socket.on('registerStudent2', () => {
         socket.join('client2');
         console.log('Client 2 enregistré :', socket.id);
-        connectedClient[1] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience");
-        }
-        connectedClient[1] = true;
-
-        if (connectedClient[0] === true && connectedClient[1] === true && connectedClient[2]) {
-            io.emit("startExperience");
-        }
-
-        userId = "client2"
-        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
-
-        console.log(userId);
+        clientConnected.client2 = true;
+        startExperience(socket);
 
     });
+
 
     socket.on('registerAnimationClient', () => {
         socket.join('client3');
-        console.log('Client 3 enregistré :', socket.id);
-
-        userId = "client3"
-        console.log(userId + " " + socket.id); // ojIckSD2jqNzOqIrAGzL
-    });
-
-    socket.on('registerAnimationClient', () => {
         console.log('Animation client registered');
         connectedClient[2] = true;
     });
 
-    numberOfTeamWhoWantsToContinue = 0
-    numberOfTeamSelected = 0
-    numberOfRulesUnderstood = 0
-    numberOfChosenAnimals = 0
-    numberOfAnimationQuestionAnswered = 0
-    IdOfAnimationQuestionAnswered = []
-    isFinalQuestionIsCorrect = true
-    numberOfButtonClicked = 0
-    numberOfCardsView = 0
 
     socket.on("wantsToStartExperience", () => {
         console.log("Ici")
-        console.log(numberOfTeamWhoWantsToContinue++);
         numberOfTeamWhoWantsToContinue++
-        socket.broadcast.emit("otherTeamWantsToContinue")
+        console.log(numberOfTeamWhoWantsToContinue++);
+        socket.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("launchIntroduction");
             numberOfTeamWhoWantsToContinue = 0
@@ -420,9 +395,10 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToContinueIntroduction", () => {
         numberOfTeamWhoWantsToContinue++
-        socket.broadcast.emit("otherTeamWantsToContinue")
+        socket.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
-            io.emit("showTeams", config.teams);
+            console.log(io.emit("showTeams", teams.teams));
+            io.emit("showTeams", teams.teams);
             numberOfTeamWhoWantsToContinue = 0
         }
     })
@@ -433,32 +409,33 @@ io.on("connection", (socket) => {
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
+        console.log(teamGroupOne + "Team choisi");
         numberOfTeamSelected++
+        console.log(numberOfTeamSelected + "Group 1")
         if (numberOfTeamSelected >= 2) {
+            console.log("Teams are done")
             teamsAreDoneShowRules()
         }
     })
 
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
+        console.log(teamGroupTwo + "team");
         numberOfTeamSelected++
+        console.log(numberOfTeamSelected + "Group 2")
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
         }
     })
-
+    
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
-        if (numberOfTeamSelected >= 2) {
             io.emit('teamsAreDoneShowRules', rules);
-            io.to('client3').emit(regles);
-        }
     }
 
     socket.on("rulesAreUnderstood", () => {
         numberOfRulesUnderstood += 1
         if (numberOfRulesUnderstood >= 2) {
-            io.to('client3').emit( chooseTheme);
             io.emit('rulesAreDoneSelectThemeRandomly');
         }
     })
@@ -479,29 +456,19 @@ io.on("connection", (socket) => {
         io.to("client2").emit("themeSelected", { theme: theme });
     });
 
-
     socket.on("themeIsRandomlyChosen", (theme) => {
-        io.to('client3').emit( themeIsChosen);
+
         setTimeout(() => {
             io.emit('themeIsSelectedShowThemeExplanation', theme);
-            io.to('client3').emit( explanation);
             setTimeout(() => {
                 randomTheme = theme
-                const dataAnimals = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-                io.emit('showAnimals', dataAnimals);
-                io.to('client3').emit( animalsCards);
+                const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+                io.emit('startTurnByTurn', dataTurnByTurn);
 
             }, themeTimer);
         }, themeTimer);
     });
-    socket.on("startGame", (randomTheme) => {
-        const dataTurnByTurn = [teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-        numberOfCardsView++;
-        if(numberOfCardsView >= 2) {
-            io.to('client3').emit(indice1);
-            io.emit('startTurnByTurn', dataTurnByTurn);
-        }
-    });
+
     socket.on("loop", () => {
         io.to('client3').emit( indice1Loop);
     })
@@ -555,10 +522,9 @@ io.on("connection", (socket) => {
     }
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
-
     socket.on("disconnect", () => {
+        clientConnected = {client: false, client2: false, client3: false }
         clearInterval(interval);
-        console.log(userId + " disconnected");
     })
 
 });

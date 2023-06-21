@@ -34,8 +34,6 @@ export default function StudentTablet1() {
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
-    const [showAnswer, setShowAnswer] = useState(false);
-    const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
     const [audioScenario, setAudioScenario] = useState(null);
@@ -53,20 +51,41 @@ export default function StudentTablet1() {
         connected = false;
     });
 
-    socket.emit("registerStudent1");
+        socket.on("reloadClient", () => {
+            window.location.reload();
+        });
+        if (connected) {
+            socket.emit("registerStudent1");
+
+        }
+
+    useEffect(() => {
+
+        socket.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
+            setAudioLoaded(false);
+
+            const audioElement = new Audio(scenario.audios[0]);
+            audioElement.addEventListener('canplaythrough', () => {
+                setAudioLoaded(true);
+            });
+
+            setCurrentAudio(audioElement);
+
+        });
+    }, []);
+
 
     useEffect(() => {
         setOtherTeamWantsToContinue(false)
     }, [currentScreen]);
 
     useEffect(() => {
-        if (connected) {
-            socket.emit("registerStudent1");
 
             if (teamSelected) {
                 socket.emit("teamChosenGroupeOne", teamSelected);
             }
-        }
+
     }, [teamSelected]);
 
     useEffect(() => {
@@ -76,13 +95,12 @@ export default function StudentTablet1() {
     }, [rulesButtonClicked]);
 
     useEffect(() => {
-
         socket.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true)
         });
 
         socket.on("startExperience", () => {
-            console.log("game should start")
+           console.log("game can be launched")
         });
 
         socket.on("launchIntroduction", () => {
@@ -175,16 +193,14 @@ export default function StudentTablet1() {
     return (
         <>
             <Head>
-                <title>ELIE | Groupe 1</title>
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="mobile-web-app-capable" content="yes" />
+                <title>Tablette groupe 1</title>
             </Head>
 
             <div className="global-container">
 
-                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue ? "show" : ""}`}>
-                    <p>L'autre équipe t'attend</p>
-                </div>
+                {otherTeamWantsToContinue && (
+                    <div className="otherTeamWantsToContinue"></div>
+                )}
 
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>
