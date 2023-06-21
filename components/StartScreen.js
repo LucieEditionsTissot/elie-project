@@ -1,30 +1,46 @@
 import React from "react";
 import Frame from "./Frame";
+import Deco from "./Deco";
 
-function StartScreen({ onClick }) {
+function StartScreen({onClick}) {
+
+    function handleClick(props) {
+        const button = document.querySelector(".start-button")
+        if (!button.classList.contains("disabled")) {
+            onClick()
+            button.classList.add("disabled")
+        }
+    }
+
     return (
         <>
-            <Frame color={"green"} text={"Elie"}/>
+            <section id="start">
 
-            <div className="relative h-full w-full flex flex-col justify-center items-center" id="startScreen">
+                <Frame color={"green"} crop={false} text={"Elie"}/>
 
-                <div className="flex flex-row justify-center items-center">
+                <div className="relative h-full w-full flex flex-col justify-center items-center" id="startScreen">
 
-                    <img src={"images/logo-blue.svg"} alt="Logo" className="logo"/>
+                    <div className="flex flex-row justify-center items-center">
 
-                    <h1>Découvrir<br/>les interactions du monde vivat</h1>
+                        <img src={"images/logo-blue.svg"} alt="Logo" className="logo"/>
+
+                        <h1>Découvrir<br/>les interactions du monde vivant</h1>
+
+                    </div>
+
+                    <div className="start-button" onClick={() => handleClick()}>
+
+                        <img src={"images/start-button-icon.svg"} alt="start button"/>
+
+                        <p>Commencer</p>
+
+                    </div>
 
                 </div>
 
-                <div className="start-button" onClick={onClick}>
+                <Deco/>
 
-                    <img src={"images/start-button-icon.svg"} alt="start button"/>
-
-                    <p>Commencer</p>
-
-                </div>
-
-            </div>
+            </section>
 
         </>
     );

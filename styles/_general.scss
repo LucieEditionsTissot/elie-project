@@ -1,22 +1,127 @@
 .global-container {
-  position: fixed;
-  padding: 19px;
+  position: relative;
   top: 0;
   left: 0;
-  height: 100dvh;
-  width: 100dvw;
-  z-index: 1;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
   background-color: $blue;
+  overflow: clip;
+  border-radius: 20px;
+}
+
+section {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+
+  .template-wrapper {
+    position: absolute;
+    padding: 7% 7% 4%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+    border-radius: 20px;
+
+    @media screen and (min-height: 800px) {
+      padding: 14% 7% 6%;
+    }
+
+    .top-part {
+      position: relative;
+      margin-bottom: 22px;
+      height: 14%;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .left-part {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        h3 {
+          position: relative;
+          font-family: "PP Pangram Sans Rounded bold", sans-serif;
+          font-size: 37px;
+          font-weight: 400;
+          line-height: 1.05;
+          letter-spacing: 0em;
+          text-align: left;
+          color: $blue;
+        }
+
+      }
+
+      .button-next {
+        position: relative;
+        padding: 12px 15px 12px 18px;
+        background-color: $pink;
+        opacity: 1;
+        transition: opacity 0.8s $ease-power4-out;
+
+        &.disabled {
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        p {
+          position: relative;
+          top: 1px;
+          margin-right: 10px;
+          font-family: "PP Pangram Sans Rounded bold", sans-serif;
+          font-size: 20px;
+          font-weight: 400;
+          line-height: 1;
+          letter-spacing: 0.04em;
+          text-align: center;
+          text-transform: uppercase;
+          color: $wheat;
+        }
+
+        img {
+          position: relative;
+          height: 29px;
+          width: auto;
+        }
+
+      }
+
+    }
+
+    .bottom-part {
+      position: relative;
+      display: flex;
+      height: 100%;
+      width: 100%;
+      flex-grow: 1;
+      border-radius: 30px;
+      background-color: $wheat;
+    }
+
+  }
 }
 
 .frame {
   position: absolute;
   top: 0;
   left: 0;
-  height: 100dvh;
-  width: 100dvw;
+  height: 100%;
+  width: 100%;
   z-index: 0;
-  padding: 19px;
   user-focus: none;
   user-select: none;
   -webkit-user-drag: none;
@@ -31,12 +136,12 @@
 
   h3 {
     position: absolute;
-    top: 22px;
+    top: 4px;
     left: 50%;
     font-family: "Patsy Sans", sans-serif;
-    font-size: 33px;
+    font-size: 25px;
     font-weight: 400;
-    line-height: 47px;
+    line-height: 1;
     letter-spacing: 0.15em;
     text-align: center;
     text-transform: uppercase;
@@ -52,8 +157,48 @@
   position: fixed;
   top: 0;
   right: 50px;
-  height: 50px;
-  width: 100px;
-  background-color: red;
+  padding: 18px;
+  border-radius: 0 0 10px 10px;
+  background-color: $light-green;
+  border: 3px solid $pink;
+  border-top: 0;
+  transform: translateY(-150px);
   z-index: 15;
+
+  &.show {
+    transform: translateY(0);
+    transition: transform 0.8s $ease-power4-out;
+  }
+
+  p {
+    position: relative;
+    max-width: 160px;
+    font-family: "PP Pangram Sans Rounded", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    text-align: center;
+    color: $blue;
+  }
+
+}
+
+.deco {
+  position: absolute;
+  left: 50%;
+  bottom: -85px;
+  transform: translateX(-50%);
+  height: auto;
+  width: 105%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  user-focus: none;
+  user-focus-pointer: none;
+  -moz-user-select: none;
 }
