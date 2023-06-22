@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
 import ThemeScreen from "../components/ThemeScreen";
 import RulesScreen from "../components/RulesScreen";
-import ThemeExplanationScreen from "../components/ThemeExplanationScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import ShowInteractions from "../components/ShowInteractions";
@@ -16,12 +15,8 @@ import AudioPlayer from "../components/AudioPlayer";
 import { url } from "./_app";
 import ThemeExplanation from "../components/ThemeExplanation";
 
-const socketClient1 = io(url);
-
 export default function StudentTablet1() {
-    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(
-        false
-    );
+    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
@@ -33,14 +28,16 @@ export default function StudentTablet1() {
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
     const [interactionsData, setInteractionsData] = useState(null);
-    const [interactionsExplainedData, setInteractionsExplainedData] = useState(
-        null
-    );
+    const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
     const [audioScenario, setAudioScenario] = useState(null);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
+    const socketClient1Ref = useRef(null);
 
     useEffect(() => {
+        socketClient1Ref.current = io(url);
+        const socketClient1 = socketClient1Ref.current;
+
         socketClient1.on("connect", function () {
             console.log("Client 1 connected");
             socketClient1.emit("registerStudent1");
@@ -50,29 +47,10 @@ export default function StudentTablet1() {
             console.log("Client 1 disconnected");
         });
 
-        return () => {
-            socketClient1.off("connect");
-            socketClient1.off("disconnect");
-        };
-    }, []);
-
-    useEffect(() => {
-        setOtherTeamWantsToContinue(false);
-    }, [currentScreen]);
-
-    useEffect(() => {
-        if (teamSelected) {
-            socketClient1.emit("teamChosenGroupeOne", teamSelected);
-        }
-    }, [teamSelected]);
-
-    useEffect(() => {
         if (rulesButtonClicked) {
             socketClient1.emit("rulesAreUnderstood");
         }
-    }, [rulesButtonClicked]);
 
-    useEffect(() => {
         socketClient1.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
         });
@@ -81,7 +59,8 @@ export default function StudentTablet1() {
             setCurrentScreen("start");
         });
 
-        socketClient1.on("launchIntroduction", () => {
+        socketClient1.on("confirmIntroductionStart", () => {
+            console.log("hello");
             setCurrentScreen("introduce");
         });
 
@@ -133,8 +112,19 @@ export default function StudentTablet1() {
             setCurrentScreen("conclusion");
         });
 
-    }, []);
-
+        return () => {
+            socketClient1.disconnect();
+        };
+    }, [rulesButtonClicked]);
+    const handleAddTeam = (teamName) => {
+        socketClient1Ref.current.emit("addTeam", teamName);
+    }
+    const handleStartButtonClick = () => {
+        socketClient1Ref.current.emit("wantsToStartExperience");
+    }
+    const handleContinueIntroduction = () => {
+        socketClient1Ref.current.emit("wantsToContinueIntroduction");
+    };
     return (
         <>
             <Head>
@@ -146,32 +136,31 @@ export default function StudentTablet1() {
                     <div className="otherTeamWantsToContinue"></div>
                 )}
                 {currentScreen === "start" && (
-                    <StartScreen socket={socketClient1}  onClick={handleStartButtonClick}/>
+                    <StartScreen onClick={handleStartButtonClick} />
                 )}
 
                 {currentScreen === "introduce" && (
-                    <Introduce socket={socketClient1} onClick={handleClickOnIntroduceButton}/>
+                    <Introduce onClick={handleContinueIntroduction} />
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams socket={socketClient1} teamSelected={teamSelected} onTeamSelected={setTeamSelected} />
+                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected} onTeamSelected={handleAddTeam} />
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    <RulesScreen socket={socketClient1} onRulesButtonClicked={setRulesButtonClicked} />
+                    <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={setRulesButtonClicked} />
                 )}
 
                 {currentScreen === "theme" && (
-                    <ThemeScreen themeSelected={themeSelected} />
+                    <ThemeScreen  themeSelected={themeSelected} />
                 )}
 
                 {currentScreen === "themeExplanation" && (
-                    <ThemeExplanation socket={socketClient1} themeSelected={themeSelected} />
+                    <ThemeExplanation s themeSelected={themeSelected} />
                 )}
 
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
-                        socket={socketClient1}
                         data={turnByTurnData}
                         client={1}
                         groupName={"teamGroupOne"}
@@ -198,12 +187,4 @@ export default function StudentTablet1() {
             </div>
         </>
     );
-
-    function handleStartButtonClick() {
-        socketClient1.emit("wantsToStartExperience");
-    }
-
-    function handleClickOnIntroduceButton() {
-        socketClient1.emit("wantsToContinueIntroduction");
-    }
 }

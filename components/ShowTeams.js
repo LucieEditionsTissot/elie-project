@@ -2,23 +2,20 @@ import React, { useEffect, useRef } from "react";
 import socket from 'socket.io-client';
 import teams from '../config';
 
-function ShowTeams({ teamSelected, onTeamSelected }) {
+function ShowTeams({ socket, teamSelected, onTeamSelected }) {
     const cardRefs = useRef([]);
-    useEffect(() => {
-
-        socket.current.on("teamChosen", function (index) {
-            const selectedCard = cardRefs.current.find(card => card.id === index);
-            if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
-                cardRefs.current.forEach(card => card.classList.remove("selectedByOtherTeam"));
-                selectedCard.classList.add("selectedByOtherTeam");
-            }
-        });
-
-    }, []);
+    const [selectedTeamIndex, setSelectedTeamIndex] = useState(null);
+    const [selectedByOtherTeam, setSelectedByOtherTeam] = useState(false);
 
     useEffect(() => {
-        cardRefs.current = cardRefs.current.slice(0, teams.teams.length);
-    }, []);
+        if (socket) {
+            socket.on("teamChosen", function (index) {
+                if (index === selectedTeamIndex) {
+                    setSelectedByOtherTeam(true);
+                }
+            });
+        }
+    }, [socket, selectedTeamIndex]);
 
     function handleClickOnTeam(index) {
         if (teamSelected === null) {
@@ -31,24 +28,13 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
     }
 
     function handleClickOnValidateButton() {
-        const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
+        const selectedCard = cardRefs.current.find((card) => card.classList.contains("selected"));
         if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
             const teamIndex = selectedCard.id;
             onTeamSelected(teamIndex);
-
-            if (teamIndex % 2 === 0) {
-                socket.emit("teamChosenGroupeOne", teamIndex);
-            } else {
-                socket.emit("teamChosenGroupeTwo", teamIndex);
-            }
+            socket.emit("selectTeam", teamIndex);
         }
     }
-
-    useEffect(() => {
-        if (teamSelected !== null) {
-            socket.current.emit("teamChosen", teamSelected, { excludeSelf: true });
-        }
-    }, [teamSelected]);
 
     return (
         <section id="teams">
@@ -86,9 +72,9 @@ function ShowTeams({ teamSelected, onTeamSelected }) {
                 </div>
 
             </div>
-
         </section>
     );
 }
 
 export default ShowTeams;
+

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Frame from "./Frame";
 import Deco from "./Deco";
 
-function StartScreen({socket, onClick }) {
+function StartScreen({ onClick }) {
 
     function handleClick() {
         const button = document.querySelector(".start-button");
