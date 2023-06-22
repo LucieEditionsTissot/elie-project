@@ -1,5 +1,5 @@
 $gray: #303030;
-$lightGray : #e7e7e7;
+$lightGray: #e7e7e7;
 
 @font-face {
   font-family: "PP Pangram Sans Rounded";
@@ -40,7 +40,7 @@ $pink: rgba(215, 102, 119, 1);
 $wheat: rgba(254, 255, 246, 1);
 $light-blue: rgba(131, 159, 220, 1);
 $blue: rgba(56, 72, 100, 1);
-$dark-blue: rgba(50, 64, 90, 1);
+$dark-blue: rgba(43, 56, 80, 1);
 $light-green: rgba(237, 248, 238, 1);
 $green: rgba(195, 224, 199, 1);
 $dark-green: rgba(179, 212, 180, 1);
@@ -59,15 +59,17 @@ $ease-power4-out: cubic-bezier(0.22, 1, 0.36, 1);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 html, body {
   overscroll-behavior: none;
+  overflow: hidden;
 }
 
 body {
+  position: fixed;
   background-color: $blue;
-  padding: 12px;
   height: 100dvh;
   width: 100dvw;
   overflow: hidden;
@@ -75,7 +77,6 @@ body {
   #__next {
     height: 100%;
     width: 100%;
-    border-radius: 20px;
     overflow: hidden;
   }
 
@@ -85,6 +86,7 @@ body {
 @import "general";
 @import "start";
 @import "dialog";
+@import "interaction";
 @import "header";
 @import "components";
 @import "teams";
@@ -93,7 +95,7 @@ body {
 @import "map";
 @import "turnByTurn";
 @import "animation";
-@import "animationQuestion";
+@import "answer";
 
 .global-wrapper {
   position: relative;
@@ -162,6 +164,7 @@ body {
     }
 
   }
+
   ul {
     list-style-type: none;
     margin: 0;

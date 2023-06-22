@@ -1,45 +1,10 @@
 #turnByTurn {
-  position: fixed;
-  padding: 5%;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  z-index: 10;
-
-  h1 {
-    position: relative;
-    margin-bottom: 15px;
-    font-family: "Helvetica", sans-serif;
-    font-weight: 500;
-    font-size: 4vw;
-    font-style: normal;
-    text-align: center;
-    color: $gray;
-  }
-
-  h2 {
-    position: relative;
-    margin-bottom: 50px;
-    font-family: "Helvetica", sans-serif;
-    font-weight: 500;
-    font-size: 3vw;
-    font-style: normal;
-    text-align: center;
-    color: $gray;
-  }
+  position: relative;
 
   .animal-wrapper {
     position: relative;
-    width: 100%;
-    flex-grow: 1;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 
     .animal {
@@ -50,30 +15,34 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      background: $gray;
-      user-select: none;
-      transition: transform 0.65s;
-      transform-style: preserve-3d;
+      border-radius: 15px;
+      background-color: rgba(250, 249, 239, 1);
+      outline: 4px solid rgba(238, 237, 230, 1);
+      opacity: 1;
+      transition: opacity 0.8s $ease-power4-out, outline 0.8s $ease-power4-out;
+
+      img {
+        position: relative;
+        height: 50px;
+        width: auto;
+        pointer-events: none;
+      }
 
       p {
         position: relative;
-        font-family: "Helvetica", sans-serif;
-        font-size: 2vw;
+        max-width: 90%;
+        font-family: "PP Pangram Sans Rounded bold", sans-serif;
+        font-size: 18px;
+        font-weight: 400;
         line-height: 1;
-        font-weight: 500;
-        font-style: normal;
+        letter-spacing: 0.1em;
         text-align: center;
-        color: white;
+        color: rgba(103, 120, 127, 1);
       }
 
       &.hidden {
-        transform: rotateY(180deg);
-
-        p {
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-        }
-
+        outline: 4px solid rgba(238, 237, 230, 1);
+        opacity: 0.5;
       }
 
       &.empty {

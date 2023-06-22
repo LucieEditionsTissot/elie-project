@@ -3,7 +3,7 @@ import '../styles/globals.css';
 import React from "react";
 import Head from "next/head";
 
-export const url = "http://localhost:3000"
+export const url = "172.28.59.45:3000"
 
 function MyApp({Component, pageProps}) {
 
