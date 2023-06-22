@@ -17,7 +17,7 @@ function Introduce(props) {
             <section id="introduce">
                 <Frame color={"green"} crop={false} text={"Introduction"}/>
                 <div id={"dialog"}>
-                    <div className="flex flex-col justify-center items-start">
+                    <div className="flex flex-col justify-center items-start text-start">
                         <p>Salut ! Je suis <span>Elie,</span><br/>je vais vous accompagner tout au long de cette partie !</p>
                         <p>Appuyez sur "<span>SUIVANT</span>"<br/> pour continuer.</p>
                         <img src={"images/logo-rounded.svg"} alt="Logo rounded icon" className="logo"/>
@@ -29,7 +29,6 @@ function Introduce(props) {
                     <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                 </div>
                 <Deco/>
-
             </section>
         </>
 

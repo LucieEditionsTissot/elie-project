@@ -338,12 +338,11 @@ const answersAnimation = {
 }
 
 
-
-let clientConnected = { client : false, client2 : false };
+let clientConnected = {client: false, client2: false};
 let currentState = {}
 
 
-const startExperience = (socket)=> {
+const startExperience = (socket) => {
     if (clientConnected.client === true && clientConnected.client2 === true) {
         console.log("Tous les clients sont connectés")
         socket.emit("startExperience");
@@ -365,7 +364,6 @@ io.on("connection", (socket) => {
     });
 
 
-
     socket.on('registerStudent2', () => {
         socket.join('client2');
         console.log('Client 2 enregistré :', socket.id);
@@ -383,10 +381,8 @@ io.on("connection", (socket) => {
 
 
     socket.on("wantsToStartExperience", () => {
-        console.log("Ici")
         numberOfTeamWhoWantsToContinue++
-        console.log(numberOfTeamWhoWantsToContinue++);
-        socket.emit("otherTeamWantsToContinue")
+        socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
             io.emit("launchIntroduction");
             numberOfTeamWhoWantsToContinue = 0
@@ -395,11 +391,11 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToContinueIntroduction", () => {
         numberOfTeamWhoWantsToContinue++
-        socket.emit("otherTeamWantsToContinue")
+        socket.broadcast.emit("otherTeamWantsToContinue")
         if (numberOfTeamWhoWantsToContinue >= 2) {
-            console.log(io.emit("showTeams", teams.teams));
             io.emit("showTeams", teams.teams);
             numberOfTeamWhoWantsToContinue = 0
+            numberOfTeamSelected = 0
         }
     })
 
@@ -409,28 +405,25 @@ io.on("connection", (socket) => {
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
-        console.log(teamGroupOne + "Team choisi");
         numberOfTeamSelected++
-        console.log(numberOfTeamSelected + "Group 1")
         if (numberOfTeamSelected >= 2) {
-            console.log("Teams are done")
             teamsAreDoneShowRules()
+            numberOfTeamSelected = 0
         }
     })
 
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
-        console.log(teamGroupTwo + "team");
         numberOfTeamSelected++
-        console.log(numberOfTeamSelected + "Group 2")
         if (numberOfTeamSelected >= 2) {
             teamsAreDoneShowRules()
+            numberOfTeamSelected = 0
         }
     })
-    
+
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
-            io.emit('teamsAreDoneShowRules', rules);
+        io.emit('teamsAreDoneShowRules', rules);
     }
 
     socket.on("rulesAreUnderstood", () => {
@@ -452,8 +445,8 @@ io.on("connection", (socket) => {
     socket.on("chooseTheme", () => {
         const theme = chooseRandomTheme();
         randomTheme = theme
-        io.to("client1").emit("themeSelected", { theme: theme });
-        io.to("client2").emit("themeSelected", { theme: theme });
+        io.to("client1").emit("themeSelected", {theme: theme});
+        io.to("client2").emit("themeSelected", {theme: theme});
     });
 
     socket.on("themeIsRandomlyChosen", (theme) => {
@@ -470,7 +463,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("loop", () => {
-        io.to('client3').emit( indice1Loop);
+        io.to('client3').emit(indice1Loop);
     })
     socket.on("indice2", () => {
         io.to('client1').emit('scenario', indice2Client1);
@@ -490,7 +483,7 @@ io.on("connection", (socket) => {
 
     socket.on("undestrandInteraction", () => {
         numberOfButtonClicked++;
-        if(numberOfButtonClicked >= 2) {
+        if (numberOfButtonClicked >= 2) {
             io.to('client3').emit(interactions);
             io.emit("interactionExplained", randomTheme);
             setTimeout(() => {
@@ -507,8 +500,8 @@ io.on("connection", (socket) => {
     // ANIMATION IS ANSWERED  ////////////////////////
     socket.on("animationQuestionIsAnswered", (answerId) => {
         numberOfAnimationQuestionAnswered++;
-        if(numberOfAnimationQuestionAnswered >=2) {
-            io.to('client3').emit( scenario11);
+        if (numberOfAnimationQuestionAnswered >= 2) {
+            io.to('client3').emit(scenario11);
             io.emit("conclusion");
         }
     })
@@ -523,7 +516,7 @@ io.on("connection", (socket) => {
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
-        clientConnected = {client: false, client2: false, client3: false }
+        clientConnected = {client: false, client2: false, client3: false}
         clearInterval(interval);
     })
 

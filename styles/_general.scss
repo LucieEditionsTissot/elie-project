@@ -5,9 +5,9 @@
   height: 100%;
   width: 100%;
   z-index: 10;
+  padding: 12px;
   background-color: $blue;
-  overflow: clip;
-  border-radius: 20px;
+  overflow: hidden;
 }
 
 section {
@@ -16,8 +16,8 @@ section {
   left: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden;
   border-radius: 20px;
+  overflow: hidden;
 
   .template-wrapper {
     position: absolute;
@@ -57,6 +57,23 @@ section {
           position: relative;
           font-family: "PP Pangram Sans Rounded bold", sans-serif;
           font-size: 37px;
+          font-weight: 400;
+          line-height: 1.05;
+          letter-spacing: 0em;
+          text-align: left;
+          text-transform: uppercase;
+          color: $blue;
+
+          span {
+            color: $pink;
+          }
+
+        }
+
+        h6 {
+          position: relative;
+          font-family: "PP Pangram Sans Rounded bold", sans-serif;
+          font-size: 30px;
           font-weight: 400;
           line-height: 1.05;
           letter-spacing: 0em;
@@ -108,7 +125,7 @@ section {
       height: 100%;
       width: 100%;
       flex-grow: 1;
-      border-radius: 30px;
+      border-radius: 20px;
       background-color: $wheat;
     }
 
@@ -116,16 +133,23 @@ section {
 }
 
 .frame {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
   z-index: 0;
+  padding: 12px;
   user-focus: none;
+  overflow: hidden;
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
+  background-color: $blue;
+
+  &.greenBackground {
+    background-color: $green;
+  }
 
   img {
     position: relative;
@@ -136,7 +160,7 @@ section {
 
   h3 {
     position: absolute;
-    top: 4px;
+    top: 23px;
     left: 50%;
     font-family: "Patsy Sans", sans-serif;
     font-size: 25px;
@@ -149,6 +173,11 @@ section {
     color: $green;
     user-select: none;
     z-index: 1;
+
+    &.blueText {
+      color: $blue;
+    }
+
   }
 
 }
@@ -163,7 +192,7 @@ section {
   border: 3px solid $pink;
   border-top: 0;
   transform: translateY(-150px);
-  z-index: 15;
+  z-index: 1000;
 
   &.show {
     transform: translateY(0);
@@ -191,7 +220,7 @@ section {
   transform: translateX(-50%);
   height: auto;
   width: 105%;
-  z-index: 1;
+  z-index: 5;
   pointer-events: none;
 }
 
