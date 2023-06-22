@@ -122,14 +122,15 @@ export default function StudentTablet1() {
     const handleStartButtonClick = () => {
         socketClient1Ref.current.emit("wantsToStartExperience");
     }
+    const handleRulesButtonClick = () => {
+        socketClient1Ref.current.emit("rules");
+    }
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
     };
     return (
         <>
-            <Head>
-                <title>Tablette groupe 1</title>
-            </Head>
+            <Head> <title>ELIE | Groupe 1</title> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> <meta name="application-name" content="MyApp" /> <meta name="apple-mobile-web-app-title" content="ELIE" /> <meta name="apple-mobile-web-app-capable" content="yes" /> <meta name="mobile-web-app-capable" content="yes" /> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> <link rel="apple-touch-icon" href="/images/logo-blue.svg" /> </Head>
 
             <div className="global-container">
                 {otherTeamWantsToContinue && (
@@ -148,7 +149,7 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={setRulesButtonClicked} />
+                    <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={handleRulesButtonClick} />
                 )}
 
                 {currentScreen === "theme" && (

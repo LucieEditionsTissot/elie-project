@@ -426,8 +426,16 @@ io.on("connection", (socket) => {
     });
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
-        stateManager.set("rules", rules);
-        io.emit("teamsAreDoneShowRules");
+        socket.on("rules", rules)
+        {
+            client1State = stateManager.getClientState(client1SocketId);
+            client2State = stateManager.getClientState(client2SocketId);
+            stateManager.updateClientState(client1SocketId, "rules");
+            stateManager.updateClientState(client2SocketId, "rules");
+            if (client1State === "rules" && client2State === "rules") {
+                io.emit("teamsAreDoneShowRules");
+            }
+        }
     }
 
     socket.on("rulesAreUnderstood", () => {
@@ -468,6 +476,7 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "randomTheme");
         console.log(stateManager)
         if (client1State === "teamAdded" && client2State === "randomTheme") {
+            console.log(io.emit("themeSelected", randomTheme))
             io.emit("themeSelected", randomTheme);
         }
     });
