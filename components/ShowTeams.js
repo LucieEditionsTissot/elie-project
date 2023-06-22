@@ -24,7 +24,6 @@ function ShowTeams({ socket, teamSelected, onTeamSelected }) {
             const selectedCard = cards[index];
             cards.forEach((card) => card.classList.remove("selected"));
             selectedCard.classList.add("selected");
-            onTeamSelected(index);
         }
     }
 
@@ -70,9 +69,6 @@ function ShowTeams({ socket, teamSelected, onTeamSelected }) {
                         </div>
                     ))}
 
-                </div>
-                <div className="validateButton" onClick={handleClickOnValidateButton}>
-                    <p>Valider</p>
                 </div>
             </div>
         </section>
