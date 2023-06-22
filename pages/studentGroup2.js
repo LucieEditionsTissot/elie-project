@@ -98,6 +98,8 @@ useEffect(() => {
 
         socketClient2.on("themeSelected", (data) => {
             setThemeSelected(data);
+            socketClient2.emit("themeIsRandomlyChosen", data);
+
         });
 
         socketClient2.on("themeIsSelectedShowThemeExplanation", (data) => {
@@ -142,17 +144,6 @@ useEffect(() => {
 
         });
 
-        return () => {
-            socketClient2.off("teamsAreDoneShowRules");
-            socketClient2.off("rulesAreDoneSelectThemeRandomly");
-            socketClient2.off("themeSelected");
-            socketClient2.off("themeIsSelectedShowThemeExplanation");
-            socketClient2.off("showAnimals");
-            socketClient2.off("startTurnByTurn");
-            socketClient2.off("animation");
-            socketClient2.off("askQuestionGroupOne");
-            socketClient2.off("showAnswer");
-        };
     }, []);
 
     return (
@@ -188,7 +179,7 @@ useEffect(() => {
                 )}
 
                 {currentScreen === "theme" &&
-                    <ThemeScreen socket={socketClient2} themeSelected={themeSelected} />
+                    <ThemeScreen themeSelected={themeSelected} />
                 }
 
                 {currentScreen === "themeExplanation" && (

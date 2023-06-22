@@ -78,7 +78,6 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("startExperience", () => {
-            console.log("ici");
             setCurrentScreen("start");
         });
 
@@ -102,6 +101,7 @@ export default function StudentTablet1() {
 
         socketClient1.on("themeSelected", (data) => {
             setThemeSelected(data);
+            socketClient1.emit("themeIsRandomlyChosen", data);
             console.log(data)
         });
 
@@ -133,22 +133,6 @@ export default function StudentTablet1() {
             setCurrentScreen("conclusion");
         });
 
-        return () => {
-            socketClient1.off("otherTeamWantsToContinue");
-            socketClient1.off("startExperience");
-            socketClient1.off("launchIntroduction");
-            socketClient1.off("showTeams");
-            socketClient1.off("teamsAreDoneShowRules");
-            socketClient1.off("rulesAreDoneSelectThemeRandomly");
-            socketClient1.off("themeSelected");
-            socketClient1.off("themeIsSelectedShowThemeExplanation");
-            socketClient1.off("showAnimals");
-            socketClient1.off("startTurnByTurn");
-            socketClient1.off("showInteractions");
-            socketClient1.off("interactionExplained");
-            socketClient1.off("askQuestion");
-            socketClient1.off("conclusion");
-        };
     }, []);
 
     return (
@@ -178,7 +162,7 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "theme" && (
-                    <ThemeScreen socket={socketClient1} themeSelected={themeSelected} />
+                    <ThemeScreen themeSelected={themeSelected} />
                 )}
 
                 {currentScreen === "themeExplanation" && (

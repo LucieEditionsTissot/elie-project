@@ -344,7 +344,7 @@ let currentState = {}
 let clientConnected = { client : false, client2 : false };
 
 
-
+const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
 const startExperience = (socket) => {
     if (clientConnected.client && clientConnected.client2) {
         console.log("Tous les clients sont connectés");
@@ -404,11 +404,8 @@ io.on("connection", (socket) => {
 
     socket.on("teamChosenGroupeOne", (teamChosen) => {
         teamGroupOne = teamChosen;
-
         numberOfTeamSelected++;
-
-        if (numberOfTeamSelected >= 2) {
-            numberOfTeamSelected=0
+        if (teamGroupOne !== null && teamGroupTwo !== null) {
             teamsAreDoneShowRules()
 
         }
@@ -416,11 +413,8 @@ io.on("connection", (socket) => {
 
     socket.on("teamChosenGroupeTwo", (teamChosen) => {
         teamGroupTwo = teamChosen;
-
         numberOfTeamSelected++;
-
-        if (numberOfTeamSelected >= 2) {
-            numberOfTeamSelected=0
+        if (teamGroupOne !== null && teamGroupTwo !== null) {
             teamsAreDoneShowRules()
         }
     })
@@ -438,35 +432,37 @@ io.on("connection", (socket) => {
 
     // THEME /////////////////////////////////////////
 
-    const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
+
 
     function chooseRandomTheme() {
-        const randomIndex = Math.floor(Math.random() * themes.length);
-        return themes[randomIndex];
+        //const randomIndex = Math.floor(Math.random() * themes.length);
+        //return themes[randomIndex];
+        return themes[0];
     }
 
     socket.on("chooseTheme", () => {
-        randomTheme = chooseRandomTheme();
+        const theme = chooseRandomTheme();
+       randomTheme = theme;
         console.log(randomTheme);
-        socket.emit("themeSelected",  randomTheme );
+        io.emit("themeSelected",  randomTheme);
     });
 
     socket.on("themeIsRandomlyChosen", (theme) => {
-        theme = randomTheme;
-        console.log(io.emit('themeIsSelectedShowThemeExplanation', randomTheme) + "jbjsbdl<is")
-        console.log(randomTheme + " ici")
-        setTimeout(() => {
+        //theme = randomTheme;
+        //console.log(io.emit('themeIsSelectedShowThemeExplanation', randomTheme) + "jbjsbdl<is")
+        console.log(theme + " ici")
+        //setTimeout(() => {
             console.log(io.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation',randomTheme))
-            socket.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
-            socket.to(client2SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
-            setTimeout(() => {
-                randomTheme = theme
-                const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-                io.to(client1SocketId).emit('startTurnByTurn', dataTurnByTurn);
-                io.to(client2SocketId).emit('startTurnByTurn', dataTurnByTurn);
+           // socket.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
+           // socket.to(client2SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
+            //setTimeout(() => {
+                //randomTheme = theme
+                //const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+               // io.to(client1SocketId).emit('startTurnByTurn', dataTurnByTurn);
+               // io.to(client2SocketId).emit('startTurnByTurn', dataTurnByTurn);
 
-            }, 10000);
-        }, 30000);
+            //}, 10000);
+        //}, 30000);
     });
 
 
