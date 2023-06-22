@@ -1,18 +1,21 @@
-import React, {useEffect, useRef} from "react";
-import io from 'socket.io-client';
-import {url} from "../pages/_app";
-import config from '../config';
-import Frame from "./Frame";
+import React, { useEffect, useRef } from "react";
+import socket from 'socket.io-client';
+import teams from '../config';
 
-const socket = io(url);
-
-function ShowTeams({ teamSelected, onTeamSelected, handleClickOnValidateTeam }) {
-
+function ShowTeams({ socket, teamSelected, onTeamSelected }) {
     const cardRefs = useRef([]);
+    const [selectedTeamIndex, setSelectedTeamIndex] = useState(null);
+    const [selectedByOtherTeam, setSelectedByOtherTeam] = useState(false);
 
     useEffect(() => {
-        cardRefs.current = cardRefs.current.slice(0, config.teams.length);
-    }, []);
+        if (socket) {
+            socket.on("teamChosen", function (index) {
+                if (index === selectedTeamIndex) {
+                    setSelectedByOtherTeam(true);
+                }
+            });
+        }
+    }, [socket, selectedTeamIndex]);
 
     function handleClickOnTeam(index) {
         if (teamSelected === null) {
@@ -20,38 +23,18 @@ function ShowTeams({ teamSelected, onTeamSelected, handleClickOnValidateTeam }) 
             const selectedCard = cards[index];
             cards.forEach((card) => card.classList.remove("selected"));
             selectedCard.classList.add("selected");
+            onTeamSelected(index);
         }
     }
 
-    function handleClickOnValidateButton(props) {
-        console.log(teamSelected)
-        if (teamSelected === null) {
-            const selectedCard = cardRefs.current.find(card => card.classList.contains("selected"));
-            if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
-                const teamIndex = selectedCard.id;
-                onTeamSelected(teamIndex);
-            }
-        }
-    }
-
-    socket.on("teamChosen", function (index) {
-        const selectedCard = cardRefs.current.find(card => card.id === index);
+    function handleClickOnValidateButton() {
+        const selectedCard = cardRefs.current.find((card) => card.classList.contains("selected"));
         if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
-            cardRefs.current.forEach(card => card.classList.remove("selectedByOtherTeam"));
-            selectedCard.classList.add("selectedByOtherTeam");
+            const teamIndex = selectedCard.id;
+            onTeamSelected(teamIndex);
+            socket.emit("selectTeam", teamIndex);
         }
-    });
-
-    useEffect(() => {
-        if (teamSelected !== null) {
-            socket.emit("teamChosen", teamSelected, { excludeSelf: true });
-            const button = document.querySelector("#teams .button-next")
-            if (!button.classList.contains("disabled")) {
-                handleClickOnValidateTeam()
-                button.classList.add("disabled")
-            }
-        }
-    }, [teamSelected]);
+    }
 
     return (
         <section id="teams">
@@ -89,11 +72,9 @@ function ShowTeams({ teamSelected, onTeamSelected, handleClickOnValidateTeam }) 
                 </div>
 
             </div>
-
         </section>
     );
 }
 
 export default ShowTeams;
-
 

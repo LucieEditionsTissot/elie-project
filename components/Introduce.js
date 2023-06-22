@@ -1,23 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Frame from "./Frame";
 import Deco from "./Deco";
 
-function Introduce(props) {
+function Introduce({socket, onClick }) {
 
     function handleClick() {
-        const button = document.querySelector(".button-next-intro")
+        const button = document.querySelector(".button-next-intro");
         if (!button.classList.contains("disabled")) {
-            props.onClick()
-            button.classList.add("disabled")
+            onClick();
+            button.classList.add("disabled");
         }
     }
 
     return (
         <>
             <section id="introduce">
-                <Frame color={"green"} crop={false} text={"Introduction"}/>
+                <Frame color={"green"} crop={false} text={"Introduction"} />
                 <div id={"dialog"}>
-                    <div className="flex flex-col justify-center items-start text-start">
+                    <div className="flex flex-col justify-center items-start">
                         <p>Salut ! Je suis <span>Elie,</span><br/>je vais vous accompagner tout au long de cette partie !</p>
                         <p>Appuyez sur "<span>SUIVANT</span>"<br/> pour continuer.</p>
                         <img src={"images/logo-rounded.svg"} alt="Logo rounded icon" className="logo"/>
@@ -29,6 +29,7 @@ function Introduce(props) {
                     <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                 </div>
                 <Deco/>
+
             </section>
         </>
 

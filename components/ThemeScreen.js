@@ -1,4 +1,4 @@
-function ThemeScreen({ themeSelected }) {
+function ThemeScreen({themeSelected }) {
     return (
         <section id="themeScreen">
             <h1>Selection du thème en cours de manière aléatoire</h1>

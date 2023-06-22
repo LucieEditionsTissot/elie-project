@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-import Head from 'next/head';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
-import Images from "../components/Images";
-import {url} from "./_app";
+import io from "socket.io-client";
+import * as url from "url";
 
 
-const socket = io(url);
+
+
 let connected = false;
 
 
@@ -19,11 +18,8 @@ const Client3 = () => {
     const [currentVideo, setCurrentVideo] = useState(null);
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
     const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
-    const [scenario7Ended, setScenario7Ended] = useState(false);
 
     let currentScenarioToPlay = 0;
-
-
 
     let scenario1 = {
        audios : "audio/Corbeau.mov",
@@ -86,79 +82,62 @@ const Client3 = () => {
     };
     let scenarios = [scenario1 ,scenario2, scenarios3, scenario4, scenario5, scenario6, scenario7, scenario8, scenario9,  scenario10, scenario11, scenario12, scenario13, scenario14]
 
-
+let socketClient3Ref;
     useEffect(() => {
+        socketClient3Ref.current = io(url);
+        const socketClient3 = socketClient3Ref.current;
 
-        socket.on('connect', function () {
+        socketClient3.on('connect', function () {
             console.log("Client 3 connected");
             connected = true;
         });
-        socket.on('disconnect', function () {
+        socketClient3.on('disconnect', function () {
             console.log("Client 3 disconnected");
             connected = false;
         });
-        socket.on("reloadClient", () => {
+        socketClient3.on("reloadClient", () => {
             window.location.reload();
         });
         if(connected) {
-            socket.emit('registerAnimationClient');
+            socketClient3.emit('registerAnimationClient');
         }
-    }, []);
 
-    useEffect(() => {
+    socketClient3.on('scenario', (scenario) => {
+            setCurrentScenario(scenario);
 
-        //socket.on('scenario', (scenario) => {
-          //  setCurrentScenario(scenario);
-
-           // setVideoLoaded(false);
-           // setScenario7Ended(false);
+            setVideoLoaded(false);
 
 
-           // const videoElement = document.createElement('video');
-            //videoElement.src = scenario.videos[0];
-           // videoElement.addEventListener('loadeddata', () => {
-             //   setVideoLoaded(true);
-            //});
+            const videoElement = document.createElement('video');
+            videoElement.src = scenario.videos[0];
+            videoElement.addEventListener('loadeddata', () => {
+                setVideoLoaded(true);
+            });
 
 
-            //setCurrentVideo(videoElement);
+            setCurrentVideo(videoElement);
 
-           // if (scenario.videos.length > 1) {
-             //   setCurrentVideoIndex(0);
-           // }
-            //if (scenario.audios.length > 1) {
-              //  setCurrentAudioIndex(0);
-            //}
+            if (scenario.videos.length > 1) {
+                setCurrentVideoIndex(0);
+            }
+            if (scenario.audios.length > 1) {
+                setCurrentAudioIndex(0);
+            }
+        });
 
-   //
-    }, []);
 
-    useEffect(() => {
         if(currentAudio) {
             currentAudio.play();
         }
         if (currentVideo) {
            currentVideo.play();
         }
-
-        return () => {
-           if (currentVideo) {
-               currentVideo.pause();
-           }
-        };
-    }, [currentVideo], [currentAudio]);
-
-    useEffect(() => {
         if (currentScenario && videoLoaded && currentScenario.videos.length > 1) {
             const videoCount = currentScenario.videos.length;
 
             const handleVideoEnded = () => {
                 setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoCount);
 
-                if (currentScenario && currentScenario.id === 7) {
-                    setScenario7Ended(true);
-                    socket.emit('scenario7Ended');
-                }
             };
 
             const videoElement = document.createElement('video');
@@ -174,14 +153,14 @@ const Client3 = () => {
                 videoElement.pause();
             };
         }
-    }, [currentScenarioToPlay, videoLoaded, currentVideoIndex]);
+        return () => {
+           if (currentVideo) {
+               currentVideo.pause();
+           }
+        };
 
-    useEffect(() => {
 
-        if (scenario7Ended) {
-            socket.emit("loop")
-        }
-    }, [scenario7Ended]);
+    }, [currentVideo, currentAudio]);
 
     console.log(scenarios[currentScenarioToPlay].audios)
 

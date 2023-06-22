@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-function ThemeExplanation({ explanation }) {
+function ThemeExplanation({socket, explanation }) {
     const explanationRef = useRef(null);
 
     useEffect(() => {
