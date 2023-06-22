@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import socket from 'socket.io-client';
-import teams from '../config';
+import config from '../config';
+import Frame from "./Frame";
 
 function ShowTeams({ socket, teamSelected, onTeamSelected }) {
     const cardRefs = useRef([]);
@@ -70,7 +71,9 @@ function ShowTeams({ socket, teamSelected, onTeamSelected }) {
                     ))}
 
                 </div>
-
+                <div className="validateButton" onClick={handleClickOnValidateButton}>
+                    <p>Valider</p>
+                </div>
             </div>
         </section>
     );

@@ -387,7 +387,6 @@ io.on("connection", (socket) => {
 
     socket.on("wantsToStartExperience", () => {
         stateManager.updateClientState(socket.id, "wantsToStartExperience");
-
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         if (client1State === "wantsToStartExperience" && client2State === "wantsToStartExperience") {
