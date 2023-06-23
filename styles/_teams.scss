@@ -25,12 +25,47 @@
       transition: background-color 0.8s $ease-power4-out;
 
       &.selected {
-        border: 3px solid $gray;
-        transform: scale(1.05);
+
+        &.blue {
+          background-color: rgba(198, 240, 255, 1);
+
+          .logo {
+            fill: #81C2DA !important;
+          }
+
+        }
+
+        &.red {
+          background-color: rgba(255, 193, 173, 1);
+
+          .logo {
+            fill: #FF784D !important;
+          }
+
+        }
+
       }
 
       &.selectedByOtherTeam {
-        filter: grayscale(1);
+
+        &.blue {
+          background-color: rgba(255, 193, 173, 1);
+
+          .logo {
+            fill: #FF784D !important;
+          }
+
+        }
+
+        &.red {
+          background-color: rgba(198, 240, 255, 1);
+
+          .logo {
+            fill: #81C2DA !important;
+          }
+
+        }
+
       }
 
       .team-name {
@@ -83,6 +118,8 @@
         height: 70px;
         width: auto;
         z-index: 0;
+        fill: #D8D6C8;
+        transition: fill 0.8s $ease-power4-out;
       }
 
     }

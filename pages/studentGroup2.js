@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
 import ThemeScreen from "../components/ThemeScreen";
@@ -10,10 +10,10 @@ import ShowInteractions from "../components/ShowInteractions";
 import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
 import AudioPlayer from "../components/AudioPlayer";
-import { url } from "./_app";
+import {url} from "./_app";
 import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
-import { io } from "socket.io-client";
+import {io} from "socket.io-client";
 import Interaction from "../components/Interaction";
 import Question from "../components/Question";
 
@@ -133,8 +133,9 @@ export default function StudentTablet2() {
             socketClient2.disconnect();
         };
     }, [rulesButtonClicked]);
-    const handleAddTeam = (teamName) => {
-        socketClient2Ref.current.emit("addTeam", teamName);
+    const handleAddTeam = (teamIndex) => {
+        setTeamSelected(teamIndex)
+        socketClient2Ref.current.emit("addTeam", teamIndex);
     }
     const handleContinueIntroduction = () => {
         socketClient2Ref.current.emit("wantsToContinueIntroduction");
@@ -150,7 +151,16 @@ export default function StudentTablet2() {
 
     return (
         <>
-            <Head> <title>ELIE | Groupe 1</title> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> <meta name="application-name" content="MyApp" /> <meta name="apple-mobile-web-app-title" content="ELIE" /> <meta name="apple-mobile-web-app-capable" content="yes" /> <meta name="mobile-web-app-capable" content="yes" /> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> <link rel="apple-touch-icon" href="/images/logo-blue.svg" /> </Head>
+            <Head><title>ELIE | Groupe 1</title>
+                <meta name="viewport"
+                      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+                <meta name="application-name" content="MyApp"/>
+                <meta name="apple-mobile-web-app-title" content="ELIE"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+                <link rel="apple-touch-icon" href="/images/logo-blue.svg"/>
+            </Head>
 
             <div className="global-container">
                 {otherTeamWantsToContinue && (
@@ -158,17 +168,16 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "start" && (
-                    <StartScreen onClick={handleStartButtonClick} />
+                    <StartScreen onClick={handleStartButtonClick}/>
                 )}
 
                 {currentScreen === "introduce" && (
-                    <Introduce onClick={handleContinueIntroduction} />
+                    <Introduce onClick={handleContinueIntroduction}/>
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams socket={socketClient2Ref.current}
-                        teamSelected={teamSelected}  onTeamSelected={handleAddTeam}
-                    />
+                    <ShowTeams socket={socketClient2Ref.current} teamSelected={teamSelected}
+                               onTeamSelected={handleAddTeam} client={2}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (

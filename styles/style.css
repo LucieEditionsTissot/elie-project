@@ -115,9 +115,9 @@ section .template-wrapper .top-part .left-part {
 section .template-wrapper .top-part .left-part h3 {
   position: relative;
   font-family: "PP Pangram Sans Rounded bold", sans-serif;
-  font-size: 37px;
+  font-size: 33px;
   font-weight: 400;
-  line-height: 1.05;
+  line-height: 1.2;
   letter-spacing: 0em;
   text-align: left;
   text-transform: uppercase;
@@ -394,7 +394,7 @@ img {
 .button-next-intro {
   position: absolute;
   top: 11vh;
-  right: 8vw;
+  right: 6vw;
   padding: 15px 20px 15px 25px;
   background-color: #d76677;
   opacity: 1;
@@ -545,12 +545,29 @@ header a:last-child h3 {
   background-color: #eeede6;
   transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-#teams .teams-wrapper .card.selected {
-  border: 3px solid #303030;
-  transform: scale(1.05);
+#teams .teams-wrapper .card.selected.blue {
+  background-color: #c6f0ff;
 }
-#teams .teams-wrapper .card.selectedByOtherTeam {
-  filter: grayscale(1);
+#teams .teams-wrapper .card.selected.blue .logo {
+  fill: #81C2DA !important;
+}
+#teams .teams-wrapper .card.selected.red {
+  background-color: #ffc1ad;
+}
+#teams .teams-wrapper .card.selected.red .logo {
+  fill: #FF784D !important;
+}
+#teams .teams-wrapper .card.selectedByOtherTeam.blue {
+  background-color: #ffc1ad;
+}
+#teams .teams-wrapper .card.selectedByOtherTeam.blue .logo {
+  fill: #FF784D !important;
+}
+#teams .teams-wrapper .card.selectedByOtherTeam.red {
+  background-color: #c6f0ff;
+}
+#teams .teams-wrapper .card.selectedByOtherTeam.red .logo {
+  fill: #81C2DA !important;
 }
 #teams .teams-wrapper .card .team-name {
   position: relative;
@@ -596,6 +613,8 @@ header a:last-child h3 {
   height: 70px;
   width: auto;
   z-index: 0;
+  fill: #D8D6C8;
+  transition: fill 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 #teams .validateButton {
   position: relative;

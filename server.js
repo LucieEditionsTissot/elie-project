@@ -425,7 +425,7 @@ io.on("connection", (socket) => {
     socket.on("selectTeam", (teamIndex) => {
         const teamChosen = stateManager.getTeamByIndex(teamIndex);
         if (teamChosen) {
-            io.emit("teamChosen", teamIndex);
+            socket.broadcast.emit("teamChosen", teamIndex);
         }
     });
     // RULES /////////////////////////////////////////
