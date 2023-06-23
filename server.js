@@ -461,15 +461,18 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "selectTheme");
         randomTheme = chooseRandomTheme();
         io.emit("themeSelected", randomTheme);
-        stateManager.set("theme", randomTheme);
     });
     socket.on("explain", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "explain");
         stateManager.updateClientState(client2SocketId, "explain");
+        console.log("coucou")
+        if (client1State === "explain" && client2State === "explain") {
+            console.log("hello")
             io.emit("themeIsSelectedShowThemeExplanation");
-    })
+        }
+    });
     // socket.on("themeIsSelectedShowThemeExplanation", () => {
     //   client1State = stateManager.getClientState(client1SocketId);
     //  client2State = stateManager.getClientState(client2SocketId);
@@ -484,10 +487,6 @@ io.on("connection", (socket) => {
     // THEME ///////////////////////////////////////
 
 
-
-    socket.on("chooseTheme", () => {
-
-    });
 
 
 
