@@ -171,10 +171,12 @@ const Client3 = () => {
         }
         else if(currentScenarioToPlay === 2) {
             socketClient3Ref.current.emit("selectTheme");
+            console.log(socketClient3Ref.current.emit("selectTheme"))
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 3) {
             socketClient3Ref.current.emit("explain");
+            console.log(socketClient3Ref.current.emit("explain"));
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 4) {
