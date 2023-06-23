@@ -87,11 +87,10 @@ export default function StudentTablet2() {
 
 
         socketClient2.on("themeIsSelectedShowThemeExplanation", () => {
-            console.log("cououc")
             setCurrentScreen("themeExplanation");
         });
 
-        socketClient2.on("startTurnByTurn", (data) => {
+        socketClient2.on("runGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
