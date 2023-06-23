@@ -13,7 +13,6 @@ import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
 import AudioPlayer from "../components/AudioPlayer";
 import {url} from "./_app";
-import ThemeExplanation from "../components/ThemeExplanation";
 import Interaction from "../components/Interaction";
 import Question from "../components/Question";
 
@@ -27,7 +26,6 @@ export default function StudentTablet1() {
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
     const [themeSelected, setThemeSelected] = useState(null);
-    const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
@@ -80,11 +78,10 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("themeIsSelectedShowThemeExplanation", () => {
-            console.log("cououc")
             setCurrentScreen("themeExplanation");
         });
 
-        socketClient1.on("startTurnByTurn", (data) => {
+        socketClient1.on("runGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
@@ -156,14 +153,12 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    // <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={handleRulesButtonClick} />
                     <Interaction title={"Regardez le plateau"} subTitle={"Pour comprendre les règles"} arrow={true}
                                  arrowDown={false} eye={false} volume={false} puzzle={false}
                                  frameText={"Règles du jeu"}/>
                 )}
 
                 {currentScreen === "theme" && (
-                    //<ThemeScreen themeSelected={themeSelected}/>
                     <Interaction title={"Choix du thème"} subTitle={false} arrow={false} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Choix du thème"}/>
                 )}
@@ -172,7 +167,13 @@ export default function StudentTablet1() {
                     <Interaction title={"Mutualisme "} subTitle={""} arrow={false} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
-
+                {currentScreen === "indice1" && (
+                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={false} arrowDown={false} eye={true}
+                                 volume={false} puzzle={false} frameText={"Indice 1"}/>
+                )}
+                {currentScreen === "indice2" && (
+                    <Interaction title={"true"} puzzle={false} frameText={"Indice 1"}/>
+                )}
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         data={turnByTurnData}

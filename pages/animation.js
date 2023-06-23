@@ -21,10 +21,7 @@ const Client3 = () => {
         "video/Rules.mp4",
         'audio/LeMutualisme.mp3',
         'video/ChoixDuTheme.mp4',
-        'audio/MutualismeInfo.mp3',
-        'video/LeMutualisme.mp4',
-
-
+        'video/LeMutualisme.mp4'
     ];
     function preloadMedia(files) {
         const promises = files.map((file) => {
@@ -53,16 +50,16 @@ const Client3 = () => {
     };
 
     let scenarios3 = {
-        videos: ['video/ChoixDuTheme.mp4'],
+        videos: 'video/ChoixDuTheme.mp4',
     };
 
     let scenario4 = {
-        videos: ['video/LeMutualisme.mp4'],
+        videos: 'video/LeMutualisme.mp4',
     };
 
     let scenario5 = {
         audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/indices/indice1/LC_intro_indice_01.mp4', 'video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
 
     let scenario6 = {
@@ -112,7 +109,16 @@ const Client3 = () => {
 
     let scenarios = [scenario1, scenario2, scenarios3, scenario4, scenario5, scenario6, scenario7, scenario8, scenario9, scenario10, scenario11, scenario12, scenario13, scenario14];
 
-
+    const cleanup = () => {
+        if (currentAudio) {
+            currentAudio.pause();
+            setCurrentAudio(null);
+        }
+        if (currentVideo) {
+            currentVideo.pause();
+            setCurrentVideo(null);
+        }
+    };
     useEffect(() => {
         socketClient3Ref.current = io(url);
         const socketClient3 = socketClient3Ref.current;
@@ -147,19 +153,12 @@ const Client3 = () => {
         });
 
         return () => {
+            cleanup();
             socketClient3.disconnect();
         };
+
     }, [currentScenarioToPlay]);
     const handleAudioEnded = () => {
-        if(currentScenarioToPlay === 4) {
-        }
-        else if(currentScenarioToPlay === 4) {
-
-        }
-        else {
-            currentAudio.loop = true;
-            currentAudio.play();
-        }
 
     };
     const handleVideoEnded = () => {
@@ -170,7 +169,7 @@ const Client3 = () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 2) {
-            socketClient3Ref.current.emit("selectTheme");
+            socketClient3Ref.current.emit("explain");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 3) {
@@ -178,6 +177,8 @@ const Client3 = () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 4) {
+            socketClient3Ref.current.emit("explain");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else {
             if (currentVideo) {
@@ -220,6 +221,7 @@ const Client3 = () => {
         } else {
             setCurrentVideo(null);
         }
+        return cleanup;
     }, [currentScenarioToPlay]);
 
     useEffect(() => {
@@ -256,6 +258,7 @@ const Client3 = () => {
 
         return () => {
             isMounted = false;
+            cleanup();
         };
     }, []);
     return (

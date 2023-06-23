@@ -21,9 +21,6 @@ const getApiAndEmit = (socket) => {
 
 let teamGroupOne = null
 let teamGroupTwo = null
-let numberOfTeamSelected = 0
-let numberOfTeamWhoWantsToContinue = 0
-let numberOfRulesUnderstood = 0
 
 const themeTimer = 5000
 let randomTheme = null;
@@ -36,18 +33,7 @@ let isFinalQuestionIsCorrect = true
 let isInformationUnderstood = 0
 let animalChosenValue = null;
 
-const rules = {
-    0: "Règles du jeu :",
-    1: "Règle 1",
-    2: "Règle 2",
-    3: "Règle 3"
-}
 
-const themeExplanation = {
-    "Mutualisme": "Explication brève du mutualisme",
-    "Predation": "Explication brève de la prédation",
-    "Commensalisme": "Explication brève du commensalisme"
-}
 
 const animals = {
     "Mutualisme": {
@@ -183,138 +169,6 @@ const animals = {
             "answer": 4
         }
     },
-    "Predation": {
-        "teamGroupOne": {
-            "animals": [
-                {
-                    "name": "Biche",
-                    "explanation": "Explication sur la biche...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Truite",
-                    "explanation": "Explication sur la truite...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Renard",
-                    "explanation": "Explication sur le renard...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Salamandre",
-                    "explanation": "Explication sur la salamandre...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Marmotte",
-                    "explanation": "Explication sur la marmotte...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Cerf",
-                    "explanation": "Explication sur le cerf...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Crapaud",
-                    "explanation": "Explication sur le crapaud...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Loup",
-                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Lapin",
-                    "explanation": "Explication sur le lapin...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Aigle",
-                    "explanation": "Explication sur l'aigle...",
-                    "image": "",
-                    "icon": ""
-                }
-            ],
-            "answer": 9
-        },
-        "teamGroupTwo": {
-            "animals": [
-                {
-                    "name": "Lézard",
-                    "explanation": "Explication sur le lézard...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Biche",
-                    "explanation": "Explication sur la biche...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Hibou",
-                    "explanation": "Explication sur le hibou...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Papillon",
-                    "explanation": "Explication sur le papillon...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Ecureuil",
-                    "explanation": "Explication sur l'écureuil...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Coccinelle",
-                    "explanation": "Explication sur la coccinelle...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Faucon",
-                    "explanation": "Explication sur le faucon...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Chouette",
-                    "explanation": "Explication sur la chouette...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Rat",
-                    "explanation": "Explication sur le rat...",
-                    "image": "",
-                    "icon": ""
-                },
-                {
-                    "name": "Loup",
-                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
-                    "image": "",
-                    "icon": ""
-                }
-            ],
-            "answer": 6
-        }
-    }
 };
 
 const answersAnimation = {
@@ -340,8 +194,6 @@ const answersAnimation = {
 
 
 
-
-let currentState = {}
 let clientConnected = { client : false, client2 : false };
 
 const stateManager = new StateManager();
@@ -455,35 +307,34 @@ io.on("connection", (socket) => {
         return themes[0];
     }
     socket.on("selectTheme", () => {
-        client1State = stateManager.getClientState(client1SocketId);
-        client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "selectTheme");
         stateManager.updateClientState(client2SocketId, "selectTheme");
-        randomTheme = chooseRandomTheme();
-        io.emit("themeSelected", randomTheme);
+        if (client1State === "selectTheme" && client2State === "selectTheme") {
+            io.emit("themeSelected");
+        }
     });
+
     socket.on("explain", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "explain");
         stateManager.updateClientState(client2SocketId, "explain");
-        console.log("coucou")
-        if (client1State === "explain" && client2State === "explain") {
-            console.log("hello")
-            io.emit("themeIsSelectedShowThemeExplanation");
-        }
+        io.emit("themeIsSelectedShowThemeExplanation");
     });
-    // socket.on("themeIsSelectedShowThemeExplanation", () => {
-    //   client1State = stateManager.getClientState(client1SocketId);
-    //  client2State = stateManager.getClientState(client2SocketId);
-    //   stateManager.updateClientState(client1SocketId, "themeIsSelectedShowThemeExplanation");
-    //   stateManager.updateClientState(client2SocketId, "themeIsSelectedShowThemeExplanation");
 
-    //  if (client1State === "themeIsSelectedShowThemeExplanation" && client2State === "themeIsSelectedShowThemeExplanation") {
-    //     const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-    //     io.emit("startGame", dataTurnByTurn);
-    //  }
-    // });
+
+
+     socket.on("gameOn", () => {
+       client1State = stateManager.getClientState(client1SocketId);
+      client2State = stateManager.getClientState(client2SocketId);
+       stateManager.updateClientState(client1SocketId, "themeIsSelectedShowThemeExplanation");
+       stateManager.updateClientState(client2SocketId, "themeIsSelectedShowThemeExplanation");
+
+      if (client1State === "themeIsSelectedShowThemeExplanation" && client2State === "themeIsSelectedShowThemeExplanation") {
+         const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+         io.emit("startGame", dataTurnByTurn);
+      }
+     });
     // THEME ///////////////////////////////////////
 
 
