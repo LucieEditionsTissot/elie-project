@@ -11,6 +11,7 @@ const AudioPlayer = ({ src }) => {
             autoplay: true,
             loop: true,
             volume: 1,
+            stereo: false,
         });
         soundRef.current = sound;
 
