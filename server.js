@@ -357,8 +357,10 @@ const startExperience = (socket) => {
 
 let client1SocketId;
 let client2SocketId;
+let client3SocketId;
 let client1State;
 let client2State;
+let client3State;
 io.on("connection", (socket) => {
     stateManager.updateClientState(socket.id, "connected");
     let userId;
@@ -382,13 +384,15 @@ io.on("connection", (socket) => {
 
     socket.on("registerAnimationClient", () => {
         socket.join("client3");
-        console.log("Animation client registered : ", socket.id);
+        client3SocketId = socket.id;
+        console.log("Animation client registered : ", client3SocketId);
     });
 
     socket.on("wantsToStartExperience", () => {
         stateManager.updateClientState(socket.id, "wantsToStartExperience");
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
+        client3State = stateManager.getClientState(client3SocketId);
         if (client1State === "wantsToStartExperience" && client2State === "wantsToStartExperience") {
             io.emit("confirmIntroductionStart");
         }
@@ -426,38 +430,35 @@ io.on("connection", (socket) => {
     });
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
-        socket.on("rules", rules)
-        {
             client1State = stateManager.getClientState(client1SocketId);
             client2State = stateManager.getClientState(client2SocketId);
+            client3State = stateManager.getClientState(client3SocketId);
             stateManager.updateClientState(client1SocketId, "rules");
             stateManager.updateClientState(client2SocketId, "rules");
-            if (client1State === "rules" && client2State === "rules") {
-                io.emit("teamsAreDoneShowRules");
-            }
-        }
+            stateManager.updateClientState(client3SocketId, "rules");
+            console.log(client3State);
+            console.log(client3State);
+            io.emit("teamsAreDoneShowRules");
     }
 
     socket.on("rulesAreUnderstood", () => {
         const rules = stateManager.get("rules");
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
+        console.log(stateManager + "rules understood");
+
         stateManager.updateClientState(client1SocketId, "rulesAreDoneSelectThemeRandomly");
         stateManager.updateClientState(client2SocketId, "rulesAreDoneSelectThemeRandomly");
+        console.log(client2State)
             io.emit("rulesAreDoneSelectThemeRandomly", rules);
     });
     socket.on("teamReady", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.set("teamReady", true);
-        stateManager.updateClientState(client1SocketId, "rulesAreDoneSelectThemeRandomly");
-        stateManager.updateClientState(client2SocketId, "rulesAreDoneSelectThemeRandomly");
-        
         io.emit("teamIsReady");
     });
     // THEME /////////////////////////////////////////
-
-
 
     function chooseRandomTheme() {
         const randomIndex = Math.floor(Math.random() * themes.length);
@@ -470,12 +471,11 @@ io.on("connection", (socket) => {
         console.log(randomTheme);
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        console.log(stateManager);
         stateManager.set("randomTheme", randomTheme);
-        stateManager.updateClientState(client1SocketId, "randomTheme");
-        stateManager.updateClientState(client2SocketId, "randomTheme");
         console.log(stateManager)
-        if (client1State === "teamAdded" && client2State === "randomTheme") {
+        stateManager.updateClientState(client1SocketId, "themeIsRandomlyChosen");
+        stateManager.updateClientState(client2SocketId, "themeIsRandomlyChosen");
+        if (client1State === "themeIsRandomlyChosen" && client2State === "themeIsRandomlyChosen") {
             console.log(io.emit("themeSelected", randomTheme))
             io.emit("themeSelected", randomTheme);
         }
