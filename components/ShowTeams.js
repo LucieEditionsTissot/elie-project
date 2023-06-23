@@ -71,6 +71,7 @@ function ShowTeams({ socket, teamSelected, onTeamSelected }) {
 
                 </div>
             </div>
+
         </section>
     );
 }

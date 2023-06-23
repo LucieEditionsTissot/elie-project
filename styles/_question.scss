@@ -1,0 +1,157 @@
+#question {
+  position: relative;
+
+  .question-wrapper {
+    position: relative;
+    padding: 2% 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    .question {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      border-radius: 15px;
+      cursor: pointer;
+
+      .left-part {
+        position: relative;
+        padding: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+        z-index: 1;
+        border: 1px solid rgba(250, 249, 239, 1);
+        background-color: rgba(250, 249, 239, 1);
+        transition: border 0.8s $ease-power4-out, background-color 0.8s $ease-power4-out;
+
+        &:before {
+          position: absolute;
+          content: "";
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: "PP Pangram Sans Rounded bold", sans-serif;
+          font-size: 20px;
+          font-weight: 400;
+          color: $blue;
+          transition: color 0.8s $ease-power4-out;
+        }
+
+      }
+
+      .right-part {
+        position: relative;
+        padding: 0 20px;
+        margin-left: -25px;
+        height: 100%;
+        width: 100%;
+        border-radius: 15px;
+        border: 1px solid $green;
+        border-left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+        transition: border 0.8s $ease-power4-out, background-color 0.8s $ease-power4-out;
+
+        p {
+          position: relative;
+          font-family: "PP Pangram Sans Rounded semi-bold", sans-serif;
+          font-size: 21px;
+          font-weight: 400;
+          line-height: 1;
+          letter-spacing: 0.1em;
+          text-align: left;
+          color: $blue;
+          transition: color 0.8s $ease-power4-out;
+        }
+
+      }
+
+      &.is-active {
+
+        .left-part {
+          border: 1px solid rgba(50, 64, 90, 1) !important;
+          background-color: rgba(50, 64, 90, 1) !important;
+
+          &:before {
+            color: $wheat !important;
+          }
+
+        }
+
+        .right-part {
+          border: 1px solid $blue !important;
+          background-color: $blue !important;
+
+          p {
+            color: $wheat !important;
+          }
+
+        }
+
+      }
+
+      &.selectByAnotherTeam {
+
+        .left-part {
+          border: 1px solid rgba(216, 214, 200, 1);
+          background-color: rgba(216, 214, 200, 1);
+        }
+
+        .right-part {
+          background-color: rgba(238, 237, 230, 1);
+        }
+
+      }
+
+      &:nth-child(1) .left-part:before {
+        content: "A";
+      }
+
+      &:nth-child(2) .left-part:before {
+        content: "B";
+      }
+
+      &:nth-child(3) .left-part:before {
+        content: "C";
+      }
+
+      &:nth-child(4) .left-part:before {
+        content: "D";
+      }
+
+    }
+
+    .icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 220px;
+      width: auto;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%) scale(0) rotate(-50deg);
+      transition: transform 0.8s $ease-power4-out, opacity 0.8s $ease-power4-out
+    }
+
+    &.is-answer {
+
+      .icon {
+        transform: translate(-50%, -50%) scale(1) rotate(0);
+        opacity: 1;
+      }
+
+    }
+
+  }
+
+}
