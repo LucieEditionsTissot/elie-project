@@ -85,12 +85,9 @@ export default function StudentTablet2() {
             setCurrentScreen("theme");
         });
 
-        socketClient2.on("themeSelected", (data) => {
-            setThemeSelected(data);
-            socketClient2.emit("themeIsRandomlyChosen", data);
-        });
 
-        socketClient2.on("themeIsSelectedShowThemeExplanation", (data) => {
+        socketClient2.on("themeIsSelectedShowThemeExplanation", () => {
+            console.log("cououc")
             setCurrentScreen("themeExplanation");
         });
 

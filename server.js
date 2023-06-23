@@ -430,75 +430,63 @@ io.on("connection", (socket) => {
     });
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
-            client1State = stateManager.getClientState(client1SocketId);
-            client2State = stateManager.getClientState(client2SocketId);
-            client3State = stateManager.getClientState(client3SocketId);
-            stateManager.updateClientState(client1SocketId, "rules");
-            stateManager.updateClientState(client2SocketId, "rules");
-            stateManager.updateClientState(client3SocketId, "rules");
-            console.log(client3State);
-            console.log(client3State);
-            io.emit("teamsAreDoneShowRules");
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        client3State = stateManager.getClientState(client3SocketId);
+        stateManager.updateClientState(client1SocketId, "rules");
+        stateManager.updateClientState(client2SocketId, "rules");
+        stateManager.updateClientState(client3SocketId, "rules");
+        io.emit("teamsAreDoneShowRules");
     }
 
     socket.on("rulesAreUnderstood", () => {
-        const rules = stateManager.get("rules");
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        console.log(stateManager + "rules understood");
+        stateManager.updateClientState(client1SocketId, "rulesAreUnderstood");
+        stateManager.updateClientState(client2SocketId, "rulesAreUnderstood");
 
-        stateManager.updateClientState(client1SocketId, "rulesAreDoneSelectThemeRandomly");
-        stateManager.updateClientState(client2SocketId, "rulesAreDoneSelectThemeRandomly");
-        console.log(client2State)
-        if (client1State === "rulesAreDoneSelectThemeRandomly" && client2State === "rulesAreDoneSelectThemeRandomly") {
+        if (client1State === "rulesAreUnderstood" && client2State === "rulesAreUnderstood") {
             io.emit("rulesAreDoneSelectThemeRandomly");
         }
     });
-    socket.on("teamReady", () => {
-        client1State = stateManager.getClientState(client1SocketId);
-        client2State = stateManager.getClientState(client2SocketId);
-        stateManager.set("teamReady", true);
-        io.emit("teamIsReady");
-    });
-    // THEME /////////////////////////////////////////
-
     function chooseRandomTheme() {
-        const randomIndex = Math.floor(Math.random() * themes.length);
-        return themes[randomIndex];
-        //return themes[0];
+        // const randomIndex = Math.floor(Math.random() * themes.length);
+        // return themes[randomIndex];
+        return themes[0];
     }
-
-    socket.on("chooseTheme", () => {
-        randomTheme = chooseRandomTheme();
-        console.log(randomTheme);
+    socket.on("selectTheme", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        stateManager.set("randomTheme", randomTheme);
-        console.log(stateManager)
-        stateManager.updateClientState(client1SocketId, "themeIsRandomlyChosen");
-        stateManager.updateClientState(client2SocketId, "themeIsRandomlyChosen");
-        if (client1State === "themeIsRandomlyChosen" && client2State === "themeIsRandomlyChosen") {
-            console.log(io.emit("themeSelected", randomTheme))
-            io.emit("themeSelected", randomTheme);
+        stateManager.updateClientState(client1SocketId, "selectTheme");
+        stateManager.updateClientState(client2SocketId, "selectTheme");
+        randomTheme = chooseRandomTheme();
+        io.emit("themeSelected", randomTheme);
+    });
+    socket.on("explain", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "explain");
+        stateManager.updateClientState(client2SocketId, "explain");
+        console.log("coucou")
+        if (client1State === "explain" && client2State === "explain") {
+            console.log("hello")
+            io.emit("themeIsSelectedShowThemeExplanation");
         }
     });
+    // socket.on("themeIsSelectedShowThemeExplanation", () => {
+    //   client1State = stateManager.getClientState(client1SocketId);
+    //  client2State = stateManager.getClientState(client2SocketId);
+    //   stateManager.updateClientState(client1SocketId, "themeIsSelectedShowThemeExplanation");
+    //   stateManager.updateClientState(client2SocketId, "themeIsSelectedShowThemeExplanation");
 
-    socket.on("themeIsRandomlyChosen", (theme) => {
-        theme = randomTheme;
-        console.log(io.emit('themeIsSelectedShowThemeExplanation', randomTheme) + "jbjsbdl<is")
-        console.log(theme + " ici")
-
-            console.log(io.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation',randomTheme))
-           // socket.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
-           // socket.to(client2SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
-
-                //randomTheme = theme
-                //const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
-               // io.to(client1SocketId).emit('startTurnByTurn', dataTurnByTurn);
-               // io.to(client2SocketId).emit('startTurnByTurn', dataTurnByTurn);
+    //  if (client1State === "themeIsSelectedShowThemeExplanation" && client2State === "themeIsSelectedShowThemeExplanation") {
+    //     const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+    //     io.emit("startGame", dataTurnByTurn);
+    //  }
+    // });
+    // THEME ///////////////////////////////////////
 
 
-    });
 
 
 

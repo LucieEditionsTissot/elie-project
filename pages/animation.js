@@ -57,7 +57,6 @@ const Client3 = () => {
     };
 
     let scenario4 = {
-        audios: ['audio/MutualismeInfo.mp3'],
         videos: ['video/LeMutualisme.mp4'],
     };
 
@@ -133,9 +132,7 @@ const Client3 = () => {
         socketClient3.on("teamsAreDoneShowRules", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
-        socketClient3.on("themeIsSelectedShowThemeExplanation", () => {
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        });
+
         socketClient3.on("scenarioDone", () => {
             setIsScenarioDone(true);
         });
@@ -154,18 +151,7 @@ const Client3 = () => {
         };
     }, [currentScenarioToPlay]);
     const handleAudioEnded = () => {
-        if (currentScenarioToPlay === 1) {
-            console.log("La bande audio est terminée.");
-            socketClient3Ref.current.emit("rulesAreUnderstood");
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        }
-        else if(currentScenarioToPlay === 2) {
-            socketClient3Ref.current.emit("rulesAreDoneSelectThemeRandomly");
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        }
-        else if(currentScenarioToPlay === 3) {
-            socketClient3Ref.current.emit("themeIsSelectedShowThemeExplanation");
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        if(currentScenarioToPlay === 4) {
         }
         else if(currentScenarioToPlay === 4) {
 
@@ -180,20 +166,24 @@ const Client3 = () => {
         if (currentScenarioToPlay === 1) {
             console.log("La bande vidéo est terminée.");
             socketClient3Ref.current.emit("rulesAreUnderstood");
+            console.log(socketClient3Ref.current.emit("rulesAreUnderstood"))
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 2) {
-            socketClient3Ref.current.emit("chooseTheme");
+            socketClient3Ref.current.emit("selectTheme");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 3) {
-            socketClient3Ref.current.emit("themeIsSelectedShowThemeExplanation");
+            socketClient3Ref.current.emit("explain");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if(currentScenarioToPlay === 4) {
         }
         else {
-            currentVideo.loop = true;
-            currentVideo.play();
+            if (currentVideo) {
+                currentVideo.loop = true;
+                currentVideo.play();
+            }
         }
     };
     useEffect(() => {

@@ -79,13 +79,8 @@ export default function StudentTablet1() {
             setCurrentScreen("theme");
         });
 
-        socketClient1.on("themeSelected", (data) => {
-            setThemeSelected(data);
-            socketClient1.emit("themeIsRandomlyChosen", data);
-            console.log(data)
-        });
-
-        socketClient1.on("themeIsSelectedShowThemeExplanation", (data) => {
+        socketClient1.on("themeIsSelectedShowThemeExplanation", () => {
+            console.log("cououc")
             setCurrentScreen("themeExplanation");
         });
 
@@ -169,13 +164,12 @@ export default function StudentTablet1() {
 
                 {currentScreen === "theme" && (
                     //<ThemeScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Choix du thème"} subTitle={""} arrow={true} arrowDown={false} eye={false}
+                    <Interaction title={"Choix du thème"} subTitle={false} arrow={false} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Choix du thème"}/>
                 )}
 
                 {currentScreen === "themeExplanation" && (
-                    //<ThemeExplanationScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false}
+                    <Interaction title={"Mutualisme "} subTitle={""} arrow={false} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
