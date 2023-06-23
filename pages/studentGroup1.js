@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
+import React, {useState, useEffect, useRef} from "react";
+import {io} from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
 import ThemeScreen from "../components/ThemeScreen";
@@ -12,16 +12,17 @@ import Conclusion from "../components/Conclusion";
 import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
 import AudioPlayer from "../components/AudioPlayer";
-import { url } from "./_app";
+import {url} from "./_app";
 import ThemeExplanation from "../components/ThemeExplanation";
 import Interaction from "../components/Interaction";
+import Question from "../components/Question";
 
 export default function StudentTablet1() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState({});
+    const [currentScreen, setCurrentScreen] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
@@ -57,7 +58,7 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("startExperience", () => {
-            setCurrentScreen("start");
+            setCurrentScreen("question");
         });
 
         socketClient1.on("confirmIntroductionStart", () => {
@@ -131,37 +132,52 @@ export default function StudentTablet1() {
     };
     return (
         <>
-            <Head> <title>ELIE | Groupe 1</title> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> <meta name="application-name" content="MyApp" /> <meta name="apple-mobile-web-app-title" content="ELIE" /> <meta name="apple-mobile-web-app-capable" content="yes" /> <meta name="mobile-web-app-capable" content="yes" /> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> <link rel="apple-touch-icon" href="/images/logo-blue.svg" /> </Head>
+            <Head>
+                <title>ELIE | Groupe 1</title>
+                <meta name="viewport"
+                      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+                <meta name="application-name" content="MyApp"/>
+                <meta name="apple-mobile-web-app-title" content="ELIE"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+                <link rel="apple-touch-icon" href="/images/logo-blue.svg"/>
+            </Head>
 
             <div className="global-container">
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
                 {currentScreen === "start" && (
-                    <StartScreen onClick={handleStartButtonClick} />
+                    <StartScreen onClick={handleStartButtonClick}/>
                 )}
 
                 {currentScreen === "introduce" && (
-                    <Introduce onClick={handleContinueIntroduction} />
+                    <Introduce onClick={handleContinueIntroduction}/>
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected} onTeamSelected={handleAddTeam} />
+                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected}
+                               onTeamSelected={handleAddTeam}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
                     // <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={handleRulesButtonClick} />
-                    <Interaction title={"Regardez le plateau"} subTitle={"Pour comprendre les règles"} arrow={true} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Règles du jeu"}/>
+                    <Interaction title={"Regardez le plateau"} subTitle={"Pour comprendre les règles"} arrow={true}
+                                 arrowDown={false} eye={false} volume={false} puzzle={false}
+                                 frameText={"Règles du jeu"}/>
                 )}
 
                 {currentScreen === "theme" && (
                     //<ThemeScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Choix du thème"} subTitle={""} arrow={true} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Choix du thème"}/>
+                    <Interaction title={"Choix du thème"} subTitle={""} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={false} frameText={"Choix du thème"}/>
                 )}
 
                 {currentScreen === "themeExplanation" && (
                     //<ThemeExplanationScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Mutualisme"}/>
+                    <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false}
+                                 volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
                 {currentScreen === "turnByTurn" && (
@@ -173,21 +189,25 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "showInteractions" && (
-                    <ShowInteractions data={interactionsData} />
+                    <ShowInteractions data={interactionsData}/>
                 )}
 
                 {currentScreen === "understandInteraction" && (
-                    <UnderstandInteraction themeSelected={themeSelected} />
+                    <UnderstandInteraction themeSelected={themeSelected}/>
                 )}
 
                 {currentScreen === "animationQuestion" && (
-                    <AnimationQuestionScreen data={animationQuestionData} />
+                    <AnimationQuestionScreen data={animationQuestionData}/>
                 )}
 
-                {currentScreen === "conclusion" && <Conclusion />}
+                {currentScreen === "question" && (
+                    <Question/>
+                )}
+
+                {currentScreen === "conclusion" && <Conclusion/>}
 
                 {currentScenario && currentScenario.id === 11 && (
-                    <AudioPlayer src={currentScenario.audios} />
+                    <AudioPlayer src={currentScenario.audios}/>
                 )}
             </div>
         </>
