@@ -14,6 +14,7 @@ import Introduce from "../components/Introduce";
 import AudioPlayer from "../components/AudioPlayer";
 import { url } from "./_app";
 import ThemeExplanation from "../components/ThemeExplanation";
+import Interaction from "../components/Interaction";
 
 export default function StudentTablet1() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -149,15 +150,18 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={handleRulesButtonClick} />
+                    // <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={handleRulesButtonClick} />
+                    <Interaction title={"Regardez le plateau"} subTitle={"Pour comprendre les règles"} arrow={true} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Règles du jeu"}/>
                 )}
 
                 {currentScreen === "theme" && (
-                    <ThemeScreen  themeSelected={themeSelected} />
+                    //<ThemeScreen themeSelected={themeSelected}/>
+                    <Interaction title={"Choix du thème"} subTitle={""} arrow={true} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Choix du thème"}/>
                 )}
 
                 {currentScreen === "themeExplanation" && (
-                    <ThemeExplanation s themeSelected={themeSelected} />
+                    //<ThemeExplanationScreen themeSelected={themeSelected}/>
+                    <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false} volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
                 {currentScreen === "turnByTurn" && (
