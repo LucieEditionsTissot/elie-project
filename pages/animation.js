@@ -21,7 +21,10 @@ const Client3 = () => {
         "video/Rules.mp4",
         'audio/LeMutualisme.mp3',
         'video/ChoixDuTheme.mp4',
-        'video/LeMutualisme.mp4'
+        'audio/MutualismeInfo.mp3',
+        'video/LeMutualisme.mp4',
+
+
     ];
     function preloadMedia(files) {
         const promises = files.map((file) => {
@@ -50,11 +53,11 @@ const Client3 = () => {
     };
 
     let scenarios3 = {
-        videos: 'video/ChoixDuTheme.mp4',
+        videos: ['video/ChoixDuTheme.mp4'],
     };
 
     let scenario4 = {
-        videos: 'video/LeMutualisme.mp4',
+        videos: ['video/LeMutualisme.mp4'],
     };
 
     let scenario5 = {
