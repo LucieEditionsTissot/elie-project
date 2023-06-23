@@ -6,6 +6,7 @@ const VideoPlayer = ({ src }) => {
     useEffect(() => {
         const video = videoRef.current;
         video.src = src;
+        video.loop= true;
         video.load();
         video.play();
 
