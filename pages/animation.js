@@ -19,6 +19,12 @@ const Client3 = () => {
         "audio/Regles.mp3",
         "video/Anim_Ambiance.mp4",
         "video/Rules.mp4",
+        'audio/LeMutualisme.mp3',
+        'video/ChoixDuTheme.mp4',
+        'audio/MutualismeInfo.mp3',
+        'video/LeMutualisme.mp4',
+
+
     ];
     function preloadMedia(files) {
         const promises = files.map((file) => {
@@ -47,13 +53,12 @@ const Client3 = () => {
     };
 
     let scenarios3 = {
-        audios: ['audio/10animaux.mp3'],
-        videos: ['video/Anim_Ambiance_Map01.mp4'],
+        videos: ['video/ChoixDuTheme.mp4'],
     };
 
     let scenario4 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4', 'video/indices/indice1/LC_B_anim_indice_01.mp4', 'video/indices/indice1/LC_C_outro_indice_01.mp4'],
+        audios: ['audio/MutualismeInfo.mp3'],
+        videos: ['video/LeMutualisme.mp4'],
     };
 
     let scenario5 = {
@@ -128,34 +133,74 @@ const Client3 = () => {
         socketClient3.on("teamsAreDoneShowRules", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
-
+        socketClient3.on("themeIsSelectedShowThemeExplanation", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        });
         socketClient3.on("scenarioDone", () => {
             setIsScenarioDone(true);
         });
 
         socketClient3.on("audioEnded", () => {
+                console.log("ici")
 
-            if (currentVideo && currentVideo.ended) {
-                socketClient3.emit("rulesAreUnderstood");
-            }
         });
 
         socketClient3.on("videoEnded", () => {
-            if (currentAudio && currentAudio.ended) {
-                console.log("ici");
-                console.log(socketClient3.emit("rulesAreUnderstood"))
-                socketClient3.emit("rulesAreUnderstood");
-            }
+                console.log("ici")
         });
 
         return () => {
             socketClient3.disconnect();
         };
     }, [currentScenarioToPlay]);
+    const handleAudioEnded = () => {
+        if (currentScenarioToPlay === 1) {
+            console.log("La bande audio est terminée.");
+            socketClient3Ref.current.emit("rulesAreUnderstood");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
+        else if(currentScenarioToPlay === 2) {
+            socketClient3Ref.current.emit("rulesAreDoneSelectThemeRandomly");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
+        else if(currentScenarioToPlay === 3) {
+            socketClient3Ref.current.emit("themeIsSelectedShowThemeExplanation");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
+        else if(currentScenarioToPlay === 4) {
 
+        }
+        else {
+            currentAudio.loop = true;
+            currentAudio.play();
+        }
+
+    };
+    const handleVideoEnded = () => {
+        if (currentScenarioToPlay === 1) {
+            console.log("La bande vidéo est terminée.");
+            socketClient3Ref.current.emit("rulesAreUnderstood");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
+        else if(currentScenarioToPlay === 2) {
+            socketClient3Ref.current.emit("chooseTheme");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
+        else if(currentScenarioToPlay === 3) {
+            socketClient3Ref.current.emit("themeIsSelectedShowThemeExplanation");
+        }
+        else if(currentScenarioToPlay === 4) {
+        }
+        else {
+            currentVideo.loop = true;
+            currentVideo.play();
+        }
+    };
     useEffect(() => {
-        if (scenarios[currentScenarioToPlay].audios) {
-            const audioElement = new Audio(scenarios[currentScenarioToPlay].audios);
+        const currentScenario = scenarios[currentScenarioToPlay];
+
+        if (currentScenario.audios) {
+            const audioElement = new Audio(currentScenario.audios);
             setCurrentAudio(audioElement);
             setAudioLoaded(false);
 
@@ -163,18 +208,14 @@ const Client3 = () => {
                 setAudioLoaded(true);
             });
 
-            audioElement.addEventListener("ended", () => {
-                socketClient3Ref.current.emit("audioEnded");
-            });
+            audioElement.removeEventListener("ended", handleAudioEnded);
         } else {
             setCurrentAudio(null);
         }
-    }, [currentScenarioToPlay]);
 
-    useEffect(() => {
-        if (scenarios[currentScenarioToPlay].videos) {
+        if (currentScenario.videos) {
             const videoElement = document.createElement("video");
-            videoElement.src = scenarios[currentScenarioToPlay].videos;
+            videoElement.src = currentScenario.videos;
             videoElement.className = "fixed top-0 left-0 w-screen h-screen";
             setCurrentVideo(videoElement);
             setVideoLoaded(false);
@@ -183,15 +224,14 @@ const Client3 = () => {
                 setVideoLoaded(true);
             });
 
-            videoElement.addEventListener("ended", () => {
-                socketClient3Ref.current.emit("videoEnded");
-            });
+            videoElement.addEventListener("ended", handleVideoEnded);
 
             document.body.appendChild(videoElement);
         } else {
             setCurrentVideo(null);
         }
     }, [currentScenarioToPlay]);
+
     useEffect(() => {
         if (currentAudio) {
             currentAudio.play();
@@ -228,13 +268,12 @@ const Client3 = () => {
             isMounted = false;
         };
     }, []);
-
     return (
         <>
             <div>
-                <AudioPlayer src={"audio/SonsAmbiance.mp3"}/>
+                <AudioPlayer src={"audio/SonsAmbiance.mp3"} />
                 {scenarios[currentScenarioToPlay].audios && audioLoaded && !currentAudio && (
-                    <AudioPlayer src={scenarios[currentScenarioToPlay].audios}/>
+                    <AudioPlayer src={scenarios[currentScenarioToPlay].audios} />
                 )}
                 {scenarios[currentScenarioToPlay].videos && videoLoaded && !currentVideo && (
                     <VideoPlayer

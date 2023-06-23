@@ -58,9 +58,6 @@ export default function StudentTablet2() {
 
         setOtherTeamWantsToContinue(false);
 
-        if (rulesButtonClicked) {
-            socketClient2.emit("rulesAreUnderstood");
-        }
 
         socketClient2.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
@@ -85,7 +82,6 @@ export default function StudentTablet2() {
         });
 
         socketClient2.on("rulesAreDoneSelectThemeRandomly", () => {
-            socketClient2.emit("chooseTheme");
             setCurrentScreen("theme");
         });
 

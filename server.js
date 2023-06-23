@@ -450,7 +450,9 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "rulesAreDoneSelectThemeRandomly");
         stateManager.updateClientState(client2SocketId, "rulesAreDoneSelectThemeRandomly");
         console.log(client2State)
-            io.emit("rulesAreDoneSelectThemeRandomly", rules);
+        if (client1State === "rulesAreDoneSelectThemeRandomly" && client2State === "rulesAreDoneSelectThemeRandomly") {
+            io.emit("rulesAreDoneSelectThemeRandomly");
+        }
     });
     socket.on("teamReady", () => {
         client1State = stateManager.getClientState(client1SocketId);
@@ -482,21 +484,20 @@ io.on("connection", (socket) => {
     });
 
     socket.on("themeIsRandomlyChosen", (theme) => {
-        //theme = randomTheme;
-        //console.log(io.emit('themeIsSelectedShowThemeExplanation', randomTheme) + "jbjsbdl<is")
+        theme = randomTheme;
+        console.log(io.emit('themeIsSelectedShowThemeExplanation', randomTheme) + "jbjsbdl<is")
         console.log(theme + " ici")
-        //setTimeout(() => {
+
             console.log(io.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation',randomTheme))
            // socket.to(client1SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
            // socket.to(client2SocketId).emit('themeIsSelectedShowThemeExplanation', randomTheme);
-            //setTimeout(() => {
+
                 //randomTheme = theme
                 //const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
                // io.to(client1SocketId).emit('startTurnByTurn', dataTurnByTurn);
                // io.to(client2SocketId).emit('startTurnByTurn', dataTurnByTurn);
 
-            //}, 10000);
-        //}, 30000);
+
     });
 
 

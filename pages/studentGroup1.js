@@ -58,7 +58,7 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("startExperience", () => {
-            setCurrentScreen("question");
+            setCurrentScreen("start");
         });
 
         socketClient1.on("confirmIntroductionStart", () => {
@@ -76,7 +76,6 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("rulesAreDoneSelectThemeRandomly", () => {
-            socketClient1.emit("chooseTheme");
             setCurrentScreen("theme");
         });
 
