@@ -22,7 +22,7 @@ export default function StudentTablet1() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [currentScreen, setCurrentScreen] = useState("question");
+    const [currentScreen, setCurrentScreen] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
