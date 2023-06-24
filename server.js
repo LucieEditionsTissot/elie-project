@@ -269,17 +269,13 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "teamAdded");
         stateManager.updateClientState(client2SocketId, "teamAdded");
         io.emit("teamAdded", teamName);
+        socket.broadcast.emit("teamChosen", teamName);
         if (client1State === "teamAdded" && client2State === "teamAdded") {
             teamsAreDoneShowRules();
         }
 
     });
-    socket.on("selectTeam", (teamIndex) => {
-        const teamChosen = stateManager.getTeamByIndex(teamIndex);
-        if (teamChosen) {
-            io.emit("teamChosen", teamIndex);
-        }
-    });
+
     // RULES /////////////////////////////////////////
     function teamsAreDoneShowRules() {
         client1State = stateManager.getClientState(client1SocketId);
