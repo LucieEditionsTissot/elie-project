@@ -147,7 +147,7 @@ export default function StudentTablet1() {
 
                 {currentScreen === "teams" && (
                     <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected}
-                               onTeamSelected={handleAddTeam}/>
+                               onTeamSelected={handleAddTeam} client={1}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
