@@ -146,8 +146,7 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected}
-                               onTeamSelected={handleAddTeam} client={1}/>
+                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected} onTeamSelected={handleAddTeam} client={1}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
@@ -157,8 +156,8 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "theme" && (
-                    <Interaction title={"Choix du thème"} subTitle={false} arrow={true} arrowDown={false} eye={false}
-                                 volume={false} puzzle={false} frameText={"Choix du thème"}/>
+                    <Interaction title={"Choix de l'interaction"} subTitle={""} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={false} frameText={"Interaction"}/>
                 )}
                 {currentScreen === "themeExplanation" && (
                     <Interaction title={"Mutualisme "} subTitle={""} arrow={false} arrowDown={false} eye={false}

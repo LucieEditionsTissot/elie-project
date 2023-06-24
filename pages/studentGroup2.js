@@ -175,8 +175,7 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams socket={socketClient2Ref.current} teamSelected={teamSelected}
-                               onTeamSelected={handleAddTeam} client={2}/>
+                    <ShowTeams socket={socketClient2Ref.current} teamSelected={teamSelected}  onTeamSelected={handleAddTeam} client={2}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
@@ -187,9 +186,8 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "theme" && (
-                    //<ThemeScreen themeSelected={themeSelected}/>
-                    <Interaction title={"Choix du thème"} subTitle={""} arrow={true} arrowDown={false} eye={false}
-                                 volume={false} puzzle={false} frameText={"Choix du thème"}/>
+                    <Interaction title={"Choix de l'interaction"} subTitle={""} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={false} frameText={"Interaction"}/>
                 )}
 
                 {currentScreen === "themeExplanation" && (
