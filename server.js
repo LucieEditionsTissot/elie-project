@@ -170,6 +170,7 @@ let client3SocketId;
 let client1State;
 let client2State;
 let client3State;
+let gameData = {};
 io.on("connection", (socket) => {
     stateManager.updateClientState(socket.id, "connected");
     let userId;
@@ -280,22 +281,73 @@ io.on("connection", (socket) => {
     });
 
 
+
     socket.on("gameOn", () => {
-        console.log("Game is launched")
+        console.log("Game is launched");
         randomTheme = chooseRandomTheme();
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "gameOn");
         stateManager.updateClientState(client2SocketId, "gameOn");
-        const dataTurnByTurn = [randomTheme, animals[randomTheme]]
-        console.log("Data turn by turn : ", dataTurnByTurn);
-        stateManager.set('dataTurn', dataTurnByTurn)
+        const dataTurnByTurn = [randomTheme, animals[randomTheme]];
+        console.log("Data turn by turn: ", dataTurnByTurn);
+        gameData = { dataTurn: dataTurnByTurn };
         io.emit("startGame", dataTurnByTurn);
-
     });
-    // THEME ///////////////////////////////////////
 
+    socket.on("updateGameIndex", (nextGameIndex) => {
+        console.log("Next game index:", nextGameIndex);
+        gameData.nextGameIndex = nextGameIndex;
+        if (client1State === "getCurrentGameData" && client2State === "getCurrentGameData") {
+            io.emit("gameDataUpdated", gameData);
+        }
+    });
 
+    socket.on("updateHiddenCards", (hiddenCards) => {
+        console.log("Hidden cards:", hiddenCards);
+        gameData.hiddenCards = hiddenCards;
+        if (client1State === "getCurrentGameData" && client2State === "getCurrentGameData") {
+            io.emit("gameDataUpdated", gameData);
+        }
+    });
+    socket.on("getCurrentGameData", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "getCurrentGameData");
+        stateManager.updateClientState(client2SocketId, "getCurrentGameData");
+        console.log(gameData.dataTurn);
+        socket.emit("gameDataUpdated", gameData.dataTurn);
+    });
+
+    socket.on("introIndice2", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "introIndice2");
+        stateManager.updateClientState(client2SocketId, "introIndice2");
+        if (client1State === "introIndice2" && client2State === "introIndice2") {
+            io.emit("setIndice2Screen");
+        }
+    });
+
+    socket.on("introIndice3", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "introIndice3");
+        stateManager.updateClientState(client2SocketId, "introIndice3");
+        if (client1State === "introIndice3" && client2State === "introIndice3") {
+            io.emit("setIndice3Screen");
+        }
+    });
+    socket.on("startAudioClient", () => {
+        if (client1State === "introIndice2" && client2State === "introIndice2") {
+            io.emit("audioIndice");
+        }
+    })
+    socket.on("stopAudioClient", () => {
+        if (client1State === "introIndice3" && client2State === "introIndice3") {
+            io.emit("stopAudioIndice");
+        }
+    });
     // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
         animalChosenValue = animalChosen;

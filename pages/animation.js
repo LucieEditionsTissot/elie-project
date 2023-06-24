@@ -25,6 +25,8 @@ const Client3 = () => {
         'audio/Indice_01.mp3',
         'video/indices/indice1/LC_A_intro_indice_01.mp4',
         'video/indices/indice1/LC_B_anim_indice_01.mp4',
+        'video/indices/indice2/LC_B_anim_indice_02.mp4',
+        "audio/Indice_02.mp3",
     ];
 
     function preloadMedia(files) {
@@ -70,23 +72,21 @@ const Client3 = () => {
     };
 
     const scenario7 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        audios: "audio/Indice_02.mp3",
+        videos: ['video/indices/indice2/LC_B_anim_indice_02.mp4'],
     };
 
     const scenario8 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/indices/indice2/LC_B_anim_indice_02.mp4'],
     };
 
     const scenario9 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        audios: ['audio/Indice_03.mp3'],
+        videos: ['video/indices/indice3/LC_B_anim_indice_03.mp4'],
     };
 
     const scenario10 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/indices/indice3/LC_B_anim_indice_03.mp4'],
     };
 
     const scenario11 = {
@@ -156,6 +156,12 @@ const Client3 = () => {
         socketClient3.on("teamsAreDoneShowRules", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
+        socketClient3.on("setIndice2Screen", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        });
+        socketClient3.on("setIndice3Screen", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        });
 
         socketClient3.on("scenarioDone", () => {
             setIsScenarioDone(true);
@@ -200,15 +206,19 @@ const Client3 = () => {
         } else if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("gameOn");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
+        else if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
+                socketClient3Ref.current.emit("getCurrentGameData");
+                setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         } else {
             if (currentVideo) {
-                currentVideo.loop = true;
                 currentVideo.play();
+                currentVideo.loop = true;
             }
         }
     };
 
-
+console.log(scenarios[currentScenarioToPlay].videos)
     useEffect(() => {
         const currentScenario = scenarios[currentScenarioToPlay];
 
@@ -255,14 +265,6 @@ const Client3 = () => {
             currentVideo.play();
         }
 
-        return () => {
-            if (currentAudio) {
-                currentAudio.pause();
-            }
-            if (currentVideo) {
-                currentVideo.pause();
-            }
-        };
     }, [currentAudio, currentVideo]);
 
     useEffect(() => {

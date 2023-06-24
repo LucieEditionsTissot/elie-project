@@ -27,7 +27,7 @@ export default function StudentTablet1() {
     const [animalCards, setAnimalCards] = useState([]);
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
-    const [audioScenario, setAudioScenario] = useState(null);
+    const [audioScenario, setAudioScenario] = useState(false);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
     const socketClient1Ref = useRef(null);
@@ -78,10 +78,25 @@ export default function StudentTablet1() {
         socketClient1.on("setIndice1Screen", () => {
             setCurrentScreen("indice1");
         });
+        socketClient1.on("setIndice2Screen", () => {
+            setCurrentScreen("indice2");
+        });
+        socketClient1.on("setIndice3Screen", () => {
+            setCurrentScreen("indice3");
+        });
+        socketClient1.on("audioIndice", () => {
+            setAudioScenario(true);
+        });
 
         socketClient1.on("startGame", (data) => {
-            console.log("game data is : ", data);
-            setTurnByTurnData(data);
+            console.log("game data is: ", data);
+            setTurnByTurnData((prevData) => {
+                return { ...prevData, ...data };
+            });
+            setCurrentScreen("turnByTurn2");
+        });
+        socketClient1.on("gameDataUpdated", (updatedData) => {
+            setTurnByTurnData(updatedData);
             setCurrentScreen("turnByTurn");
         });
 
@@ -136,6 +151,9 @@ export default function StudentTablet1() {
             </Head>
 
             <div className="global-container">
+                {audioScenario &&
+                <AudioPlayer src={"audio/loup.mov"}/>
+                }
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
@@ -174,11 +192,17 @@ export default function StudentTablet1() {
                     <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
-                {currentScreen === "indice2" && (
+                {currentScreen === "indice3" && (
                     <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={true} frameText={"Indice 3"}/>
                 )}
                 {currentScreen === "turnByTurn" && (
+                    <TurnByTurn
+                        socket={socketClient1Ref.current}
+                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
+                    />
+                )}
+                {currentScreen === "turnByTurn2" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
                         data={turnByTurnData} client={1} groupName={"teamGroupOne"}
