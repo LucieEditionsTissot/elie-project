@@ -89,8 +89,11 @@ export default function StudentTablet2() {
         socketClient2.on("themeIsSelectedShowThemeExplanation", () => {
             setCurrentScreen("themeExplanation");
         });
+        socketClient2.on("setIndice1Screen", () => {
+            setCurrentScreen("indice1");
+        });
 
-        socketClient2.on("runGame", (data) => {
+        socketClient2.on("startGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
@@ -181,16 +184,20 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "themeExplanation" && (
-                    //<ThemeExplanationScreen themeSelected={themeSelected}/>
+
                     <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
+                {currentScreen === "indice1" && (
+                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={false} arrowDown={false} eye={true}
+                                 volume={false} puzzle={false} frameText={"Indice 1"}/>
+                )}
+
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
-                        data={turnByTurnData}
-                        client={2}
-                        groupName={"teamGroupTwo"}
+                        socket={socketClient2Ref.current}
+                        data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
                     />
                 )}
 

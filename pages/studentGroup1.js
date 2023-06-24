@@ -2,8 +2,6 @@ import React, {useState, useEffect, useRef} from "react";
 import {io} from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
-import ThemeScreen from "../components/ThemeScreen";
-import RulesScreen from "../components/RulesScreen";
 import TurnByTurn from "../components/TurnByTurn";
 import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
 import ShowInteractions from "../components/ShowInteractions";
@@ -47,9 +45,6 @@ export default function StudentTablet1() {
             console.log("Client 1 disconnected");
         });
 
-        if (rulesButtonClicked) {
-            socketClient1.emit("rulesAreUnderstood");
-        }
 
         socketClient1.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
@@ -80,8 +75,11 @@ export default function StudentTablet1() {
         socketClient1.on("themeIsSelectedShowThemeExplanation", () => {
             setCurrentScreen("themeExplanation");
         });
-
-        socketClient1.on("runGame", (data) => {
+        socketClient1.on("setIndice1Screen", () => {
+            setCurrentScreen("indice1");
+        });
+        socketClient1.on("startGame", (data) => {
+            console.log("hey");
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
@@ -159,26 +157,30 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "theme" && (
-                    <Interaction title={"Choix du thème"} subTitle={false} arrow={false} arrowDown={false} eye={false}
+                    <Interaction title={"Choix du thème"} subTitle={false} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Choix du thème"}/>
                 )}
-
                 {currentScreen === "themeExplanation" && (
                     <Interaction title={"Mutualisme "} subTitle={""} arrow={false} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
+
                 {currentScreen === "indice1" && (
-                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={false} arrowDown={false} eye={true}
+                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
                 {currentScreen === "indice2" && (
-                    <Interaction title={"true"} puzzle={false} frameText={"Indice 1"}/>
+                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
+                                 volume={true} puzzle={false} frameText={"Indice 2"}/>
+                )}
+                {currentScreen === "indice2" && (
+                    <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={true} frameText={"Indice 3"}/>
                 )}
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
-                        data={turnByTurnData}
-                        client={1}
-                        groupName={"teamGroupOne"}
+                        socket={socketClient1Ref.current}
+                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
                     />
                 )}
 
