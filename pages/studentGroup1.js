@@ -90,13 +90,15 @@ export default function StudentTablet1() {
 
         socketClient1.on("startGame", (data) => {
             console.log("game data is: ", data);
-            setTurnByTurnData((prevData) => {
-                return { ...prevData, ...data };
-            });
-            setCurrentScreen("turnByTurn2");
+            setTurnByTurnData(data);
+            setCurrentScreen("turnByTurn");
         });
         socketClient1.on("gameDataUpdated", (updatedData) => {
-            setTurnByTurnData(updatedData);
+            console.log("game data is: ", updatedData);
+            setTurnByTurnData((prevData) => {
+                console.log(updatedData);
+                return { ...prevData, ...updatedData };
+            });
             setCurrentScreen("turnByTurn");
         });
 

@@ -208,6 +208,7 @@ const Client3 = () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
         else if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
+            console.log(socketClient3Ref.current.emit("getCurrentGameData"));
                 socketClient3Ref.current.emit("getCurrentGameData");
                 setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         } else {

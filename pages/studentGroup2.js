@@ -101,15 +101,16 @@ export default function StudentTablet2() {
         });
         socketClient2.on("startGame", (data) => {
             console.log("game data is: ", data);
-            setTurnByTurnData((prevData) => {
-                return { ...prevData, ...data };
-            });
+            setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
         socketClient2.on("gameDataUpdated", (updatedData) => {
-            console.log(updatedData)
-            setTurnByTurnData(updatedData);
-            setCurrentScreen("turnByTurn2");
+            console.log("game data is: ", updatedData.dataTurn);
+            setTurnByTurnData((prevData) => {
+                console.log(updatedData);
+                return { ...prevData, ...updatedData.dataTurn };
+            });
+            setCurrentScreen("turnByTurn");
         });
 
         socketClient2.on("showInteractions", (data) => {
