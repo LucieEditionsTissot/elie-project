@@ -31,6 +31,8 @@ export default function StudentTablet1() {
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
     const socketClient1Ref = useRef(null);
+    const [hiddenCards, setHiddenCards] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState([]);
 
     useEffect(() => {
         socketClient1Ref.current = io(url);
@@ -93,13 +95,15 @@ export default function StudentTablet1() {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
-        socketClient1.on("gameDataUpdated", (updatedData) => {
+        socketClient1.on("gameDataUpdated", (updatedData, hiddenCards, currentIndex) => {
             console.log("game data is: ", updatedData);
+            setHiddenCards(hiddenCards);
+            setCurrentIndex(currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
                 return { ...prevData, ...updatedData };
             });
-            setCurrentScreen("turnByTurn");
+            setCurrentScreen("turnByTurn2");
         });
 
         socketClient1.on("showInteractions", (data) => {

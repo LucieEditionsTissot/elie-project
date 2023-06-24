@@ -26,6 +26,8 @@ export default function StudentTablet2() {
     const [turnByTurnData, setTurnByTurnData] = useState(null);
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [animationQuestionData, setAnimationQuestionData] = useState([]);
+    const [hiddenCards, setHiddenCards] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState([]);
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
@@ -100,17 +102,21 @@ export default function StudentTablet2() {
             setAudioScenario(false);
         });
         socketClient2.on("startGame", (data) => {
-            console.log("game data is: ", data);
-            setTurnByTurnData(data);
-            setCurrentScreen("turnByTurn");
-        });
-        socketClient2.on("gameDataUpdated", (updatedData) => {
-            console.log("game data is: ", updatedData.dataTurn);
             setTurnByTurnData((prevData) => {
-                console.log(updatedData);
-                return { ...prevData, ...updatedData.dataTurn };
+                console.log(data);
+                return { ...prevData, ...data };
             });
             setCurrentScreen("turnByTurn");
+        });
+        socketClient2.on("gameDataUpdated", (updatedData, hiddenCards, currentIndex) => {
+            console.log("game data is: ", updatedData);
+            setHiddenCards(hiddenCards);
+            setCurrentIndex(currentIndex);
+            setTurnByTurnData((prevData) => {
+                console.log(updatedData);
+                return { ...prevData, ...updatedData };
+            });
+            setCurrentScreen("turnByTurn2");
         });
 
         socketClient2.on("showInteractions", (data) => {

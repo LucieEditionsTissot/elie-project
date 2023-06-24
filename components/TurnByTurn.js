@@ -44,24 +44,22 @@ function TurnByTurn({ socket, data, client, groupName }) {
         const nextGameIndex = currentGameIndex + 1;
         setCurrentGameIndex(nextGameIndex);
 
-        socket.emit("updateGameIndex", nextGameIndex);
-
         const hiddenCards = Array.from(
             document.querySelectorAll(".animal.hidden")
         ).map((card) => card.id);
 
-        socket.emit("updateHiddenCards", hiddenCards);
-
-
-
         if (nextGameIndex === 1) {
             socket.emit("introIndice2");
             socket.emit("startAudioClient");
+            socket.emit("updateHiddenCards", hiddenCards);
+            socket.emit("updateGameIndex", nextGameIndex);
             const el = document.querySelector("#step");
             el.innerHTML = "Indice 3";
         }
 
         if (nextGameIndex === 2) {
+            socket.emit("updateHiddenCards", hiddenCards);
+            socket.emit("updateGameIndex", nextGameIndex);
             socket.emit("introIndice3");
             socket.emit("stopAudioClient");
         }
