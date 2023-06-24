@@ -298,17 +298,11 @@ io.on("connection", (socket) => {
     socket.on("updateGameIndex", (nextGameIndex) => {
         console.log("Next game index:", nextGameIndex);
         gameData.nextGameIndex = nextGameIndex;
-        if (client1State === "getCurrentGameData" && client2State === "getCurrentGameData") {
-            io.emit("gameDataUpdated", gameData);
-        }
     });
 
     socket.on("updateHiddenCards", (hiddenCards) => {
         console.log("Hidden cards:", hiddenCards);
         gameData.hiddenCards = hiddenCards;
-        if (client1State === "getCurrentGameData" && client2State === "getCurrentGameData") {
-            io.emit("gameDataUpdated", gameData);
-        }
     });
     socket.on("getCurrentGameData", () => {
         client1State = stateManager.getClientState(client1SocketId);
@@ -316,7 +310,8 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "getCurrentGameData");
         stateManager.updateClientState(client2SocketId, "getCurrentGameData");
         console.log(gameData.dataTurn);
-        socket.emit("gameDataUpdated", gameData.dataTurn);
+        console.log(socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex));
+        socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex);
     });
 
     socket.on("introIndice2", () => {

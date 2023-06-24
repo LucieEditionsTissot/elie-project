@@ -13,7 +13,7 @@ function TurnByTurn({ socket, data, client, groupName }) {
 
     useEffect(() => {
         setData(data);
-        setStateOfTheGame(stateOfTheGame);
+        setStateOfTheGame(stateOfTheGame.slice(1));
         setRandomTheme(data[0]);
         const animalData = data[1];
         if (animalData) {
@@ -44,28 +44,28 @@ function TurnByTurn({ socket, data, client, groupName }) {
         const nextGameIndex = currentGameIndex + 1;
         setCurrentGameIndex(nextGameIndex);
 
-        socket.emit("updateGameIndex", nextGameIndex);
-
         const hiddenCards = Array.from(
             document.querySelectorAll(".animal.hidden")
         ).map((card) => card.id);
 
-        socket.emit("updateHiddenCards", hiddenCards);
-
-        const el = document.querySelector("#step");
-        el.innerHTML = "Indice 3";
-
         if (nextGameIndex === 1) {
             socket.emit("introIndice2");
             socket.emit("startAudioClient");
+            socket.emit("updateHiddenCards", hiddenCards);
+            socket.emit("updateGameIndex", nextGameIndex);
+            const el = document.querySelector("#step");
+            el.innerHTML = "Indice 3";
         }
 
         if (nextGameIndex === 2) {
+            socket.emit("updateHiddenCards", hiddenCards);
+            socket.emit("updateGameIndex", nextGameIndex);
             socket.emit("introIndice3");
             socket.emit("stopAudioClient");
         }
 
         if (nextGameIndex === 3) {
+            const el = document.querySelector("#step");
             el.innerHTML = "Suivant";
         }
 
