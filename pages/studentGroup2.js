@@ -33,7 +33,7 @@ export default function StudentTablet2() {
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
-    const [audioScenario, setAudioScenario] = useState(null);
+    const [audioScenario, setAudioScenario] = useState(false);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
     const [currentAudio, setCurrentAudio] = useState(null);
@@ -87,11 +87,29 @@ export default function StudentTablet2() {
         socketClient2.on("setIndice1Screen", () => {
             setCurrentScreen("indice1");
         });
-
+        socketClient2.on("setIndice2Screen", () => {
+            setCurrentScreen("indice2");
+        });
+        socketClient2.on("setIndice3Screen", () => {
+            setCurrentScreen("indice3");
+        });
+        socketClient2.on("audioIndice", () => {
+            setAudioScenario(true);
+        });
+        socketClient2.on("stopAudioIndice", () => {
+            setAudioScenario(false);
+        });
         socketClient2.on("startGame", (data) => {
-            console.log("game data is : ", data);
-            setTurnByTurnData(data);
+            console.log("game data is: ", data);
+            setTurnByTurnData((prevData) => {
+                return { ...prevData, ...data };
+            });
             setCurrentScreen("turnByTurn");
+        });
+        socketClient2.on("gameDataUpdated", (updatedData) => {
+            console.log(updatedData)
+            setTurnByTurnData(updatedData);
+            setCurrentScreen("turnByTurn2");
         });
 
         socketClient2.on("showInteractions", (data) => {
@@ -158,6 +176,9 @@ export default function StudentTablet2() {
             </Head>
 
             <div className="global-container">
+                {audioScenario &&
+                <AudioPlayer src={"audio/Corbeau.mov"}/>
+                }
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
@@ -196,8 +217,23 @@ export default function StudentTablet2() {
                     <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={false} arrowDown={false} eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
+                {currentScreen === "indice2" && (
+                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
+                                 volume={true} puzzle={false} frameText={"Indice 2"}/>
+                )}
+                {currentScreen === "indice3" && (
+                    <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={true} frameText={"Indice 3"}/>
+                )}
+
 
                 {currentScreen === "turnByTurn" && (
+                    <TurnByTurn
+                        socket={socketClient2Ref.current}
+                        data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
+                    />
+                )}
+                {currentScreen === "turnByTurn2" && (
                     <TurnByTurn
                         socket={socketClient2Ref.current}
                         data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
