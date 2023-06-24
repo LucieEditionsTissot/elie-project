@@ -28,10 +28,6 @@ class StateManager {
         console.log(`L'équipe "${teamName}" a été ajoutée.`);
     }
 
-    getTeamByIndex(index) {
-        return this.teams[index];
-    }
-
     set(key, value) {
         this.state[key] = value;
     }

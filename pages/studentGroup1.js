@@ -55,7 +55,6 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("confirmIntroductionStart", () => {
-            console.log("hello");
             setCurrentScreen("introduce");
         });
 
@@ -75,11 +74,13 @@ export default function StudentTablet1() {
         socketClient1.on("themeIsSelectedShowThemeExplanation", () => {
             setCurrentScreen("themeExplanation");
         });
+
         socketClient1.on("setIndice1Screen", () => {
             setCurrentScreen("indice1");
         });
+
         socketClient1.on("startGame", (data) => {
-            console.log("hey");
+            console.log("game data is : ", data);
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
@@ -106,6 +107,7 @@ export default function StudentTablet1() {
         return () => {
             socketClient1.disconnect();
         };
+
     }, [rulesButtonClicked]);
     const handleAddTeam = (teamName) => {
         socketClient1Ref.current.emit("addTeam", teamName);

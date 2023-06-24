@@ -90,6 +90,7 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
 
                 </div>
             </div>
+
         </section>);
 }
 

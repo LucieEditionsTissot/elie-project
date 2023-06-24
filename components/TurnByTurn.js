@@ -1,40 +1,26 @@
 import React, {useEffect, useRef, useState} from "react";
-import io from 'socket.io-client';
+import Frame from "./Frame";
+import config from "../config";
 
-const socket = io('localhost:3000')
-
-function TurnByTurn( {socket, props} ) {
+function TurnByTurn(props) {
 
     const [stateOfTheGame, setStateOfTheGame] = useState(null);
-    const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
-    const [globalTimer, setGlobalTimer] = useState(15);
     const [data, setData] = useState([]);
-    const [teams, setTeams] = useState([]);
     const [randomTheme, setRandomTheme] = useState("");
-    const [teamIndex, setTeamIndex] = useState(null);
-    const [actualTeamMembers, setActualTeamMembers] = useState([]);
     const [animals, setAnimals] = useState({});
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [isValueSubmit, setIsValueSubmit] = useState(false);
 
     useEffect(() => {
         setData(props.data)
-        setTeams(props.data[0])
-        setRandomTheme(props.data[3])
-        const animalData = props.data[4]
+        setRandomTheme(props.data[0])
+        const animalData = props.data[1]
         if (animalData) {
             setAnimals(animalData[props.groupName]["animals"])
             setCorrectAnswer(animalData[props.groupName]["answer"])
         }
     }, [props.data])
-
-
-    useEffect(() => {
-        if (stateOfTheGame !== null) {
-            showTipsWaitingScreen("Indice en cours !")
-        }
-    }, [stateOfTheGame]);
 
     function handleFlipCard(e) {
         const element = e.target.closest('.animal')
@@ -51,103 +37,46 @@ function TurnByTurn( {socket, props} ) {
             }
         }
 
-        allHiddenCards = document.querySelectorAll(".animal.hidden")
-        const validateButton = document.querySelector("#turnByTurn .validateButton")
-
-        if (allHiddenCards.length === Object.keys(animals).length - 1) {
-            validateButton.style.display = "block"
-        } else {
-            validateButton.style.display = "none"
-        }
-
-    }
-
-    function showTipsWaitingScreen(text) {
-        const waitingScreen = document.querySelector(".waitingScreen")
-        const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreen.classList.add("is-active")
-        waitingScreenText.innerHTML = text
-
-        console.log("stateOfTheGame", stateOfTheGame)
-    }
-
-    function showPlayerWaitingScreen() {
-
-        const waitingScreen = document.querySelector(".waitingScreen")
-        const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
-        waitingScreen.classList.add("is-active")
-
-    }
-
-
-    function updateWaitingScreenForTheLastTime() {
-
-        const waitingScreen = document.querySelector(".waitingScreen")
-        const waitingScreenText = document.querySelector(".waitingScreen h4")
-        waitingScreenText.innerHTML = "Indice en cours !"
-        waitingScreen.classList.add("is-active")
-
-
-    }
-
-    function disableTimer() {
-        const timerWrapper = document.querySelector(".timer-wrapper");
-        const timer = document.querySelector(".timer");
-        timerWrapper.style.display = "none";
-        timer.style.display = "none";
-        timer.style.animationPlayState = "paused";
     }
 
     function handleClickOnValidateButton() {
         const lastCard = document.querySelectorAll(".animal:not(.hidden)")
-        const answerText = document.querySelector(".answerText")
         if (lastCard.length === 1 && isValueSubmit === false) {
             setIsValueSubmit(true)
-            socket.emit("animalChosen", Number(lastCard.id))
-            if (Number(lastCard[0].id) === Number(correctAnswer)) {
-                answerText.innerHTML = "Bonne réponse !"
-            } else {
-                answerText.innerHTML = "Mauvaise réponse !"
-            }
+            props.socket.emit("animalChosen", Number(lastCard.id))
         }
 
     }
 
     return (
-        <section id={"turnByTurn"} className={"hide"}>
+        <section id="turnByTurn">
 
-            <h1>Équipe </h1>
+            <Frame color={"green"} crop={false} text={randomTheme}/>
 
-            <div className="animal-wrapper">
+            <div className="template-wrapper">
 
-                {animals !== undefined && animals.length > 0 ? (
-                    animals.map((animal, index) => (
-                        <div
-                            key={index}
-                            id={index}
-                            className="animal"
-                            onClick={(e) => handleFlipCard(e)}
-                        >
-                            <p>{animal}</p>
-                        </div>
-                    ))
-                ) : null}
-            </div>
+                <div className="top-part">
+                    <div className="left-part">
+                        <h3 onClick={() => console.log(animals)}>Masquez 3 espèces</h3>
+                        <h6>Qui ne correspondent pas à l'indice</h6>
+                    </div>
+                    <div className="button-next flex flex-row justify-center items-center rounded-full">
+                        <p>Suivant</p>
+                        <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
+                    </div>
+                </div>
 
-            <div className={"timer-wrapper"}>
-                <div className={"timer"}></div>
-            </div>
+                <div className="bottom-part animal-wrapper">
 
-            <div className={"validateButton"} onClick={() => handleClickOnValidateButton()}>
-                <p>Validate</p>
-            </div>
+                    {animals !== undefined && animals.length > 0 && (
+                        animals.map((animal, index) => (
+                            <div key={index} id={index} className="animal" onClick={(e) => handleFlipCard(e)}>
+                                <p>{animal.name}</p>
+                            </div>
+                        ))
+                    )}
 
-            <h5 className={"answerText"}></h5>
-
-            <div className={"waitingScreen"}>
-
-                <h4>Premier indice en cours</h4>
+                </div>
 
             </div>
 

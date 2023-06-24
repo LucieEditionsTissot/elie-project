@@ -18,9 +18,7 @@ import Interaction from "../components/Interaction";
 import Question from "../components/Question";
 
 export default function StudentTablet2() {
-    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(
-        false
-    );
+    const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
@@ -34,9 +32,7 @@ export default function StudentTablet2() {
     const [showAnswer, setShowAnswer] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
-    const [interactionsExplainedData, setInteractionsExplainedData] = useState(
-        null
-    );
+    const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
     const [audioScenario, setAudioScenario] = useState(null);
     const [currentScenario, setCurrentScenario] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
@@ -68,7 +64,6 @@ export default function StudentTablet2() {
         });
 
         socketClient2.on("confirmIntroductionStart", () => {
-            console.log("hello");
             setCurrentScreen("introduce");
         });
 
@@ -94,6 +89,7 @@ export default function StudentTablet2() {
         });
 
         socketClient2.on("startGame", (data) => {
+            console.log("game data is : ", data);
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
