@@ -41,62 +41,42 @@ const animals = {
             "animals": [
                 {
                     "name": "Biche",
-                    "explanation": "Explication sur la biche...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Truite",
-                    "explanation": "Explication sur la truite...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Renard",
-                    "explanation": "Explication sur le renard...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Salamandre",
-                    "explanation": "Explication sur la salamandre...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Marmotte",
-                    "explanation": "Explication sur la marmotte...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Cerf",
-                    "explanation": "Explication sur le cerf...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Crapaud",
-                    "explanation": "Explication sur le crapaud...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Loup",
-                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Lapin",
-                    "explanation": "Explication sur le lapin...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Aigle",
-                    "explanation": "Explication sur l'aigle...",
-                    "image": "",
                     "icon": ""
                 }
             ],
@@ -106,63 +86,42 @@ const animals = {
             "animals": [
                 {
                     "name": "Lézard",
-                    "explanation": "Explication sur le lézard...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Biche",
-                    "explanation": "Explication sur la biche...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Hibou",
-                    "explanation": "Explication sur le hibou...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Papillon",
-                    "explanation": "Explication sur le papillon...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Corbeau",
-                    "explanation": "Explication sur l'écureuil...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Coccinelle",
-                    "explanation": "Explication sur la coccinelle...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Faucon",
-                    "explanation": "Explication sur le faucon...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Chouette",
-                    "explanation": "Explication sur la chouette...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Rat",
-                    "explanation": "Explication sur le rat...",
-                    "image": "",
                     "icon": ""
                 },
                 {
                     "name": "Loup",
-                    "explanation": "Le loup est un chasseur capable d'attraper la plupart des proies.Il sagit d'un animal principalement carnivore, raison pour laquelle il est courant de le voir se nourrir d'autres animaux plus petits ou certains animaux de plus grandes tailles.Ils ont un incroyable sens de l'odorat et de l'audition. Ce sont leurs organes les plus développés, ce qui leur permet de débusquer facilement leurs proies et communiquer",
-
-                    "image": "",
                     "icon": ""
                 }
             ],
@@ -292,10 +251,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "rulesAreUnderstood");
         stateManager.updateClientState(client2SocketId, "rulesAreUnderstood");
-
-        if (client1State === "rulesAreUnderstood" && client2State === "rulesAreUnderstood") {
-            io.emit("rulesAreDoneSelectThemeRandomly");
-        }
+        io.emit("rulesAreDoneSelectThemeRandomly");
     });
     function chooseRandomTheme() {
         // const randomIndex = Math.floor(Math.random() * themes.length);
@@ -305,9 +261,7 @@ io.on("connection", (socket) => {
     socket.on("selectTheme", () => {
         stateManager.updateClientState(client1SocketId, "selectTheme");
         stateManager.updateClientState(client2SocketId, "selectTheme");
-        if (client1State === "selectTheme" && client2State === "selectTheme") {
-            io.emit("themeSelected");
-        }
+        io.emit("themeSelected");
     });
 
     socket.on("explain", () => {
@@ -317,19 +271,28 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "explain");
         io.emit("themeIsSelectedShowThemeExplanation");
     });
+    socket.on("introIndice1", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "introIndice1");
+        stateManager.updateClientState(client2SocketId, "introIndice1");
+        io.emit("setIndice1Screen");
+    });
 
 
 
      socket.on("gameOn", () => {
-       client1State = stateManager.getClientState(client1SocketId);
+         console.log("hey")
+      randomTheme = chooseRandomTheme();
+      client1State = stateManager.getClientState(client1SocketId);
       client2State = stateManager.getClientState(client2SocketId);
-       stateManager.updateClientState(client1SocketId, "themeIsSelectedShowThemeExplanation");
-       stateManager.updateClientState(client2SocketId, "themeIsSelectedShowThemeExplanation");
-
-      if (client1State === "themeIsSelectedShowThemeExplanation" && client2State === "themeIsSelectedShowThemeExplanation") {
-         const dataTurnByTurn = [teams.teams, teamGroupOne, teamGroupTwo, randomTheme, animals[randomTheme]]
+       stateManager.updateClientState(client1SocketId, "gameOn");
+       stateManager.updateClientState(client2SocketId, "gameOn");
+         const dataTurnByTurn = [teams, randomTheme, animals[randomTheme]]
+         console.log(dataTurnByTurn);
+         stateManager.set('dataTurn', dataTurnByTurn)
          io.emit("startGame", dataTurnByTurn);
-      }
+
      });
     // THEME ///////////////////////////////////////
 

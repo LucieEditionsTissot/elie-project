@@ -7,7 +7,6 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
     useEffect(() => {
         if (socket) {
             socket.on("teamChosen", function (index) {
-                console.log("hbzhbdebhdbez")
                 const cardSelectedByAnotherTeam = document.querySelector("#teams .card[id='" + index + "']")
                 if (cardSelectedByAnotherTeam) {
                     cardSelectedByAnotherTeam.classList.add("selectedByOtherTeam");
@@ -35,8 +34,7 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
         const selectedCard = cardRefs.current.find((card) => card.classList.contains("selected"));
         if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
             const teamIndex = selectedCard.id;
-            onTeamSelected(teamIndex);
-            socket.emit("selectTeam", teamIndex);
+            onTeamSelected(teamIndex)
             const button = document.querySelector("#teams .button-next");
             if (button) {
                 button.classList.add("disabled");
@@ -63,9 +61,10 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
                     </div>
                 </div>
 
-                <div className="bottom-part teams-wrapper"> {
-
-                    Object.keys(config.teams).map((teamName, index) => (
+                <div className="bottom-part teams-wrapper"> 
+                  
+                  {Object.keys(config.teams).map((teamName, index) => (
+                    
                         <div ref={ref => (cardRefs.current[index] = ref)} key={index} id={index}
                              className={`card ${client === 1 ? "blue" : "red"}`}
                              onClick={() => handleClickOnTeam(index)}><h2 className="team-name">{teamName}</h2>
@@ -86,6 +85,7 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
                                 </g>
                             </svg>
                         </div>
+                        
                     ))}
 
                 </div>
