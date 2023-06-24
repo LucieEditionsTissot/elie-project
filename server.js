@@ -10,7 +10,7 @@ const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 let interval;
 const teams = require('./config');
-const { StateManager } = require('./StateManager');
+const {StateManager} = require('./StateManager');
 
 const getApiAndEmit = (socket) => {
     const response = new Date();
@@ -32,7 +32,6 @@ let numberOfCardsView = 0;
 let isFinalQuestionIsCorrect = true
 let isInformationUnderstood = 0
 let animalChosenValue = null;
-
 
 
 const animals = {
@@ -152,8 +151,7 @@ const answersAnimation = {
 }
 
 
-
-let clientConnected = { client : false, client2 : false };
+let clientConnected = {client: false, client2: false};
 
 const stateManager = new StateManager();
 const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
@@ -253,11 +251,13 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "rulesAreUnderstood");
         io.emit("rulesAreDoneSelectThemeRandomly");
     });
+
     function chooseRandomTheme() {
         // const randomIndex = Math.floor(Math.random() * themes.length);
         // return themes[randomIndex];
         return themes[0];
     }
+
     socket.on("selectTheme", () => {
         stateManager.updateClientState(client1SocketId, "selectTheme");
         stateManager.updateClientState(client2SocketId, "selectTheme");
@@ -280,24 +280,20 @@ io.on("connection", (socket) => {
     });
 
 
+    socket.on("gameOn", () => {
+        console.log("Game is launched")
+        randomTheme = chooseRandomTheme();
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "gameOn");
+        stateManager.updateClientState(client2SocketId, "gameOn");
+        const dataTurnByTurn = [randomTheme, animals[randomTheme]]
+        console.log("Data turn by turn : ", dataTurnByTurn);
+        stateManager.set('dataTurn', dataTurnByTurn)
+        io.emit("startGame", dataTurnByTurn);
 
-     socket.on("gameOn", () => {
-         console.log("hey")
-      randomTheme = chooseRandomTheme();
-      client1State = stateManager.getClientState(client1SocketId);
-      client2State = stateManager.getClientState(client2SocketId);
-       stateManager.updateClientState(client1SocketId, "gameOn");
-       stateManager.updateClientState(client2SocketId, "gameOn");
-         const dataTurnByTurn = [teams, randomTheme, animals[randomTheme]]
-         console.log(dataTurnByTurn);
-         stateManager.set('dataTurn', dataTurnByTurn)
-         io.emit("startGame", dataTurnByTurn);
-
-     });
+    });
     // THEME ///////////////////////////////////////
-
-
-
 
 
     // ANIMAL CHOSEN  ////////////////////////////////
@@ -311,7 +307,7 @@ io.on("connection", (socket) => {
 
     socket.on("undestrandInteraction", () => {
         numberOfButtonClicked++;
-        if(numberOfButtonClicked >= 2) {
+        if (numberOfButtonClicked >= 2) {
             io.to('client3').emit(interactions);
             io.emit("interactionExplained", randomTheme);
             setTimeout(() => {
@@ -327,7 +323,7 @@ io.on("connection", (socket) => {
     // ANIMATION IS ANSWERED  ////////////////////////
     socket.on("animationQuestionIsAnswered", (answerId) => {
         numberOfAnimationQuestionAnswered++;
-        if(numberOfAnimationQuestionAnswered >=2) {
+        if (numberOfAnimationQuestionAnswered >= 2) {
             io.emit("conclusion");
         }
     })

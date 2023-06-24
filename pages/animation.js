@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import VideoPlayer from '../components/VideoPlayer';
 import AudioPlayer from '../components/AudioPlayer';
 import io from "socket.io-client";
@@ -185,20 +185,19 @@ const Client3 = () => {
     }
 
     const handleVideoEnded = () => {
-        if (currentScenarioToPlay === 1 &&  scenarios[currentScenarioToPlay].videos.length === 1) {
+        if (currentScenarioToPlay === 1 && scenarios[currentScenarioToPlay].videos.length === 1) {
             console.log("La bande vidéo est terminée.");
             socketClient3Ref.current.emit("rulesAreUnderstood");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        }
-        else if(currentScenarioToPlay === 2 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        } else if (currentScenarioToPlay === 2 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("explain");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
-        }  else if (currentScenarioToPlay === 3 && scenarios[currentScenarioToPlay].videos.length === 1) {
-                socketClient3Ref.current.emit("introIndice1");
-                setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        } else if (currentScenarioToPlay === 3 && scenarios[currentScenarioToPlay].videos.length === 1) {
+            socketClient3Ref.current.emit("introIndice1");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
-        }  else if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        } else if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("gameOn");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         } else {
@@ -208,7 +207,6 @@ const Client3 = () => {
             }
         }
     };
-
 
 
     useEffect(() => {
@@ -290,11 +288,11 @@ const Client3 = () => {
     return (
         <>
             <div>
-                <AudioPlayer src={"audio/SonsAmbiance.mp3"} />
+                <AudioPlayer src={"audio/SonsAmbiance.mp3"}/>
                 {scenarios[currentScenarioToPlay].audios &&
                     audioLoaded &&
                     !currentAudio && (
-                        <AudioPlayer src={scenarios[currentScenarioToPlay].audios} />
+                        <AudioPlayer src={scenarios[currentScenarioToPlay].audios}/>
                     )}
                 {scenarios[currentScenarioToPlay].videos &&
                     videoLoaded &&
