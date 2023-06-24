@@ -1,48 +1,157 @@
-import React, { useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
+import io from 'socket.io-client';
 
-function TurnByTurn({ socket, animals }) {
-    const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-    const [selectedAnimals, setSelectedAnimals] = useState([]);
-    const [message, setMessage] = useState("");
+const socket = io('localhost:3000')
 
-    const handleAnimalClick = (animal) => {
-        if (selectedAnimals.length < 3 && !selectedAnimals.includes(animal)) {
-            setSelectedAnimals((prevSelectedAnimals) => [
-                ...prevSelectedAnimals,
-                animal,
-            ]);
+function TurnByTurn( {socket, props} ) {
+
+    const [stateOfTheGame, setStateOfTheGame] = useState(null);
+    const [actualIndexOfMembers, setActualIndexOfMembers] = useState(0);
+    const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
+    const [globalTimer, setGlobalTimer] = useState(15);
+    const [data, setData] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [randomTheme, setRandomTheme] = useState("");
+    const [teamIndex, setTeamIndex] = useState(null);
+    const [actualTeamMembers, setActualTeamMembers] = useState([]);
+    const [animals, setAnimals] = useState({});
+    const [correctAnswer, setCorrectAnswer] = useState("");
+    const [isValueSubmit, setIsValueSubmit] = useState(false);
+
+    useEffect(() => {
+        setData(props.data)
+        setTeams(props.data[0])
+        setRandomTheme(props.data[3])
+        const animalData = props.data[4]
+        if (animalData) {
+            setAnimals(animalData[props.groupName]["animals"])
+            setCorrectAnswer(animalData[props.groupName]["answer"])
         }
-    };
+    }, [props.data])
 
-    const handleNextPlayer = () => {
-        if (currentPlayerIndex <= 3) {
-            setCurrentPlayerIndex(0);
+
+    useEffect(() => {
+        if (stateOfTheGame !== null) {
+            showTipsWaitingScreen("Indice en cours !")
+        }
+    }, [stateOfTheGame]);
+
+    function handleFlipCard(e) {
+        const element = e.target.closest('.animal')
+        const allCards = document.querySelectorAll(".animal");
+        let allHiddenCards = document.querySelectorAll(".animal.hidden");
+
+        if (!isValueSubmit) {
+            if (allHiddenCards.length < maxNumberOfCard) {
+                element.classList.toggle("hidden");
+            } else {
+                if (element.classList.contains("hidden")) {
+                    element.classList.remove("hidden");
+                }
+            }
+        }
+
+        allHiddenCards = document.querySelectorAll(".animal.hidden")
+        const validateButton = document.querySelector("#turnByTurn .validateButton")
+
+        if (allHiddenCards.length === Object.keys(animals).length - 1) {
+            validateButton.style.display = "block"
         } else {
-            setCurrentPlayerIndex((prevPlayerIndex) => prevPlayerIndex + 1);
+            validateButton.style.display = "none"
         }
-        setSelectedAnimals([]);
-    };
+
+    }
+
+    function showTipsWaitingScreen(text) {
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreen.classList.add("is-active")
+        waitingScreenText.innerHTML = text
+
+        console.log("stateOfTheGame", stateOfTheGame)
+    }
+
+    function showPlayerWaitingScreen() {
+
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreenText.innerHTML = actualTeamMembers[actualIndexOfMembers] + " à toi de jouer !"
+        waitingScreen.classList.add("is-active")
+
+    }
+
+
+    function updateWaitingScreenForTheLastTime() {
+
+        const waitingScreen = document.querySelector(".waitingScreen")
+        const waitingScreenText = document.querySelector(".waitingScreen h4")
+        waitingScreenText.innerHTML = "Indice en cours !"
+        waitingScreen.classList.add("is-active")
+
+
+    }
+
+    function disableTimer() {
+        const timerWrapper = document.querySelector(".timer-wrapper");
+        const timer = document.querySelector(".timer");
+        timerWrapper.style.display = "none";
+        timer.style.display = "none";
+        timer.style.animationPlayState = "paused";
+    }
+
+    function handleClickOnValidateButton() {
+        const lastCard = document.querySelectorAll(".animal:not(.hidden)")
+        const answerText = document.querySelector(".answerText")
+        if (lastCard.length === 1 && isValueSubmit === false) {
+            setIsValueSubmit(true)
+            socket.emit("animalChosen", Number(lastCard.id))
+            if (Number(lastCard[0].id) === Number(correctAnswer)) {
+                answerText.innerHTML = "Bonne réponse !"
+            } else {
+                answerText.innerHTML = "Mauvaise réponse !"
+            }
+        }
+
+    }
 
     return (
-        <div>
-            <p>{message}</p>
-            <div className="animal-container">
+        <section id={"turnByTurn"} className={"hide"}>
+
+            <h1>Équipe </h1>
+
+            <div className="animal-wrapper">
+
                 {animals !== undefined && animals.length > 0 ? (
                     animals.map((animal, index) => (
                         <div
                             key={index}
-                            className={`animal-card ${
-                                selectedAnimals.includes(animal) ? "selected" : ""
-                            }`}
+                            id={index}
+                            className="animal"
+                            onClick={(e) => handleFlipCard(e)}
                         >
-                            <button onClick={() => handleAnimalClick(animal)}>
-                                {animal.name}
-                            </button>
+                            <p>{animal}</p>
                         </div>
-                ))) : ""}
+                    ))
+                ) : null}
             </div>
-            <button onClick={handleNextPlayer}>Passer au joueur suivant</button>
-        </div>
+
+            <div className={"timer-wrapper"}>
+                <div className={"timer"}></div>
+            </div>
+
+            <div className={"validateButton"} onClick={() => handleClickOnValidateButton()}>
+                <p>Validate</p>
+            </div>
+
+            <h5 className={"answerText"}></h5>
+
+            <div className={"waitingScreen"}>
+
+                <h4>Premier indice en cours</h4>
+
+            </div>
+
+        </section>
     );
 }
 

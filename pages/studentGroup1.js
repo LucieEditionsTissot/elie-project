@@ -180,7 +180,7 @@ export default function StudentTablet1() {
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
-                        animals={turnByTurnData}
+                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
                     />
                 )}
 

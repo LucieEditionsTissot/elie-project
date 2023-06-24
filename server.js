@@ -292,15 +292,10 @@ io.on("connection", (socket) => {
       client2State = stateManager.getClientState(client2SocketId);
        stateManager.updateClientState(client1SocketId, "gameOn");
        stateManager.updateClientState(client2SocketId, "gameOn");
-         const dataTurnByTurnGroupOne = animals[randomTheme].teamGroupOne;
-          const dataTurnByTurnGroupTwo = animals[randomTheme].teamGroupTwo;
-          console.log(dataTurnByTurnGroupTwo)
-          console.log(dataTurnByTurnGroupOne)
-         stateManager.set('dataGroupOne', dataTurnByTurnGroupOne)
-         stateManager.set('dataGroupTwo', dataTurnByTurnGroupTwo)
-          console.log( io.to(client1SocketId).emit("startGame", dataTurnByTurnGroupOne))
-         io.to('client1').emit("startGame", dataTurnByTurnGroupOne);
-         io.to('client2').emit("startGame", dataTurnByTurnGroupTwo);
+         const dataTurnByTurn = [teams, randomTheme, animals[randomTheme]]
+         console.log(dataTurnByTurn);
+         stateManager.set('dataTurn', dataTurnByTurn)
+         io.emit("startGame", dataTurnByTurn);
 
      });
     // THEME ///////////////////////////////////////
