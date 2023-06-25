@@ -15,6 +15,7 @@ import Interaction from "../components/Interaction";
 import Question from "../components/Question";
 import TurnByTurn2 from "../components/TurnByTurn2";
 import TurnByTurn3 from "../components/TurnByTurn3";
+import Answer from "../components/Answer";
 
 export default function StudentTablet1() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -82,12 +83,15 @@ export default function StudentTablet1() {
         socketClient1.on("setIndice1Screen", () => {
             setCurrentScreen("indice1");
         });
+
         socketClient1.on("setIndice2Screen", () => {
             setCurrentScreen("indice2");
         });
+
         socketClient1.on("setIndice3Screen", () => {
             setCurrentScreen("indice3");
         });
+
         socketClient1.on("audioIndice", () => {
             setAudioScenario(true);
         });
@@ -96,6 +100,7 @@ export default function StudentTablet1() {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
+
         socketClient1.on("gameDataUpdated", (updatedData) => {
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
@@ -106,6 +111,7 @@ export default function StudentTablet1() {
             });
             setCurrentScreen("turnByTurn2");
         });
+
         socketClient1.on("gameDataUpdatedLastTime", (updatedData) => {
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
@@ -116,9 +122,9 @@ export default function StudentTablet1() {
             });
             setCurrentScreen("turnByTurn3");
         });
-        socketClient1.on("showInteractions", (data) => {
-            setInteractionsData(data);
-            setCurrentScreen("showInteractions");
+
+        socketClient1.on("answer", () => {
+            setCurrentScreen("answer");
         });
 
         socketClient1.on("interactionExplained", (data) => {
@@ -139,19 +145,20 @@ export default function StudentTablet1() {
             socketClient1.disconnect();
         };
 
-    }, [rulesButtonClicked]);
+    }, []);
+
     const handleAddTeam = (teamName) => {
         socketClient1Ref.current.emit("addTeam", teamName);
     }
+
     const handleStartButtonClick = () => {
         socketClient1Ref.current.emit("wantsToStartExperience");
     }
-    const handleRulesButtonClick = () => {
-        socketClient1Ref.current.emit("rules");
-    }
+
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
     };
+
     return (
         <>
             <Head>
@@ -204,27 +211,31 @@ export default function StudentTablet1() {
                     <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
+
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
+                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
+
                 {currentScreen === "indice3" && (
                     <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={true} frameText={"Indice 3"}/>
                 )}
+
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                     />
                 )}
+
                 {currentScreen === "turnByTurn2" && (
                     <TurnByTurn2
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                         hiddenCards={hiddenCards}
                         currentIndex={currentIndex}
@@ -234,7 +245,7 @@ export default function StudentTablet1() {
                     <TurnByTurn3
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                         hiddenCards={hiddenCards}
                         currentIndex={currentIndex}
@@ -242,8 +253,8 @@ export default function StudentTablet1() {
                 )}
 
 
-                {currentScreen === "showInteractions" && (
-                    <ShowInteractions data={interactionsData}/>
+                {currentScreen === "answer" && (
+                    <Answer/>
                 )}
 
                 {currentScreen === "understandInteraction" && (

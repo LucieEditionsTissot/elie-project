@@ -291,29 +291,22 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "gameOn");
         const dataTurnByTurn = [randomTheme, animals[randomTheme]];
         console.log("Data turn by turn: ", dataTurnByTurn);
-        gameData = { dataTurn: dataTurnByTurn };
+        gameData = { dataTurn: dataTurnByTurn, nextGameIndex: 0, hiddenCards: { one: [], two: [] } };
         io.emit("startGame", dataTurnByTurn);
     });
 
     socket.on("updateGameIndex", (nextGameIndex) => {
-        console.log("Next game index:", nextGameIndex);
         gameData.nextGameIndex = nextGameIndex;
     });
 
-    socket.on("updateHiddenCards", (hiddenCards) => {
-        console.log("Hidden cards:", hiddenCards);
-        gameData.hiddenCards = hiddenCards;
+    socket.on("updateHiddenCardsone", (hiddenCards) => {
+        gameData.hiddenCards.one = hiddenCards;
     });
 
-    socket.on("updateGameIndex2", (nextGameIndex) => {
-        console.log("Next game index:", nextGameIndex);
-        gameData.nextGameIndex = nextGameIndex;
+    socket.on("updateHiddenCardstwo", (hiddenCards) => {
+        gameData.hiddenCards.two = hiddenCards;
     });
 
-    socket.on("updateHiddenCards2", (hiddenCards) => {
-        console.log("Hidden cards:", hiddenCards);
-        gameData.hiddenCards = hiddenCards;
-    });
     socket.on("getCurrentGameData", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
@@ -351,22 +344,27 @@ io.on("connection", (socket) => {
             io.emit("setIndice3Screen");
         }
     });
+
     socket.on("startAudioClient", () => {
         if (client1State === "introIndice2" && client2State === "introIndice2") {
             io.emit("audioIndice");
         }
     })
+
     socket.on("stopAudioClient", () => {
         if (client1State === "introIndice3" && client2State === "introIndice3") {
             io.emit("stopAudioIndice");
         }
     });
+
     // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
-        animalChosenValue = animalChosen;
-        numberOfChosenAnimals++;
-        if (numberOfChosenAnimals >= 2) {
-            io.emit("showInteractions", animals[randomTheme]);
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "answer");
+        stateManager.updateClientState(client2SocketId, "answer");
+        if (client1State === "answer" && client2State === "answer") {
+            io.emit("answer");
         }
     });
 
