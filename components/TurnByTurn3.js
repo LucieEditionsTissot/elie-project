@@ -58,7 +58,7 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
         if (!buttonNext.classList.contains("disabled")) {
             const nextGameIndex = currentGameIndex + 1;
             setCurrentGameIndex(nextGameIndex);
-            socket.emit("animalChosen");
+            socket.emit("animalChosen", );
 
             const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
             hiddenCardsElements.forEach((cardElement, index) => {
