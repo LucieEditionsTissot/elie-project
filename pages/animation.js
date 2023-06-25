@@ -202,28 +202,32 @@ const Client3 = () => {
             console.log("La bande vidéo est terminée.");
             socketClient3Ref.current.emit("rulesAreUnderstood");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        } else if (currentScenarioToPlay === 2 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }
+        if (currentScenarioToPlay === 2 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("explain");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
-        } else if (currentScenarioToPlay === 3 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }  if (currentScenarioToPlay === 3 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("introIndice1");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
-        } else if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }  if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("gameOn");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
-        else if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
+         if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
                 socketClient3Ref.current.emit("getCurrentGameData");
                 setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        }  else if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }
+         if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("getCurrentGameDataLastTime");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        } else if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }
+         if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("animationIsDoneAskQuestion")
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        } else {
+        }
+         else {
             if(currentVideo) {
              currentVideo.loop = true;
                 currentVideo.play();
