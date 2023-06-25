@@ -134,8 +134,7 @@ export default function StudentTablet1() {
             setCurrentScreen("understandInteraction");
         });
 
-        socketClient1.on("askQuestion", (data) => {
-            setAnimationQuestionData(data);
+        socketClient1.on("askQuestion", () => {
             setCurrentScreen("question");
         });
 
