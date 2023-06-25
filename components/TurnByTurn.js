@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import Frame from "./Frame";
 import Indicator from "./Indicator";
 
-function TurnByTurn({ socket, data, client, groupName }) {
+function TurnByTurn({socket, data, client, groupName}) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
     const [dataAnimals, setData] = useState([]);
     const [randomTheme, setRandomTheme] = useState("");
     const [animals, setAnimals] = useState({});
     const [correctAnswer, setCorrectAnswer] = useState("");
-    const [isValueSubmit, setIsValueSubmit] = useState(false);
     const [currentGameIndex, setCurrentGameIndex] = useState(0);
 
     useEffect(() => {
@@ -21,8 +20,6 @@ function TurnByTurn({ socket, data, client, groupName }) {
             setAnimals(animalData[groupName]["animals"]);
             setCorrectAnswer(animalData[groupName]["answer"]);
         }
-        const el = document.querySelector("#step");
-        el.innerHTML = "Indice 2";
     }, [data]);
 
     function handleFlipCard(e) {
@@ -30,57 +27,68 @@ function TurnByTurn({ socket, data, client, groupName }) {
         const allCards = document.querySelectorAll(".animal");
         let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
-        if (!isValueSubmit) {
-            if (allHiddenCards.length < maxNumberOfCard) {
-                element.classList.toggle("hidden");
-            } else {
-                if (element.classList.contains("hidden")) {
-                    element.classList.remove("hidden");
-                }
+        if (allHiddenCards.length < maxNumberOfCard) {
+            element.classList.toggle("hidden");
+        } else {
+            if (element.classList.contains("hidden")) {
+                element.classList.remove("hidden");
             }
         }
+
+        const numberOfHiddenCard = document.querySelectorAll(".animal.hidden").length;
+        const buttonNext = document.querySelector(".button-next");
+        if (numberOfHiddenCard === 3) {
+            buttonNext.classList.remove("disabled")
+        } else {
+            buttonNext.classList.add("disabled")
+        }
+
     }
 
     function handleClickOnNextButton() {
-        const nextGameIndex = currentGameIndex + 1;
-        setCurrentGameIndex(nextGameIndex);
+        const buttonNext = document.querySelector(".button-next");
 
-        const hiddenCards = Array.from(
-            document.querySelectorAll(".animal.hidden")
-        ).map((card) => card.id);
+        if (!buttonNext.classList.contains("disabled")) {
+            const nextGameIndex = currentGameIndex + 1;
+            setCurrentGameIndex(nextGameIndex);
 
+            const hiddenCards = Array.from(
+                document.querySelectorAll(".animal.hidden")
+            ).map((card) => card.id);
 
             socket.emit("introIndice2");
             socket.emit("startAudioClient");
-            socket.emit("updateHiddenCards", hiddenCards);
+            socket.emit("updateHiddenCards" + client, hiddenCards);
             socket.emit("updateGameIndex", nextGameIndex);
 
+            setStateOfTheGame([...stateOfTheGame]);
 
-        setStateOfTheGame([...stateOfTheGame]);
+            buttonNext.classList.add("disabled");
+        }
     }
 
     return (
         <section id="turnByTurn">
-            <Frame color={"green"} crop={true} text={randomTheme} />
+            <Frame color={"green"} crop={true} text={randomTheme}/>
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
-                        <h3 onClick={() => console.log(animals)}>Masquez 3 espèces</h3>
+                        <h3>Masquez 3 espèces</h3>
                         <h6>Qui ne correspondent pas à l'indice</h6>
                     </div>
                     <div
-                        className="button-next flex flex-row justify-center items-center rounded-full"
+                        className="button-next flex flex-row justify-center items-center rounded-full disabled"
                         onClick={handleClickOnNextButton}
                     >
-                        <p id="step"></p>
-                        <img src={"images/next-icon-wheat.svg"} alt="Next icon" />
+                        <p>Indice 1</p>
+                        <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                     </div>
                 </div>
                 <div className="bottom-part animal-wrapper">
                     {animals !== undefined &&
                         animals.length > 0 &&
                         animals.map((animal, index) => (
-                            <div key={index} id={index} className={`animal ${hiddenCards.includes(index.toString()) ? "hidden" : ""}`} onClick={(e) => handleFlipCard(e)}>
+                            <div key={index} id={index} className="animal" onClick={(e) => handleFlipCard(e)}>
                                 <img src={"images/animals/" + animal.icon} alt="Animal icon"/>
                                 <p>{animal.name}</p>
                             </div>

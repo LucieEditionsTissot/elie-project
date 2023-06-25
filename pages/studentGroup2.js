@@ -58,7 +58,6 @@ export default function StudentTablet2() {
 
         setOtherTeamWantsToContinue(false);
 
-
         socketClient2.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
         });
@@ -84,29 +83,35 @@ export default function StudentTablet2() {
             setCurrentScreen("theme");
         });
 
-
         socketClient2.on("themeIsSelectedShowThemeExplanation", () => {
             setCurrentScreen("themeExplanation");
         });
+
         socketClient2.on("setIndice1Screen", () => {
             setCurrentScreen("indice1");
         });
+
         socketClient2.on("setIndice2Screen", () => {
             setCurrentScreen("indice2");
         });
+
         socketClient2.on("setIndice3Screen", () => {
             setCurrentScreen("indice3");
         });
+
         socketClient2.on("audioIndice", () => {
             setAudioScenario(true);
         });
+
         socketClient2.on("stopAudioIndice", () => {
             setAudioScenario(false);
         });
+
         socketClient2.on("startGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
+
         socketClient2.on("gameDataUpdated", (updatedData) => {
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
@@ -117,6 +122,7 @@ export default function StudentTablet2() {
             });
             setCurrentScreen("turnByTurn2");
         });
+
         socketClient2.on("gameDataUpdatedLastTime", (updatedData) => {
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
@@ -177,6 +183,10 @@ export default function StudentTablet2() {
         socketClient2Ref.current.emit("rules");
     };
 
+    useEffect(() => {
+        console.log("hidden,", hiddenCards);
+    }, [hiddenCards])
+
 
     return (
         <>
@@ -230,11 +240,11 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "indice1" && (
-                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={false} arrowDown={false} eye={true}
+                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
+                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
                 {currentScreen === "indice3" && (
@@ -247,7 +257,7 @@ export default function StudentTablet2() {
                     <TurnByTurn
                         socket={socketClient2Ref.current}
                         data={turnByTurnData}
-                        client={2}
+                        client={"two"}
                         groupName={"teamGroupTwo"}
                     />
                 )}
@@ -256,7 +266,7 @@ export default function StudentTablet2() {
                     <TurnByTurn2
                         socket={socketClient2Ref.current}
                         data={turnByTurnData}
-                        client={2}
+                        client={"two"}
                         groupName={"teamGroupTwo"}
                         hiddenCards={hiddenCards}
                         currentIndex={currentIndex}
@@ -266,7 +276,7 @@ export default function StudentTablet2() {
                     <TurnByTurn3
                         socket={socketClient2Ref.current}
                         data={turnByTurnData}
-                        client={2}
+                        client={"two"}
                         groupName={"teamGroupTwo"}
                         hiddenCards={hiddenCards}
                         currentIndex={currentIndex}

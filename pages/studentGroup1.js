@@ -152,6 +152,11 @@ export default function StudentTablet1() {
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
     };
+
+    useEffect(() => {
+        console.log("hidden,", hiddenCards);
+    }, [hiddenCards])
+
     return (
         <>
             <Head>
@@ -204,27 +209,31 @@ export default function StudentTablet1() {
                     <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
+
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
+                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
+
                 {currentScreen === "indice3" && (
                     <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={true} frameText={"Indice 3"}/>
                 )}
+
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                     />
                 )}
+
                 {currentScreen === "turnByTurn2" && (
                     <TurnByTurn2
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                         hiddenCards={hiddenCards}
                         currentIndex={currentIndex}
@@ -234,7 +243,7 @@ export default function StudentTablet1() {
                     <TurnByTurn3
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                         hiddenCards={hiddenCards}
                         currentIndex={currentIndex}
