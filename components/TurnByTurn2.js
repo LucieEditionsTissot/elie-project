@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Frame from "./Frame";
 
-function TurnByTurn({ socket, data, client, groupName }) {
+function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentIndex }) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
     const [dataAnimals, setData] = useState([]);
@@ -10,6 +10,7 @@ function TurnByTurn({ socket, data, client, groupName }) {
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [isValueSubmit, setIsValueSubmit] = useState(false);
     const [currentGameIndex, setCurrentGameIndex] = useState(0);
+    const hiddenCardsRef = useRef(hiddenCards);
 
     useEffect(() => {
         setData(data);
@@ -21,8 +22,24 @@ function TurnByTurn({ socket, data, client, groupName }) {
             setCorrectAnswer(animalData[groupName]["answer"]);
         }
         const el = document.querySelector("#step");
-        el.innerHTML = "Indice 2";
+        el.innerHTML = "Indice 3";
     }, [data]);
+
+    useEffect(() => {
+        hiddenCardsRef.current = hiddenCards;
+    }, [hiddenCards]);
+
+    useEffect(() => {
+        if (currentIndex > 0) {
+            const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
+            hiddenCardsRef.current.forEach((cardId) => {
+                const cardElement = hiddenCardsElements[cardId];
+                if (cardElement) {
+                    cardElement.classList.add("hidden");
+                }
+            });
+        }
+    }, [currentIndex]);
 
     function handleFlipCard(e) {
         const element = e.target.closest(".animal");
@@ -30,12 +47,8 @@ function TurnByTurn({ socket, data, client, groupName }) {
         let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
         if (!isValueSubmit) {
-            if (allHiddenCards.length < maxNumberOfCard) {
+            if (allHiddenCards.length < maxNumberOfCard || element.classList.contains("hidden")) {
                 element.classList.toggle("hidden");
-            } else {
-                if (element.classList.contains("hidden")) {
-                    element.classList.remove("hidden");
-                }
             }
         }
     }
@@ -44,27 +57,18 @@ function TurnByTurn({ socket, data, client, groupName }) {
         const nextGameIndex = currentGameIndex + 1;
         setCurrentGameIndex(nextGameIndex);
 
-        const hiddenCards = Array.from(
-            document.querySelectorAll(".animal.hidden")
-        ).map((card) => card.id);
-
-        if (nextGameIndex === 1) {
-            socket.emit("introIndice2");
-            socket.emit("startAudioClient");
-            socket.emit("updateHiddenCards", hiddenCards);
-            socket.emit("updateGameIndex", nextGameIndex);
-        }
-
         if (nextGameIndex === 2) {
-            socket.emit("updateHiddenCards", hiddenCards);
-            socket.emit("updateGameIndex", nextGameIndex);
+            console.log("hi");
             socket.emit("introIndice3");
             socket.emit("stopAudioClient");
         }
 
-        if (nextGameIndex === 3) {
-            const el = document.querySelector("#step");
-            el.innerHTML = "Suivant";
+        if (nextGameIndex >= 1) {
+            const updatedData = {
+                hiddenCards: Array.from(document.querySelectorAll(".animal.hidden")).map((card) => card.id),
+                currentIndex: nextGameIndex,
+            };
+            socket.emit("updateGameData", updatedData);
         }
 
         setStateOfTheGame([...stateOfTheGame]);
@@ -94,7 +98,7 @@ function TurnByTurn({ socket, data, client, groupName }) {
                             <div
                                 key={index}
                                 id={index}
-                                className="animal"
+                                className={`animal ${hiddenCards.includes(index.toString()) ? "hidden" : ""}`}
                                 onClick={(e) => handleFlipCard(e)}
                             >
                                 <p>{animal.name}</p>
@@ -106,5 +110,5 @@ function TurnByTurn({ socket, data, client, groupName }) {
     );
 }
 
-export default TurnByTurn;
+export default TurnByTurn2;
 

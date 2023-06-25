@@ -311,7 +311,7 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "getCurrentGameData");
         console.log(gameData.dataTurn);
         console.log(socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex));
-        socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex);
+        io.emit("gameDataUpdated", gameData);
     });
 
     socket.on("introIndice2", () => {

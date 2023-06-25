@@ -16,6 +16,7 @@ import Introduce from "../components/Introduce";
 import {io} from "socket.io-client";
 import Interaction from "../components/Interaction";
 import Question from "../components/Question";
+import TurnByTurn2 from "../components/TurnByTurn2";
 
 export default function StudentTablet2() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -108,10 +109,10 @@ export default function StudentTablet2() {
             });
             setCurrentScreen("turnByTurn");
         });
-        socketClient2.on("gameDataUpdated", (updatedData, hiddenCards, currentIndex) => {
+        socketClient2.on("gameDataUpdated", (updatedData) => {
             console.log("game data is: ", updatedData);
-            setHiddenCards(hiddenCards);
-            setCurrentIndex(currentIndex);
+            setHiddenCards(updatedData.hiddenCards);
+            setCurrentIndex(updatedData.currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
                 return { ...prevData, ...updatedData };
@@ -237,13 +238,20 @@ export default function StudentTablet2() {
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient2Ref.current}
-                        data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
+                        data={turnByTurnData}
+                        client={2}
+                        groupName={"teamGroupTwo"}
                     />
                 )}
+
                 {currentScreen === "turnByTurn2" && (
-                    <TurnByTurn
+                    <TurnByTurn2
                         socket={socketClient2Ref.current}
-                        data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
+                        data={turnByTurnData}
+                        client={2}
+                        groupName={"teamGroupTwo"}
+                        hiddenCards={hiddenCards}
+                        currentIndex={currentIndex}
                     />
                 )}
 

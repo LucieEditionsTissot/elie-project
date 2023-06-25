@@ -13,6 +13,7 @@ import AudioPlayer from "../components/AudioPlayer";
 import {url} from "./_app";
 import Interaction from "../components/Interaction";
 import Question from "../components/Question";
+import TurnByTurn2 from "../components/TurnByTurn2";
 
 export default function StudentTablet1() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -95,10 +96,10 @@ export default function StudentTablet1() {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
-        socketClient1.on("gameDataUpdated", (updatedData, hiddenCards, currentIndex) => {
+        socketClient1.on("gameDataUpdated", (updatedData) => {
             console.log("game data is: ", updatedData);
-            setHiddenCards(hiddenCards);
-            setCurrentIndex(currentIndex);
+            setHiddenCards(updatedData.hiddenCards);
+            setCurrentIndex(updatedData.currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
                 return { ...prevData, ...updatedData };
@@ -205,15 +206,22 @@ export default function StudentTablet1() {
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
-                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
+                        data={turnByTurnData}
+                        client={1}
+                        groupName={"teamGroupOne"}
                     />
                 )}
                 {currentScreen === "turnByTurn2" && (
-                    <TurnByTurn
+                    <TurnByTurn2
                         socket={socketClient1Ref.current}
-                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
+                        data={turnByTurnData}
+                        client={1}
+                        groupName={"teamGroupOne"}
+                        hiddenCards={hiddenCards}
+                        currentIndex={currentIndex}
                     />
                 )}
+
 
                 {currentScreen === "showInteractions" && (
                     <ShowInteractions data={interactionsData}/>
