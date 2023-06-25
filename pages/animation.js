@@ -210,7 +210,10 @@ const Client3 = () => {
         else if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
                 socketClient3Ref.current.emit("getCurrentGameData");
                 setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        } else {
+        }  else if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
+            socketClient3Ref.current.emit("getCurrentGameDataLastTime");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }  else {
             if (currentVideo) {
                 currentVideo.play();
                 currentVideo.loop = true;
@@ -290,6 +293,7 @@ console.log(scenarios[currentScenarioToPlay].videos)
     return (
         <>
             <div>
+                <AudioPlayer src="audio/SonsAmbiance.mp3"/>
 
                 {scenarios[currentScenarioToPlay].audios &&
                     audioLoaded &&

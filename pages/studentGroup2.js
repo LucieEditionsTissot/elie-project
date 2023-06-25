@@ -16,6 +16,8 @@ import Introduce from "../components/Introduce";
 import {io} from "socket.io-client";
 import Interaction from "../components/Interaction";
 import Question from "../components/Question";
+import TurnByTurn2 from "../components/TurnByTurn2";
+import TurnByTurn3 from "../components/TurnByTurn3";
 
 export default function StudentTablet2() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -102,21 +104,28 @@ export default function StudentTablet2() {
             setAudioScenario(false);
         });
         socketClient2.on("startGame", (data) => {
-            setTurnByTurnData((prevData) => {
-                console.log(data);
-                return { ...prevData, ...data };
-            });
+            setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
-        socketClient2.on("gameDataUpdated", (updatedData, hiddenCards, currentIndex) => {
+        socketClient2.on("gameDataUpdated", (updatedData) => {
             console.log("game data is: ", updatedData);
-            setHiddenCards(hiddenCards);
-            setCurrentIndex(currentIndex);
+            setHiddenCards(updatedData.hiddenCards);
+            setCurrentIndex(updatedData.currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
                 return { ...prevData, ...updatedData };
             });
             setCurrentScreen("turnByTurn2");
+        });
+        socketClient2.on("gameDataUpdatedLastTime", (updatedData) => {
+            console.log("game data is: ", updatedData);
+            setHiddenCards(updatedData.hiddenCards);
+            setCurrentIndex(updatedData.currentIndex);
+            setTurnByTurnData((prevData) => {
+                console.log(updatedData);
+                return { ...prevData, ...updatedData };
+            });
+            setCurrentScreen("turnByTurn3");
         });
 
         socketClient2.on("showInteractions", (data) => {
@@ -237,16 +246,32 @@ export default function StudentTablet2() {
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient2Ref.current}
-                        data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
-                    />
-                )}
-                {currentScreen === "turnByTurn2" && (
-                    <TurnByTurn
-                        socket={socketClient2Ref.current}
-                        data={turnByTurnData} client={2} groupName={"teamGroupTwo"}
+                        data={turnByTurnData}
+                        client={2}
+                        groupName={"teamGroupTwo"}
                     />
                 )}
 
+                {currentScreen === "turnByTurn2" && (
+                    <TurnByTurn2
+                        socket={socketClient2Ref.current}
+                        data={turnByTurnData}
+                        client={2}
+                        groupName={"teamGroupTwo"}
+                        hiddenCards={hiddenCards}
+                        currentIndex={currentIndex}
+                    />
+                )}
+                {currentScreen === "turnByTurn3" && (
+                    <TurnByTurn3
+                        socket={socketClient2Ref.current}
+                        data={turnByTurnData}
+                        client={2}
+                        groupName={"teamGroupTwo"}
+                        hiddenCards={hiddenCards}
+                        currentIndex={currentIndex}
+                    />
+                )}
                 {currentScreen === "showInteractions" && (
                     <ShowInteractions data={interactionsData}/>
                 )}

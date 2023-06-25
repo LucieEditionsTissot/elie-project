@@ -13,6 +13,8 @@ import AudioPlayer from "../components/AudioPlayer";
 import {url} from "./_app";
 import Interaction from "../components/Interaction";
 import Question from "../components/Question";
+import TurnByTurn2 from "../components/TurnByTurn2";
+import TurnByTurn3 from "../components/TurnByTurn3";
 
 export default function StudentTablet1() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -91,21 +93,29 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("startGame", (data) => {
-            console.log("game data is: ", data);
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
         });
-        socketClient1.on("gameDataUpdated", (updatedData, hiddenCards, currentIndex) => {
+        socketClient1.on("gameDataUpdated", (updatedData) => {
             console.log("game data is: ", updatedData);
-            setHiddenCards(hiddenCards);
-            setCurrentIndex(currentIndex);
+            setHiddenCards(updatedData.hiddenCards);
+            setCurrentIndex(updatedData.currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
                 return { ...prevData, ...updatedData };
             });
             setCurrentScreen("turnByTurn2");
         });
-
+        socketClient1.on("gameDataUpdatedLastTime", (updatedData) => {
+            console.log("game data is: ", updatedData);
+            setHiddenCards(updatedData.hiddenCards);
+            setCurrentIndex(updatedData.currentIndex);
+            setTurnByTurnData((prevData) => {
+                console.log(updatedData);
+                return { ...prevData, ...updatedData };
+            });
+            setCurrentScreen("turnByTurn3");
+        });
         socketClient1.on("showInteractions", (data) => {
             setInteractionsData(data);
             setCurrentScreen("showInteractions");
@@ -205,15 +215,32 @@ export default function StudentTablet1() {
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
-                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
+                        data={turnByTurnData}
+                        client={1}
+                        groupName={"teamGroupOne"}
                     />
                 )}
                 {currentScreen === "turnByTurn2" && (
-                    <TurnByTurn
+                    <TurnByTurn2
                         socket={socketClient1Ref.current}
-                        data={turnByTurnData} client={1} groupName={"teamGroupOne"}
+                        data={turnByTurnData}
+                        client={1}
+                        groupName={"teamGroupOne"}
+                        hiddenCards={hiddenCards}
+                        currentIndex={currentIndex}
                     />
                 )}
+                {currentScreen === "turnByTurn3" && (
+                    <TurnByTurn3
+                        socket={socketClient1Ref.current}
+                        data={turnByTurnData}
+                        client={1}
+                        groupName={"teamGroupOne"}
+                        hiddenCards={hiddenCards}
+                        currentIndex={currentIndex}
+                    />
+                )}
+
 
                 {currentScreen === "showInteractions" && (
                     <ShowInteractions data={interactionsData}/>

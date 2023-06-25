@@ -304,6 +304,16 @@ io.on("connection", (socket) => {
         console.log("Hidden cards:", hiddenCards);
         gameData.hiddenCards = hiddenCards;
     });
+
+    socket.on("updateGameIndex2", (nextGameIndex) => {
+        console.log("Next game index:", nextGameIndex);
+        gameData.nextGameIndex = nextGameIndex;
+    });
+
+    socket.on("updateHiddenCards2", (hiddenCards) => {
+        console.log("Hidden cards:", hiddenCards);
+        gameData.hiddenCards = hiddenCards;
+    });
     socket.on("getCurrentGameData", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
@@ -311,9 +321,17 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "getCurrentGameData");
         console.log(gameData.dataTurn);
         console.log(socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex));
-        socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex);
+        io.emit("gameDataUpdated", gameData);
     });
-
+    socket.on("getCurrentGameDataLastTime", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "getCurrentGameDataLastTime");
+        stateManager.updateClientState(client2SocketId, "getCurrentGameDataLastTime");
+        console.log(gameData.dataTurn);
+        console.log(socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex));
+        io.emit("gameDataUpdatedLastTime", gameData);
+    });
     socket.on("introIndice2", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);

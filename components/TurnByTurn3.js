@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Frame from "./Frame";
 
-function TurnByTurn({ socket, data, client, groupName }) {
+function TurnByTurn3({ socket, data, client, groupName, hiddenCards, currentIndex }) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
     const [dataAnimals, setData] = useState([]);
@@ -10,6 +10,7 @@ function TurnByTurn({ socket, data, client, groupName }) {
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [isValueSubmit, setIsValueSubmit] = useState(false);
     const [currentGameIndex, setCurrentGameIndex] = useState(0);
+    const hiddenCardsRef = useRef(hiddenCards);
 
     useEffect(() => {
         setData(data);
@@ -21,21 +22,32 @@ function TurnByTurn({ socket, data, client, groupName }) {
             setCorrectAnswer(animalData[groupName]["answer"]);
         }
         const el = document.querySelector("#step");
-        el.innerHTML = "Indice 2";
+        el.innerHTML = "Suivant";
     }, [data]);
+
+    useEffect(() => {
+        hiddenCardsRef.current = hiddenCards;
+    }, [hiddenCards]);
+
+    useEffect(() => {
+        if (currentIndex > 0) {
+            const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
+            hiddenCardsRef.current.forEach((cardId) => {
+                const cardElement = hiddenCardsElements[cardId];
+                if (cardElement) {
+                    cardElement.classList.add("hidden");
+                }
+            });
+        }
+    }, [currentIndex]);
 
     function handleFlipCard(e) {
         const element = e.target.closest(".animal");
         const allCards = document.querySelectorAll(".animal");
-        let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
         if (!isValueSubmit) {
-            if (allHiddenCards.length < maxNumberOfCard) {
+            if (!element.classList.contains("hidden") || allCards.length < maxNumberOfCard) {
                 element.classList.toggle("hidden");
-            } else {
-                if (element.classList.contains("hidden")) {
-                    element.classList.remove("hidden");
-                }
             }
         }
     }
@@ -43,21 +55,17 @@ function TurnByTurn({ socket, data, client, groupName }) {
     function handleClickOnNextButton() {
         const nextGameIndex = currentGameIndex + 1;
         setCurrentGameIndex(nextGameIndex);
+            socket.emit("animalChosen");
 
-        const hiddenCards = Array.from(
-            document.querySelectorAll(".animal.hidden")
-        ).map((card) => card.id);
-
-
-            socket.emit("introIndice2");
-            socket.emit("startAudioClient");
-            socket.emit("updateHiddenCards", hiddenCards);
-            socket.emit("updateGameIndex", nextGameIndex);
-
+        const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
+        hiddenCardsElements.forEach((cardElement, index) => {
+            if (cardElement.classList.contains("hidden") && !hiddenCardsRef.current.includes(index.toString())) {
+                hiddenCardsRef.current.push(index.toString());
+            }
+        });
 
         setStateOfTheGame([...stateOfTheGame]);
     }
-
     return (
         <section id="turnByTurn">
             <Frame color={"green"} crop={false} text={randomTheme} />
@@ -82,7 +90,7 @@ function TurnByTurn({ socket, data, client, groupName }) {
                             <div
                                 key={index}
                                 id={index}
-                                className="animal"
+                                className={`animal ${hiddenCards.includes(index.toString()) ? "hidden" : ""}`}
                                 onClick={(e) => handleFlipCard(e)}
                             >
                                 <p>{animal.name}</p>
@@ -94,5 +102,4 @@ function TurnByTurn({ socket, data, client, groupName }) {
     );
 }
 
-export default TurnByTurn;
-
+export default TurnByTurn3;
