@@ -18,6 +18,7 @@ import Interaction from "../components/Interaction";
 import Question from "../components/Question";
 import TurnByTurn2 from "../components/TurnByTurn2";
 import TurnByTurn3 from "../components/TurnByTurn3";
+import Answer from "../components/Answer";
 
 export default function StudentTablet2() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -134,9 +135,8 @@ export default function StudentTablet2() {
             setCurrentScreen("turnByTurn3");
         });
 
-        socketClient2.on("showInteractions", (data) => {
-            setInteractionsData(data);
-            setCurrentScreen("showInteractions");
+        socketClient2.on("answer", () => {
+            setCurrentScreen("answer");
         });
 
         socketClient2.on("interactionExplained", (data) => {
@@ -164,10 +164,13 @@ export default function StudentTablet2() {
 
             setCurrentAudio(audioElement);
         });
+
         return () => {
             socketClient2.disconnect();
         };
-    }, [rulesButtonClicked]);
+
+    }, []);
+
     const handleAddTeam = (teamIndex) => {
         setTeamSelected(teamIndex)
         socketClient2Ref.current.emit("addTeam", teamIndex);
@@ -179,14 +182,6 @@ export default function StudentTablet2() {
     const handleStartButtonClick = () => {
         socketClient2Ref.current.emit("wantsToStartExperience");
     };
-    const handleRulesButtonClick = () => {
-        socketClient2Ref.current.emit("rules");
-    };
-
-    useEffect(() => {
-        console.log("hidden,", hiddenCards);
-    }, [hiddenCards])
-
 
     return (
         <>
@@ -282,8 +277,9 @@ export default function StudentTablet2() {
                         currentIndex={currentIndex}
                     />
                 )}
-                {currentScreen === "showInteractions" && (
-                    <ShowInteractions data={interactionsData}/>
+
+                {currentScreen === "answer" && (
+                    <Answer/>
                 )}
 
                 {currentScreen === "understandInteraction" && (

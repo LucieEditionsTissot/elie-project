@@ -344,22 +344,27 @@ io.on("connection", (socket) => {
             io.emit("setIndice3Screen");
         }
     });
+
     socket.on("startAudioClient", () => {
         if (client1State === "introIndice2" && client2State === "introIndice2") {
             io.emit("audioIndice");
         }
     })
+
     socket.on("stopAudioClient", () => {
         if (client1State === "introIndice3" && client2State === "introIndice3") {
             io.emit("stopAudioIndice");
         }
     });
+
     // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
-        animalChosenValue = animalChosen;
-        numberOfChosenAnimals++;
-        if (numberOfChosenAnimals >= 2) {
-            io.emit("showInteractions", animals[randomTheme]);
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "answer");
+        stateManager.updateClientState(client2SocketId, "answer");
+        if (client1State === "answer" && client2State === "answer") {
+            io.emit("answer");
         }
     });
 
