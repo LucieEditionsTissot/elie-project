@@ -1,12 +1,22 @@
 import React, {useEffect, useState} from "react";
 import Frame from "./Frame";
 import config from "../config";
+import socket from "socket.io-client";
 
-function Question() {
+function Question({socket, answerSelected, onAnswerSelected, client}) {
 
     const questions = ["Les animaux se mangent entre eux", "Les animaux se protègent les uns des autres", "Les animaux s'entraident pour se nourrir"]
     const [questionSelected, setQuestionSelected] = useState(null)
-
+    useEffect(() => {
+        if (socket) {
+            socket.on("answerChosen", function (index) {
+                const answerSelectedByAnotherTeam = document.querySelector("#teams .card[id='" + index + "']")
+                if (answerSelectedByAnotherTeam) {
+                    answerSelectedByAnotherTeam.classList.add('is-active');
+                }
+            });
+        }
+    }, []);
     function handleClickOnQuestion(e) {
         const question = e.target.closest('.question')
         const allQuestions = document.querySelectorAll('#question .question')

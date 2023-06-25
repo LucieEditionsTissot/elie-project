@@ -27,6 +27,11 @@ const Client3 = () => {
         'video/indices/indice1/LC_B_anim_indice_01.mp4',
         'video/indices/indice2/LC_B_anim_indice_02.mp4',
         "audio/Indice_02.mp3",
+        'audio/Indice_03.mp3',
+        'video/indices/indice3/LC_B_anim_indice_03.mp4',
+        'video/Interaction_Intro.mp4',
+        'video/Interaction_Anim.mp4'
+
     ];
 
     function preloadMedia(files) {
@@ -90,22 +95,18 @@ const Client3 = () => {
     };
 
     const scenario11 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ["video/Anim_Ambiance.mp4"]
     };
 
     const scenario12 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/Interaction_Intro.mp4'],
     };
 
     const scenario13 = {
-        audios: ['audio/Indice_01.mp3'],
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/Interaction_Anim.mp4'],
     };
 
     const scenario14 = {
-        audios: ['audio/Indice_01.mp3'],
         videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
 
@@ -162,6 +163,12 @@ const Client3 = () => {
         socketClient3.on("setIndice3Screen", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
+        socketClient3.on("showInteractions", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        })
+        socketClient3.on("interactionExplained", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        })
 
         socketClient3.on("scenarioDone", () => {
             setIsScenarioDone(true);
@@ -213,10 +220,13 @@ const Client3 = () => {
         }  else if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
             socketClient3Ref.current.emit("getCurrentGameDataLastTime");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        }  else {
-            if (currentVideo) {
+        } else if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
+            socketClient3Ref.current.emit("animationIsDoneAskQuestion")
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        } else {
+            if(currentVideo) {
+             currentVideo.loop = true;
                 currentVideo.play();
-                currentVideo.loop = true;
             }
         }
     };
