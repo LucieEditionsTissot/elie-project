@@ -44,10 +44,9 @@ function TurnByTurn3({ socket, data, client, groupName, hiddenCards, currentInde
     function handleFlipCard(e) {
         const element = e.target.closest(".animal");
         const allCards = document.querySelectorAll(".animal");
-        let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
         if (!isValueSubmit) {
-            if (allHiddenCards.length < maxNumberOfCard || element.classList.contains("hidden")) {
+            if (!element.classList.contains("hidden") || allCards.length < maxNumberOfCard) {
                 element.classList.toggle("hidden");
             }
         }
@@ -58,17 +57,15 @@ function TurnByTurn3({ socket, data, client, groupName, hiddenCards, currentInde
         setCurrentGameIndex(nextGameIndex);
             socket.emit("animalChosen");
 
-        if (nextGameIndex >= 1) {
-            const updatedData = {
-                hiddenCards: Array.from(document.querySelectorAll(".animal.hidden")).map((card) => card.id),
-                currentIndex: nextGameIndex,
-            };
-            socket.emit("updateGameData", updatedData);
-        }
+        const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
+        hiddenCardsElements.forEach((cardElement, index) => {
+            if (cardElement.classList.contains("hidden") && !hiddenCardsRef.current.includes(index.toString())) {
+                hiddenCardsRef.current.push(index.toString());
+            }
+        });
 
         setStateOfTheGame([...stateOfTheGame]);
     }
-
     return (
         <section id="turnByTurn">
             <Frame color={"green"} crop={false} text={randomTheme} />

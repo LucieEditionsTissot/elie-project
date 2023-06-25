@@ -56,10 +56,21 @@ function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentInde
         const nextGameIndex = currentGameIndex + 1;
         setCurrentGameIndex(nextGameIndex);
 
-            socket.emit("introIndice3");
-            socket.emit("stopAudioClient");
-            socket.emit("updateHiddenCards", hiddenCards);
-            socket.emit("updateGameIndex", nextGameIndex);
+        console.log("hi");
+        socket.emit("introIndice3");
+        socket.emit("stopAudioClient");
+
+
+        const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
+        hiddenCardsElements.forEach((cardElement, index) => {
+            if (cardElement.classList.contains("hidden") && !hiddenCardsRef.current.includes(index.toString())) {
+                hiddenCardsRef.current.push(index.toString());
+            }
+        });
+
+        socket.emit("updateHiddenCards2", hiddenCardsRef.current);
+        socket.emit("updateGameIndex2", nextGameIndex);
+
         if (nextGameIndex >= 1) {
             const updatedData = {
                 hiddenCards: Array.from(document.querySelectorAll(".animal")).reduce((hiddenCards, card) => {
@@ -113,6 +124,3 @@ function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentInde
 }
 
 export default TurnByTurn2;
-
-
-

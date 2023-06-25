@@ -304,6 +304,16 @@ io.on("connection", (socket) => {
         console.log("Hidden cards:", hiddenCards);
         gameData.hiddenCards = hiddenCards;
     });
+
+    socket.on("updateGameIndex2", (nextGameIndex) => {
+        console.log("Next game index:", nextGameIndex);
+        gameData.nextGameIndex = nextGameIndex;
+    });
+
+    socket.on("updateHiddenCards2", (hiddenCards) => {
+        console.log("Hidden cards:", hiddenCards);
+        gameData.hiddenCards = hiddenCards;
+    });
     socket.on("getCurrentGameData", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
