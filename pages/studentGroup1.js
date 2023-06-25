@@ -124,6 +124,7 @@ export default function StudentTablet1() {
             });
             setCurrentScreen("turnByTurn3");
         });
+
         socketClient1.on("showInteractions", (data) => {
             setShowAnswer(data);
             setCurrentScreen("showInteractions");
@@ -253,7 +254,7 @@ export default function StudentTablet1() {
 
 
                 {currentScreen === "showInteractions" && (
-                    <Answer socket={socketClient1Ref.current} animalChosen={showAnswer}/>
+                    <Answer socket={socketClient1Ref.current} animalChosen={showAnswer} client={"one"}/>
                 )}
 
                 {currentScreen === "understandInteraction" && (

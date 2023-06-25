@@ -40,43 +40,53 @@ const animals = {
             "animals": [
                 {
                     "name": "Biche",
-                    "icon": "biche.svg"
+                    "icon": "biche.svg",
+                    "fullName" : "La biche"
                 },
                 {
                     "name": "Truite",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "L'ours"
                 },
                 {
                     "name": "Renard",
-                    "icon": "renard.svg"
+                    "icon": "renard.svg",
+                    "fullName" : "Le renard"
                 },
                 {
                     "name": "Salamandre",
-                    "icon": "salamandre.svg"
+                    "icon": "salamandre.svg",
+                    "fullName" : "La salamandre"
                 },
                 {
                     "name": "Marmotte",
-                    "icon": "marmotte.svg"
+                    "icon": "marmotte.svg",
+                    "fullName" : "La marmotte"
                 },
                 {
                     "name": "Cerf",
-                    "icon": "cerf.svg"
+                    "icon": "cerf.svg",
+                    "fullName" : "Le cerf"
                 },
                 {
                     "name": "Crapaud",
-                    "icon": "crapaud.svg"
+                    "icon": "crapaud.svg",
+                    "fullName" : "Le crapaud"
                 },
                 {
                     "name": "Loup",
-                    "icon": "loup.svg"
+                    "icon": "loup.svg",
+                    "fullName" : "Le loup"
                 },
                 {
                     "name": "Lapin",
-                    "icon": "lapin.svg"
+                    "icon": "lapin.svg",
+                    "fullName" : "Le lapin"
                 },
                 {
                     "name": "Aigle",
-                    "icon": "aigle.svg"
+                    "icon": "aigle.svg",
+                    "fullName" : "L'aigle"
                 }
             ],
             "answer": 7
@@ -85,43 +95,53 @@ const animals = {
             "animals": [
                 {
                     "name": "Lézard",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "Le lézard"
                 },
                 {
                     "name": "Biche",
-                    "icon": "biche.svg"
+                    "icon": "biche.svg",
+                    "fullName" : "La biche"
                 },
                 {
                     "name": "Hibou",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "Le hibou"
                 },
                 {
                     "name": "Papillon",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "Le papillon"
                 },
                 {
                     "name": "Corbeau",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "Le corbeau"
                 },
                 {
                     "name": "Coccinelle",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "La coccinelle"
                 },
                 {
                     "name": "Faucon",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "Le faucon"
                 },
                 {
                     "name": "Chouette",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "La chouette"
                 },
                 {
                     "name": "Rat",
-                    "icon": "ours.svg"
+                    "icon": "ours.svg",
+                    "fullName" : "Le rat"
                 },
                 {
                     "name": "Loup",
-                    "icon": "loup.svg"
+                    "icon": "loup.svg",
+                    "fullName" : "Le loup"
                 }
             ],
             "answer": 4
@@ -171,6 +191,7 @@ let client1State;
 let client2State;
 let client3State;
 let gameData = {};
+let animalsChosenData = {"one": null, "two": null};
 io.on("connection", (socket) => {
     stateManager.updateClientState(socket.id, "connected");
     let userId;
@@ -312,19 +333,17 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "getCurrentGameData");
         stateManager.updateClientState(client2SocketId, "getCurrentGameData");
-        console.log(gameData.dataTurn);
-        console.log(socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex));
         io.emit("gameDataUpdated", gameData);
     });
+
     socket.on("getCurrentGameDataLastTime", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "getCurrentGameDataLastTime");
         stateManager.updateClientState(client2SocketId, "getCurrentGameDataLastTime");
-        console.log(gameData.dataTurn);
-        console.log(socket.emit("gameDataUpdated", gameData.dataTurn, gameData.hiddenCards, gameData.nextGameIndex));
         io.emit("gameDataUpdatedLastTime", gameData);
     });
+
     socket.on("introIndice2", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
@@ -359,12 +378,18 @@ io.on("connection", (socket) => {
 
     // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
+        if (animalChosen[0] === "one") {
+            animalsChosenData.one = [animalChosen[1], animalChosen[2]];
+        }
+        if (animalChosen[0] === "two") {
+            animalsChosenData.two = [animalChosen[1], animalChosen[2]];
+        }
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animalChosen");
         stateManager.updateClientState(client2SocketId, "animalChosen");
         if (client1State === "animalChosen" && client2State === "animalChosen") {
-            io.emit("showInteractions", (animalChosen));
+            io.emit("showInteractions", (animalsChosenData));
         }
     });
 

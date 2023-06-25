@@ -2,14 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import Frame from "./Frame";
 import config from "../config";
 
-function Answer({socket, animalName, isCorrect }) {
+function Answer({socket, client, animalChosen }) {
+
     useEffect(() => {
         const bottomPart = document.querySelector("#answer .bottom-part");
         setTimeout(() => {
             bottomPart.classList.add("is-active");
             setTimeout(() => {
                 socket.emit("undestrandInteraction");
-            }, 10000);
+            }, 5000);
         }, 3000);
     }, []);
 
@@ -21,7 +22,7 @@ function Answer({socket, animalName, isCorrect }) {
                 <div className="top-part">
                     <div className="left-part">
                         <h3>
-                            <span>{animalName}</span>
+                            <span>{animalChosen[client][0]["fullName"]}</span>
                         </h3>
                         <h3>est-ce l'espèce qui correspond ?</h3>
                     </div>
@@ -29,14 +30,17 @@ function Answer({socket, animalName, isCorrect }) {
 
                 <div className="bottom-part answer">
                     <div className="animal">
-                        {/* Afficher les autres informations de l'animal si nécessaire */}
-                        {isCorrect && (
-                            <img
-                                src={"images/good-answer.svg"}
-                                alt="Good answer icon"
-                                className="icon"
-                            />
-                        )}
+
+                        <img src={"images/animals/" + animalChosen[client][0]["icon"]} alt="animal icon"/>
+
+                        <p>{animalChosen[client][0]["name"]}</p>
+
+                        {animalChosen[client][1] === true ?
+                            <img src={"images/good-answer.svg"} alt="Good answer icon" className="icon"/>
+                            :
+                            <img src={"images/wrong-answer.svg"} alt="Bad answer icon" className="icon"/>
+                        }
+
                     </div>
                 </div>
             </div>

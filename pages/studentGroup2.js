@@ -194,7 +194,7 @@ export default function StudentTablet2() {
 
     return (
         <>
-            <Head><title>ELIE | Groupe 1</title>
+            <Head><title>ELIE | Groupe 2</title>
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
                 <meta name="application-name" content="MyApp"/>
@@ -248,7 +248,7 @@ export default function StudentTablet2() {
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"écoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
+                    <Interaction title={"Indice 2"} subTitle={"écoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
                 {currentScreen === "indice3" && (
@@ -287,7 +287,7 @@ export default function StudentTablet2() {
                     />
                 )}
                 {currentScreen === "showInteractions" && (
-                    <Answer socket={socketClient2Ref.current}  animalChosen={showAnswer}/>
+                    <Answer socket={socketClient2Ref.current}  animalChosen={showAnswer} client={"two"}/>
                 )}
 
                 {currentScreen === "understandInteraction" && (
