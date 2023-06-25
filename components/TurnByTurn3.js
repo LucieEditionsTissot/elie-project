@@ -1,6 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import Frame from "./Frame";
 import Indicator from "./Indicator";
+import answer from "./Answer";
 
 function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex}) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
@@ -58,7 +59,14 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
         if (!buttonNext.classList.contains("disabled")) {
             const nextGameIndex = currentGameIndex + 1;
             setCurrentGameIndex(nextGameIndex);
-            socket.emit("animalChosen", );
+            const lastAnimalId = document.querySelector("#turnByTurn .animal:not(.hidden):not(.locked)").id;
+            let isCorrect = false
+            console.log("last id", lastAnimalId, correctAnswer)
+            if (correctAnswer === Number(lastAnimalId)) {
+                isCorrect = true
+            }
+            const data = [client, animals[lastAnimalId], isCorrect]
+            socket.emit("animalChosen", data);
 
             const hiddenCardsElements = Array.from(document.querySelectorAll(".animal"));
             hiddenCardsElements.forEach((cardElement, index) => {
