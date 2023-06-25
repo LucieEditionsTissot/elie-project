@@ -19,10 +19,12 @@ import Question from "../components/Question";
 import TurnByTurn2 from "../components/TurnByTurn2";
 import TurnByTurn3 from "../components/TurnByTurn3";
 import Answer from "../components/Answer";
+import answer from "../components/Answer";
 
 export default function StudentTablet2() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
+    const [answerSelected, setAnswerSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
     const [currentScreen, setCurrentScreen] = useState(null);
@@ -185,6 +187,9 @@ export default function StudentTablet2() {
     const handleRulesButtonClick = () => {
         socketClient2Ref.current.emit("rules");
     };
+    const handleAnswerQuestion = (answer) => {
+        socketClient2Ref.current.emit("answer", answer);
+    }
 
 
     return (
@@ -292,7 +297,7 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "question" && (
-                    <Question socket={socketClient2Ref.current}/>
+                    <Question socket={socketClient2Ref.current} answerSelected={answerSelected}  onAnswerSelected={handleAnswerQuestion} client={2}/>
                 )}
 
                 {currentScreen === "conclusion" && <Conclusion/>}

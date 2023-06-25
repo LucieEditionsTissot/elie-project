@@ -221,7 +221,7 @@ const Client3 = () => {
             socketClient3Ref.current.emit("getCurrentGameDataLastTime");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         } else if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
-            socketClient3Ref.current.emit("animationIsDoneAskQuestionIsDone")
+            socketClient3Ref.current.emit("animationIsDoneAskQuestion")
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         } else {
             if(currentVideo) {

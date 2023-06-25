@@ -389,9 +389,16 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animationIsDoneAskQuestion");
         stateManager.updateClientState(client2SocketId, "animationIsDoneAskQuestion");
-        io.emit('askQuestion', data)
+        io.emit('askQuestion', data);
     })
 
+    socket.on("animationQuestionAnswer", (data) => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "animationQuestionAnswer");
+        stateManager.updateClientState(client2SocketId, "animationQuestionAnswer");
+        socket.broadcast.emit("answerChosen", data)
+    })
     // ANIMATION IS ANSWERED  ////////////////////////
     socket.on("animationQuestionIsAnswered", (answerId) => {
         client1State = stateManager.getClientState(client1SocketId);
@@ -399,9 +406,26 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "animationQuestionIsAnswered");
         stateManager.updateClientState(client2SocketId, "animationQuestionIsAnswered");
         if (client1State === "animationQuestionIsAnswered" && client2State === "animationQuestionIsAnswered") {
-            io.emit("conclusion");
+            setTimeout(() => {
+                io.emit("conclusion");
+            }, 10000);
         }
-    })
+    });
+
+    socket.on("answer", (answer) => {
+        stateManager.addTeam(answer);
+
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "answersAdded");
+        stateManager.updateClientState(client2SocketId, "answersAdded");
+        io.emit("answersAdded", answer);
+        socket.broadcast.emit("answerChosen", answer);
+        if (client1State === "answer" && client2State === "answer") {
+            teamsAreDoneShowRules();
+        }
+
+    });
 
     function checkIfAnimationQuestionIsCorrect() {
         IdOfAnimationQuestionAnswered.map((answerId) => {

@@ -22,6 +22,7 @@ export default function StudentTablet1() {
     const [teamSelected, setTeamSelected] = useState(null);
     const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
+    const [answerSelected, setAnswerSelected] = useState(null);
     const [currentScreen, setCurrentScreen] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
     const [animationInProgress, setAnimationInProgress] = useState(false);
@@ -159,6 +160,9 @@ export default function StudentTablet1() {
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
     };
+    const handleAnswerQuestion = (answer) => {
+        socketClient1Ref.current.emit("answer", answer);
+    }
     return (
         <>
             <Head>
@@ -260,8 +264,9 @@ export default function StudentTablet1() {
 
 
                 {currentScreen === "question" && (
-                    <Question socket={socketClient1Ref.current}/>
+                    <Question socket={socketClient1Ref.current} answerSelected={answerSelected}  onAnswerSelected={handleAnswerQuestion} client={1}/>
                 )}
+
 
                 {currentScreen === "conclusion" && <Conclusion/>}
 
