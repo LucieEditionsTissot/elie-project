@@ -21,7 +21,7 @@ section {
 
   .template-wrapper {
     position: absolute;
-    padding: 7% 7% 4%;
+    padding: 7.7% 7% 4%;
     top: 0;
     left: 0;
     height: 100%;
@@ -231,4 +231,8 @@ img {
   user-focus: none;
   user-focus-pointer: none;
   -moz-user-select: none;
+}
+
+#animation {
+  background-color: black;
 }

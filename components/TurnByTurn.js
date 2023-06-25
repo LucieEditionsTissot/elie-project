@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Frame from "./Frame";
+import Indicator from "./Indicator";
 
 function TurnByTurn({ socket, data, client, groupName }) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
@@ -60,7 +61,7 @@ function TurnByTurn({ socket, data, client, groupName }) {
 
     return (
         <section id="turnByTurn">
-            <Frame color={"green"} crop={false} text={randomTheme} />
+            <Frame color={"green"} crop={true} text={randomTheme} />
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
@@ -79,17 +80,14 @@ function TurnByTurn({ socket, data, client, groupName }) {
                     {animals !== undefined &&
                         animals.length > 0 &&
                         animals.map((animal, index) => (
-                            <div
-                                key={index}
-                                id={index}
-                                className="animal"
-                                onClick={(e) => handleFlipCard(e)}
-                            >
+                            <div key={index} id={index} className={`animal ${hiddenCards.includes(index.toString()) ? "hidden" : ""}`} onClick={(e) => handleFlipCard(e)}>
+                                <img src={"images/animals/" + animal.icon} alt="Animal icon"/>
                                 <p>{animal.name}</p>
                             </div>
                         ))}
                 </div>
             </div>
+            <Indicator/>
         </section>
     );
 }

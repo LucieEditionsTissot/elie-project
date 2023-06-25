@@ -40,43 +40,43 @@ const animals = {
             "animals": [
                 {
                     "name": "Biche",
-                    "icon": ""
+                    "icon": "biche.svg"
                 },
                 {
                     "name": "Truite",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Renard",
-                    "icon": ""
+                    "icon": "renard.svg"
                 },
                 {
                     "name": "Salamandre",
-                    "icon": ""
+                    "icon": "salamandre.svg"
                 },
                 {
                     "name": "Marmotte",
-                    "icon": ""
+                    "icon": "marmotte.svg"
                 },
                 {
                     "name": "Cerf",
-                    "icon": ""
+                    "icon": "cerf.svg"
                 },
                 {
                     "name": "Crapaud",
-                    "icon": ""
+                    "icon": "crapaud.svg"
                 },
                 {
                     "name": "Loup",
-                    "icon": ""
+                    "icon": "loup.svg"
                 },
                 {
                     "name": "Lapin",
-                    "icon": ""
+                    "icon": "lapin.svg"
                 },
                 {
                     "name": "Aigle",
-                    "icon": ""
+                    "icon": "aigle.svg"
                 }
             ],
             "answer": 7
@@ -85,43 +85,43 @@ const animals = {
             "animals": [
                 {
                     "name": "Lézard",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Biche",
-                    "icon": ""
+                    "icon": "biche.svg"
                 },
                 {
                     "name": "Hibou",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Papillon",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Corbeau",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Coccinelle",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Faucon",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Chouette",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Rat",
-                    "icon": ""
+                    "icon": "ours.svg"
                 },
                 {
                     "name": "Loup",
-                    "icon": ""
+                    "icon": "loup.svg"
                 }
             ],
             "answer": 4
