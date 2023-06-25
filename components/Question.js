@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import Frame from "./Frame";
 import config from "../config";
+import socket from "socket.io-client";
 
-function Question() {
+function Question({socket}) {
 
     const questions = ["Les animaux se mangent entre eux", "Les animaux se protègent les uns des autres", "Les animaux s'entraident pour se nourrir"]
     const [questionSelected, setQuestionSelected] = useState(null)
@@ -28,6 +29,9 @@ function Question() {
             button.classList.add('disabled')
             setQuestionSelected(document.querySelector('#question .question.is-active').id)
         }
+        setTimeout(() => {
+        socket.emit("animationQuestionIsAnswered");
+    }, 10000);
     }
 
     useEffect(() => {

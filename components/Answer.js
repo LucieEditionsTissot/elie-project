@@ -2,11 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import Frame from "./Frame";
 import config from "../config";
 
-function Answer({ animalName, isCorrect }) {
+function Answer({socket, animalName, isCorrect }) {
     useEffect(() => {
         const bottomPart = document.querySelector("#answer .bottom-part");
         setTimeout(() => {
             bottomPart.classList.add("is-active");
+            setTimeout(() => {
+                socket.emit("undestrandInteraction");
+            }, 10000);
         }, 3000);
     }, []);
 

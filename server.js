@@ -377,24 +377,28 @@ io.on("connection", (socket) => {
     });
 
     socket.on("undestrandInteraction", () => {
-        numberOfButtonClicked++;
-        if (numberOfButtonClicked >= 2) {
-            io.to('client3').emit(interactions);
-            io.emit("interactionExplained", randomTheme);
-            setTimeout(() => {
-                io.emit('askQuestion', answersAnimation[randomTheme])
-            }, themeTimer);
-        }
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "undestrandInteraction");
+        stateManager.updateClientState(client2SocketId, "undestrandInteraction");
+            io.emit("interactionExplained");
     })
 
     socket.on("animationIsDoneAskQuestion", (data) => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "animationIsDoneAskQuestion");
+        stateManager.updateClientState(client2SocketId, "animationIsDoneAskQuestion");
         io.emit('askQuestion', data)
     })
 
     // ANIMATION IS ANSWERED  ////////////////////////
     socket.on("animationQuestionIsAnswered", (answerId) => {
-        numberOfAnimationQuestionAnswered++;
-        if (numberOfAnimationQuestionAnswered >= 2) {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "animationQuestionIsAnswered");
+        stateManager.updateClientState(client2SocketId, "animationQuestionIsAnswered");
+        if (client1State === "animationQuestionIsAnswered" && client2State === "animationQuestionIsAnswered") {
             io.emit("conclusion");
         }
     })

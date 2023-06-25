@@ -146,7 +146,7 @@ export default function StudentTablet2() {
 
         socketClient2.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
-            setCurrentScreen("animationQuestion");
+            setCurrentScreen("question");
         });
 
         socketClient2.on("conclusion", () => {
@@ -243,7 +243,7 @@ export default function StudentTablet2() {
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
+                    <Interaction title={"Indice 2"} subTitle={"écoutez dans les enceintes"} arrow={false} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
                 {currentScreen === "indice3" && (
@@ -287,15 +287,12 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "understandInteraction" && (
-                    <UnderstandInteraction themeSelected={themeSelected}/>
-                )}
-
-                {currentScreen === "animationQuestion" && (
-                    <AnimationQuestionScreen data={animationQuestionData}/>
+                    <Interaction title={"Mutualisme"} subTitle={" écoutez et regardez le plateau"} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
                 {currentScreen === "question" && (
-                    <Question/>
+                    <Question socket={socketClient2Ref.current}/>
                 )}
 
                 {currentScreen === "conclusion" && <Conclusion/>}

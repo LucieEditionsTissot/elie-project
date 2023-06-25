@@ -32,6 +32,7 @@ export default function StudentTablet1() {
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
     const [audioScenario, setAudioScenario] = useState(false);
     const [currentScenario, setCurrentScenario] = useState(null);
+    const [showAnswer, setShowAnswer] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
     const socketClient1Ref = useRef(null);
     const [hiddenCards, setHiddenCards] = useState([]);
@@ -134,7 +135,7 @@ export default function StudentTablet1() {
 
         socketClient1.on("askQuestion", (data) => {
             setAnimationQuestionData(data);
-            setCurrentScreen("animationQuestion");
+            setCurrentScreen("question");
         });
 
         socketClient1.on("conclusion", () => {
@@ -210,26 +211,22 @@ export default function StudentTablet1() {
                     <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
-
                 {currentScreen === "indice2" && (
                     <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
-
                 {currentScreen === "indice3" && (
                     <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={true} frameText={"Indice 3"}/>
                 )}
-
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={"one"}
+                        client={1}
                         groupName={"teamGroupOne"}
                     />
                 )}
-
                 {currentScreen === "turnByTurn2" && (
                     <TurnByTurn2
                         socket={socketClient1Ref.current}
@@ -257,15 +254,13 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "understandInteraction" && (
-                    <UnderstandInteraction themeSelected={themeSelected}/>
+                    <Interaction title={"Mutualisme"} subTitle={" écoutez et regardez le plateau"} arrow={true} arrowDown={false} eye={false}
+                                 volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
-                {currentScreen === "animationQuestion" && (
-                    <AnimationQuestionScreen data={animationQuestionData}/>
-                )}
 
                 {currentScreen === "question" && (
-                    <Question/>
+                    <Question socket={socketClient1Ref.current}/>
                 )}
 
                 {currentScreen === "conclusion" && <Conclusion/>}

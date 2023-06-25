@@ -6,7 +6,6 @@ const VideoPlayer = ({ src }) => {
     useEffect(() => {
         const video = videoRef.current;
         video.src = src;
-        video.loop= true;
         video.load();
         video.play();
 
@@ -15,7 +14,7 @@ const VideoPlayer = ({ src }) => {
         };
     }, [src]);
 
-    return <video ref={videoRef} controls={false} />;
+    return <video ref={videoRef} controls={false} className="w-full h-full object-cover" />;
 
 };
 
