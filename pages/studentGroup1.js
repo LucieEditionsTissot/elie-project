@@ -124,9 +124,9 @@ export default function StudentTablet1() {
             });
             setCurrentScreen("turnByTurn3");
         });
-
-        socketClient1.on("answer", () => {
-            setCurrentScreen("answer");
+        socketClient1.on("showInteractions", (data) => {
+            setShowAnswer(data);
+            setCurrentScreen("showInteractions");
         });
 
         socketClient1.on("interactionExplained", (data) => {
@@ -227,7 +227,7 @@ export default function StudentTablet1() {
                     <TurnByTurn
                         socket={socketClient1Ref.current}
                         data={turnByTurnData}
-                        client={1}
+                        client={"one"}
                         groupName={"teamGroupOne"}
                     />
                 )}
@@ -253,8 +253,8 @@ export default function StudentTablet1() {
                 )}
 
 
-                {currentScreen === "answer" && (
-                    <Answer/>
+                {currentScreen === "showInteractions" && (
+                    <Answer socket={socketClient1Ref.current} animalChosen={showAnswer}/>
                 )}
 
                 {currentScreen === "understandInteraction" && (
@@ -264,7 +264,7 @@ export default function StudentTablet1() {
 
 
                 {currentScreen === "question" && (
-                    <Question socket={socketClient1Ref.current} answerSelected={answerSelected}  onAnswerSelected={handleAnswerQuestion} client={1}/>
+                    <Question socket={socketClient1Ref.current} answerSelected={answerSelected}  onTeamSelected={handleAnswerQuestion} client={1}/>
                 )}
 
 

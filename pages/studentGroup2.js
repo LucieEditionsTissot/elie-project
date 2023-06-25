@@ -137,8 +137,9 @@ export default function StudentTablet2() {
             setCurrentScreen("turnByTurn3");
         });
 
-        socketClient2.on("answer", () => {
-            setCurrentScreen("answer");
+        socketClient2.on("showInteractions", (data) => {
+            setShowAnswer(data);
+            setCurrentScreen("showInteractions");
         });
 
         socketClient2.on("interactionExplained", (data) => {
@@ -286,9 +287,8 @@ export default function StudentTablet2() {
                         currentIndex={currentIndex}
                     />
                 )}
-
-                {currentScreen === "answer" && (
-                    <Answer/>
+                {currentScreen === "showInteractions" && (
+                    <Answer socket={socketClient2Ref.current}  animalChosen={showAnswer}/>
                 )}
 
                 {currentScreen === "understandInteraction" && (

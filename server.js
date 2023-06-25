@@ -340,9 +340,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice3");
         stateManager.updateClientState(client2SocketId, "introIndice3");
-        if (client1State === "introIndice3" && client2State === "introIndice3") {
             io.emit("setIndice3Screen");
-        }
     });
 
     socket.on("startAudioClient", () => {
@@ -359,30 +357,16 @@ io.on("connection", (socket) => {
 
     // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
-        const cardId = animalChosen.card;
-        const isCorrect = animalChosen.isCorrect;
-        console.log(animalChosen)
-        console.log(cardId);
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animalChosen");
         stateManager.updateClientState(client2SocketId, "animalChosen");
 
         if (client1State === "animalChosen" && client2State === "animalChosen") {
-            io.emit("showInteractions", {
-                animalName: animalChosen,
-                isCorrect: isCorrect,
-            });
+            io.emit("showInteractions", (animalChosen));
         }
     });
 
-    socket.on("undestrandInteraction", () => {
-        client1State = stateManager.getClientState(client1SocketId);
-        client2State = stateManager.getClientState(client2SocketId);
-        stateManager.updateClientState(client1SocketId, "undestrandInteraction");
-        stateManager.updateClientState(client2SocketId, "undestrandInteraction");
-            io.emit("interactionExplained");
-    })
 
     socket.on("animationIsDoneAskQuestion", (data) => {
         client1State = stateManager.getClientState(client1SocketId);
