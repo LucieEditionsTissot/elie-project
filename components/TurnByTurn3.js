@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Frame from "./Frame";
 
-function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentIndex }) {
+function TurnByTurn3({ socket, data, client, groupName, hiddenCards, currentIndex }) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
     const [maxNumberOfCard, setMaxNumberOfCard] = useState(3);
     const [dataAnimals, setData] = useState([]);
@@ -22,7 +22,7 @@ function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentInde
             setCorrectAnswer(animalData[groupName]["answer"]);
         }
         const el = document.querySelector("#step");
-        el.innerHTML = "Indice 3";
+        el.innerHTML = "Suivant";
     }, [data]);
 
     useEffect(() => {
@@ -44,9 +44,10 @@ function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentInde
     function handleFlipCard(e) {
         const element = e.target.closest(".animal");
         const allCards = document.querySelectorAll(".animal");
+        let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
         if (!isValueSubmit) {
-            if (!element.classList.contains("hidden") || allCards.length < maxNumberOfCard) {
+            if (allHiddenCards.length < maxNumberOfCard || element.classList.contains("hidden")) {
                 element.classList.toggle("hidden");
             }
         }
@@ -55,19 +56,11 @@ function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentInde
     function handleClickOnNextButton() {
         const nextGameIndex = currentGameIndex + 1;
         setCurrentGameIndex(nextGameIndex);
+            socket.emit("animalChosen");
 
-            socket.emit("introIndice3");
-            socket.emit("stopAudioClient");
-            socket.emit("updateHiddenCards", hiddenCards);
-            socket.emit("updateGameIndex", nextGameIndex);
         if (nextGameIndex >= 1) {
             const updatedData = {
-                hiddenCards: Array.from(document.querySelectorAll(".animal")).reduce((hiddenCards, card) => {
-                    if (card.classList.contains("hidden")) {
-                        hiddenCards.push(card.id);
-                    }
-                    return hiddenCards;
-                }, []),
+                hiddenCards: Array.from(document.querySelectorAll(".animal.hidden")).map((card) => card.id),
                 currentIndex: nextGameIndex,
             };
             socket.emit("updateGameData", updatedData);
@@ -112,7 +105,4 @@ function TurnByTurn2({ socket, data, client, groupName, hiddenCards, currentInde
     );
 }
 
-export default TurnByTurn2;
-
-
-
+export default TurnByTurn3;

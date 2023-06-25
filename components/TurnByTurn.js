@@ -48,24 +48,12 @@ function TurnByTurn({ socket, data, client, groupName }) {
             document.querySelectorAll(".animal.hidden")
         ).map((card) => card.id);
 
-        if (nextGameIndex === 1) {
+
             socket.emit("introIndice2");
             socket.emit("startAudioClient");
             socket.emit("updateHiddenCards", hiddenCards);
             socket.emit("updateGameIndex", nextGameIndex);
-        }
 
-        if (nextGameIndex === 2) {
-            socket.emit("updateHiddenCards", hiddenCards);
-            socket.emit("updateGameIndex", nextGameIndex);
-            socket.emit("introIndice3");
-            socket.emit("stopAudioClient");
-        }
-
-        if (nextGameIndex === 3) {
-            const el = document.querySelector("#step");
-            el.innerHTML = "Suivant";
-        }
 
         setStateOfTheGame([...stateOfTheGame]);
     }
