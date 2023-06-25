@@ -292,7 +292,7 @@ console.log(scenarios[currentScenarioToPlay].videos)
 
     return (
         <>
-            <div>
+            <div id="animation">
                 <AudioPlayer src="audio/SonsAmbiance.mp3"/>
 
                 {scenarios[currentScenarioToPlay].audios &&

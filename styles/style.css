@@ -79,7 +79,7 @@ section {
 }
 section .template-wrapper {
   position: absolute;
-  padding: 7% 7% 4%;
+  padding: 7.7% 7% 4%;
   top: 0;
   left: 0;
   height: 100%;
@@ -158,6 +158,7 @@ section .template-wrapper .top-part .button-next p {
   line-height: 1;
   letter-spacing: 0.04em;
   text-align: center;
+  white-space: nowrap;
   text-transform: uppercase;
   color: #fefff6;
 }
@@ -265,6 +266,13 @@ img {
   user-focus: none;
   user-focus-pointer: none;
   -moz-user-select: none;
+}
+
+#animation {
+  position: relative;
+  height: 100Vh;
+  width: 100vw;
+  background-color: black;
 }
 
 #startScreen {
@@ -750,136 +758,93 @@ header a:last-child h3 {
 #turnByTurn {
   position: relative;
 }
-#turnByTurn .animal-wrapper {
+#turnByTurn .template-wrapper {
+  padding: 7.7% 7% 7.75%;
+}
+#turnByTurn .template-wrapper .animal-wrapper {
   position: relative;
+  padding: 20px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
-#turnByTurn .animal-wrapper .animal {
+#turnByTurn .template-wrapper .animal-wrapper .animal {
   position: relative;
   height: 100%;
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-radius: 15px;
   background-color: #faf9ef;
-  outline: 4px solid #eeede6;
+  border: 3px solid #eeede6;
   opacity: 1;
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), outline 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), border 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-#turnByTurn .animal-wrapper .animal img {
+#turnByTurn .template-wrapper .animal-wrapper .animal img {
   position: relative;
-  height: 50px;
-  width: auto;
+  height: auto;
+  width: 65%;
   pointer-events: none;
 }
-#turnByTurn .animal-wrapper .animal p {
+#turnByTurn .template-wrapper .animal-wrapper .animal p {
   position: relative;
+  margin-top: 20px;
   max-width: 90%;
   font-family: "PP Pangram Sans Rounded bold", sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.1em;
   text-align: center;
   color: #67787f;
 }
-#turnByTurn .animal-wrapper .animal.hidden {
-  outline: 4px solid #eeede6;
-  opacity: 0.5;
+#turnByTurn .template-wrapper .animal-wrapper .animal.hidden {
+  border: 1px solid #eeede6;
+  opacity: 0.3;
 }
-#turnByTurn .animal-wrapper .animal.empty {
-  background: transparent;
-  cursor: none;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
+#turnByTurn .template-wrapper .animal-wrapper .animal.locked {
+  border: 1px solid #eeede6;
+  background-color: red !important;
+  opacity: 0.3;
 }
-#turnByTurn .timer-wrapper {
-  position: relative;
-  margin-top: 50px;
-  height: 20px;
-  width: 100%;
-  border-radius: 5px;
-  border: 2px solid #303030;
-}
-#turnByTurn .timer-wrapper .timer {
-  position: relative;
-  left: 0;
-  height: 100%;
-  width: 0;
-  background: green;
-  animation-duration: 999s;
-  animation: timer linear infinite;
-  animation-play-state: paused;
-}
-@keyframes timer {
-  0% {
-    width: 0;
-    background: green;
-  }
-  50% {
-    background: orange;
-  }
-  100% {
-    width: 100%;
-    background: red;
-  }
-}
-#turnByTurn .validateButton {
-  position: relative;
-  margin-top: 30px;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background: #303030;
-  cursor: pointer;
-  display: none;
-}
-#turnByTurn .validateButton p {
-  position: relative;
-  font-family: "Helvetica", sans-serif;
-  font-size: 2vw;
-  font-style: normal;
-  line-height: 1;
-  font-weight: 500;
-  text-align: center;
-  color: white;
-  user-select: none;
-}
-#turnByTurn .waitingScreen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
+#turnByTurn .indicator {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38%;
+  z-index: 100;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#turnByTurn .indicator .wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  opacity: 0;
-  z-index: 1;
-  visibility: hidden;
-  pointer-events: none;
-  background: white;
-  transition: opacity 0.35s ease-in-out, visibility 0.35s ease-in-out;
 }
-#turnByTurn .waitingScreen.is-active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
-}
-#turnByTurn .waitingScreen h4 {
+#turnByTurn .indicator .wrapper img {
   position: relative;
-  font-family: "Helvetica", sans-serif;
-  font-size: 5vw;
-  font-style: normal;
-  line-height: 1;
-  font-weight: 500;
-  text-align: center;
-  color: #303030;
-  user-select: none;
+  margin-right: 10px;
+  height: auto;
+  width: 20px;
+}
+#turnByTurn .indicator .wrapper .card {
+  position: relative;
+  margin-right: 5px;
+  height: 37px;
+  width: 25px;
+  border-radius: 5px;
+  background: #2B3850;
+}
+#turnByTurn .indicator .wrapper .card:last-child {
+  margin-right: 0;
 }
 
 #animationScreen {
