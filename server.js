@@ -192,6 +192,7 @@ let client2State;
 let client3State;
 let gameData = {};
 let animalsChosenData = {"one": null, "two": null};
+let questionData = {"one": null, "two": null};
 io.on("connection", (socket) => {
     stateManager.updateClientState(socket.id, "connected");
     let userId;
@@ -242,7 +243,6 @@ io.on("connection", (socket) => {
 
     socket.on("addTeam", (teamName) => {
         stateManager.addTeam(teamName);
-
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "teamAdded");
@@ -296,12 +296,9 @@ io.on("connection", (socket) => {
     socket.on("introIndice1", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        client3State = stateManager.getClientState(client3SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice1");
         stateManager.updateClientState(client2SocketId, "introIndice1");
-        stateManager.updateClientState(client3SocketId, "introIndice1");
-
-            io.emit("setIndice1Screen");
+        io.emit("setIndice1Screen");
     });
 
 
@@ -314,6 +311,7 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "gameOn");
         stateManager.updateClientState(client2SocketId, "gameOn");
         const dataTurnByTurn = [randomTheme, animals[randomTheme]];
+        console.log("Data turn by turn: ", dataTurnByTurn);
         gameData = { dataTurn: dataTurnByTurn, nextGameIndex: 0, hiddenCards: { one: [], two: [] } };
         io.emit("startGame", dataTurnByTurn);
     });
@@ -349,10 +347,8 @@ io.on("connection", (socket) => {
     socket.on("introIndice2", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        client3State = stateManager.getClientState(client3SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice2");
         stateManager.updateClientState(client2SocketId, "introIndice2");
-        stateManager.updateClientState(client3SocketId, "introIndice2");
         if (client1State === "introIndice2" && client2State === "introIndice2") {
             io.emit("setIndice2Screen");
         }
@@ -361,10 +357,8 @@ io.on("connection", (socket) => {
     socket.on("introIndice3", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        client3State = stateManager.getClientState(client3SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice3");
         stateManager.updateClientState(client2SocketId, "introIndice3");
-        stateManager.updateClientState(client3SocketId, "introIndice3");
         if (client1State === "introIndice3" && client2State === "introIndice3") {
             io.emit("setIndice3Screen");
         }
@@ -382,6 +376,7 @@ io.on("connection", (socket) => {
         }
     });
 
+    // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
         if (animalChosen[0] === "one") {
             animalsChosenData.one = [animalChosen[1], animalChosen[2]];
@@ -423,6 +418,7 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "animationQuestionAnswer");
         socket.broadcast.emit("answerChosen", data)
     })
+
     // ANIMATION IS ANSWERED  ////////////////////////
     socket.on("animationQuestionIsAnswered", (answerId) => {
         client1State = stateManager.getClientState(client1SocketId);
@@ -431,18 +427,34 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "animationQuestionIsAnswered");
     });
 
-    socket.on("answer", (answer) => {
-        stateManager.set( "answerChosen" ,answer);
+    socket.on("answer", (data) => {
+        if (data[0] === "one") {
+            questionData.one = data[1]
+            stateManager.set( "answerChosen" ,data[1]);
+            client1State = stateManager.getClientState(client1SocketId);
+            stateManager.updateClientState(client1SocketId, "answersAdded");
+        }
+        if (data[0] === "two") {
+            questionData.two = data[1]
+            stateManager.set( "answerChosen" ,data[1]);
+            client2State = stateManager.getClientState(client2SocketId);
+            stateManager.updateClientState(client2SocketId, "answersAdded");
+        }
+        socket.broadcast.emit("answerChosen", data[1]);
+        if (client1State === "answersAdded" && client2State === "answersAdded" && questionData.one !== null && questionData.two !== null) {
+            io.emit("questionReveal", questionData);
+        }
+    });
+
+    socket.on("showConclusion", (answer) => {
+        stateManager.set( "showConclusion" ,answer);
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        stateManager.updateClientState(client1SocketId, "answersAdded");
-        stateManager.updateClientState(client2SocketId, "answersAdded");
-        io.emit("answersAdded", answer);
-        socket.broadcast.emit("answerChosen", answer);
-        if (client1State === "answer" && client2State === "answer") {
+        stateManager.updateClientState(client1SocketId, "showConclusion");
+        stateManager.updateClientState(client2SocketId, "showConclusion");
+        if (client1State === "showConclusion" && client2State === "showConclusion") {
             io.emit("conclusion");
         }
-
     });
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
