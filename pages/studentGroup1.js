@@ -158,7 +158,6 @@ export default function StudentTablet1() {
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
     };
-
     return (
         <>
             <Head>

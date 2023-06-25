@@ -359,12 +359,20 @@ io.on("connection", (socket) => {
 
     // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
+        const cardId = animalChosen.card;
+        const isCorrect = animalChosen.isCorrect;
+        console.log(animalChosen)
+        console.log(cardId);
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
-        stateManager.updateClientState(client1SocketId, "answer");
-        stateManager.updateClientState(client2SocketId, "answer");
-        if (client1State === "answer" && client2State === "answer") {
-            io.emit("answer");
+        stateManager.updateClientState(client1SocketId, "animalChosen");
+        stateManager.updateClientState(client2SocketId, "animalChosen");
+
+        if (client1State === "animalChosen" && client2State === "animalChosen") {
+            io.emit("showInteractions", {
+                animalName: animalChosen,
+                isCorrect: isCorrect,
+            });
         }
     });
 

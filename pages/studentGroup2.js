@@ -34,7 +34,7 @@ export default function StudentTablet2() {
     const [themeSelected, setThemeSelected] = useState(null);
     const [themeExplanationFinished, setExplanationFinished] = useState(false);
     const [animalCards, setAnimalCards] = useState([]);
-    const [showAnswer, setShowAnswer] = useState(false);
+    const [showAnswer, setShowAnswer] = useState(null);
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
@@ -182,6 +182,10 @@ export default function StudentTablet2() {
     const handleStartButtonClick = () => {
         socketClient2Ref.current.emit("wantsToStartExperience");
     };
+    const handleRulesButtonClick = () => {
+        socketClient2Ref.current.emit("rules");
+    };
+
 
     return (
         <>
