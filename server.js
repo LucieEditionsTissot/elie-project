@@ -368,13 +368,22 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on("undestrandInteraction", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "undestrandInteraction");
+        stateManager.updateClientState(client2SocketId, "undestrandInteraction");
+        if (client1State === "undestrandInteraction" && client2State === "undestrandInteraction") {
+            io.emit("interactionExplained");
+        }
+    })
 
-    socket.on("animationIsDoneAskQuestion", (data) => {
+    socket.on("animationIsDoneAskQuestion", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animationIsDoneAskQuestion");
         stateManager.updateClientState(client2SocketId, "animationIsDoneAskQuestion");
-        io.emit('askQuestion', data);
+            io.emit('askQuestion');
     })
 
     socket.on("animationQuestionAnswer", (data) => {
@@ -390,16 +399,10 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animationQuestionIsAnswered");
         stateManager.updateClientState(client2SocketId, "animationQuestionIsAnswered");
-        if (client1State === "animationQuestionIsAnswered" && client2State === "animationQuestionIsAnswered") {
-            setTimeout(() => {
-                io.emit("conclusion");
-            }, 10000);
-        }
     });
 
     socket.on("answer", (answer) => {
         stateManager.addTeam(answer);
-
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "answersAdded");
@@ -407,7 +410,7 @@ io.on("connection", (socket) => {
         io.emit("answersAdded", answer);
         socket.broadcast.emit("answerChosen", answer);
         if (client1State === "answer" && client2State === "answer") {
-            teamsAreDoneShowRules();
+            io.emit("conclusion");
         }
 
     });
