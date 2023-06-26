@@ -7,6 +7,8 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
 
     const questions = ["Les animaux se mangent entre eux", "Les animaux se protègent les uns des autres", "Les animaux s'entraident pour se nourrir"]
     const [questionSelected, setQuestionSelected] = useState(null)
+    const [revealText, setRevealText] = useState(false)
+
     useEffect(() => {
         if (socket) {
             socket.on("answerChosen", function (index) {
@@ -15,37 +17,53 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
                     answerSelectedByAnotherTeam.classList.add("selectedByOtherTeam");
                 }
             });
+
+            socket.on("questionReveal", function () {
+                setTimeout(() => {
+                    const bottomPart = document.querySelector("#question .bottom-part");
+                    bottomPart.classList.add("is-answer");
+                    setRevealText(true)
+                    setTimeout(() => {
+                        socket.emit("showConclusion")
+                    }, 5000)
+                }, 3000)
+            });
+
         }
     }, []);
+
     function handleClickOnQuestion(e) {
-            const question = e.target.closest('.question')
-            const allQuestions = document.querySelectorAll('#question .question')
-            if (question && questionSelected === null) {
-                if (question.classList.contains('is-active')) {
+        const button = document.querySelector('#question .button-next');
+        const question = e.target.closest('.question')
+        const allQuestions = document.querySelectorAll('#question .question')
+        if (question && questionSelected === null) {
+            if (question.classList.contains('is-active')) {
+                question.classList.remove('is-active')
+                button.classList.add('disabled')
+            } else {
+                allQuestions.forEach(question => {
                     question.classList.remove('is-active')
-                } else {
-                    allQuestions.forEach(question => {
-                        question.classList.remove('is-active')
-                    })
-                    question.classList.add('is-active')
-                }
+                })
+                question.classList.add('is-active')
+                button.classList.remove('disabled')
+            }
         }
     }
 
     function handleClickOnButton() {
-        setQuestionSelected(document.querySelector('#question .question.is-active').id);
-            const answerSelectedIndex = document.querySelector('#question .question.is-active').id;
+        const button = document.querySelector('#question .button-next');
+        const answerSelectedIndex = document.querySelector('#question .question.is-active').id;
 
-            const button = document.querySelector('#question .button-next');
-            if (button) {
-                button.classList.add('disabled')
+        if (!button.classList.contains('disabled')) {
+            if (answerSelectedIndex) {
+                setQuestionSelected(answerSelectedIndex);
             }
+            button.classList.add('disabled')
         }
+    }
 
     useEffect(() => {
-        console.log(questionSelected)
         onAnswerSelected(questionSelected)
-        console.log(answerSelected)
     }, [questionSelected])
 
     return (
@@ -60,7 +78,9 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
                         <h3><span>Question</span></h3>
                         <h6>Que comprenez-vous de cette interaction ?</h6>
                     </div>
-                    <div className={`${questionSelected === 2 ? "is-answer" : ""} button-next flex flex-row justify-center items-center rounded-full`} onClick={() => handleClickOnButton()}>
+                    <div
+                        className={"button-next flex flex-row justify-center items-center rounded-full disabled"}
+                        onClick={() => handleClickOnButton()}>
                         <p>Suivant</p>
                         <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                     </div>
@@ -78,7 +98,15 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
                         </div>
                     ))}
 
-                    <img src={"images/good-answer.svg"} alt="Good answer icon" className="icon"/>
+                    {revealText === true && (
+                        <>
+                            {questionSelected === 2 ? (
+                                <img src={"images/good-answer.svg"} alt="Good answer icon" className="icon" />
+                            ) : (
+                                <img src={"images/wrong-answer.svg"} alt="Bad answer icon" className="icon" />
+                            )}
+                        </>
+                    )}
 
                 </div>
             </div>
