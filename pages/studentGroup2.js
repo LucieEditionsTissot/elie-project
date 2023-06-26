@@ -188,7 +188,8 @@ export default function StudentTablet2() {
         socketClient2Ref.current.emit("rules");
     };
     const handleAnswerQuestion = (answer) => {
-        socketClient2Ref.current.emit("answer", answer);
+        const data = ["two", answer]
+        socketClient2Ref.current.emit("answer", data);
     }
 
 
@@ -239,7 +240,7 @@ export default function StudentTablet2() {
 
                 {currentScreen === "themeExplanation" && (
 
-                    <Interaction title={"Mutualisme"} subTitle={""} arrow={false} arrowDown={false} eye={false}
+                    <Interaction title={"Mutualisme"} subTitle={""} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
@@ -296,7 +297,7 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "question" && (
-                    <Question socket={socketClient2Ref.current} answerSelected={answerSelected}  onAnswerSelected={handleAnswerQuestion} client={2}/>
+                    <Question socket={socketClient2Ref.current} onAnswerSelected={handleAnswerQuestion} client={"two"}/>
                 )}
 
                 {currentScreen === "conclusion" && <Conclusion/>}

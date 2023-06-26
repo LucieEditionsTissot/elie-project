@@ -51,6 +51,7 @@
           opacity: 0.3;
         }
 
+<<<<<<< HEAD
         &.locked {
           border: 1px solid rgba(238, 237, 230, 1);
           background-color: red !important;
@@ -58,6 +59,16 @@
         }
 
 
+=======
+        &.empty {
+          background: transparent;
+          cursor: none;
+          pointer-events: none;
+          opacity: 0;
+          visibility: hidden;
+        }
+
+>>>>>>> aa4705d (added visual with new version of turn by turn)
       }
 
     }
