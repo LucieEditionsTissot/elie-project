@@ -224,18 +224,19 @@ const Client3 = () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
          if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
-            socketClient3Ref.current.emit("animationIsDoneAskQuestion")
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        }
+             socketClient3Ref.current.emit("animationIsDoneAskQuestion")
+             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+         }
          else {
-            if(currentVideo) {
-             currentVideo.loop = true;
-                currentVideo.play();
-            }
-        }
+                 if (currentVideo) {
+                     console.log("Reapeat");
+                     currentVideo.currentTime = 0.1;
+                     currentVideo.loop = true;
+                     console.log(currentVideo);
+                 }
+             }
     };
 
-console.log(scenarios[currentScenarioToPlay].videos)
     useEffect(() => {
         const currentScenario = scenarios[currentScenarioToPlay];
 
@@ -258,6 +259,14 @@ console.log(scenarios[currentScenarioToPlay].videos)
             videoElement.src = currentScenario.videos[currentVideoIndex];
             videoElement.className = "fixed top-0 left-0 w-screen h-screen";
             setCurrentVideo(videoElement);
+            if(currentScenarioToPlay === 5 ||
+                currentScenarioToPlay === 0 ||
+                currentScenarioToPlay === 7 ||
+                currentScenarioToPlay === 10 ||
+                currentScenarioToPlay === 12 ||
+                currentScenarioToPlay === 13) {
+                videoElement.loop=true;
+            }
             setVideoLoaded(false);
 
             videoElement.addEventListener("canplaythrough", () => {
