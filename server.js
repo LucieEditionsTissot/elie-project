@@ -427,7 +427,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("answer", (answer) => {
-        stateManager.addTeam(answer);
+        stateManager.set( "answerChosen" ,answer);
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "answersAdded");
