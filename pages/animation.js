@@ -15,13 +15,8 @@ const Client3 = () => {
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
     const allMediaFiles = [
         "audio/SonsAmbiance.mp3",
-<<<<<<< HEAD
         'audio/Regles.mp3',
         'video/Anim_Ambiance.mp4',
-=======
-        "audio/Regles.mp3",
-        "video/Anim_Ambiance.mp4",
->>>>>>> a8fe4f7 (start question debug)
         "video/ExplicationsDesRegles.mp4",
         'audio/LeMutualisme.mp3',
         'video/ChoixDuTheme.mp4',
@@ -100,11 +95,7 @@ const Client3 = () => {
     };
 
     const scenario11 = {
-<<<<<<< HEAD
         videos: ["video/Anim_Ambiance_Map01.mp4"]
-=======
-        videos: ["video/Anim_Ambiance_map01.mp4"]
->>>>>>> a8fe4f7 (start question debug)
     };
 
     const scenario12 = {
@@ -116,11 +107,7 @@ const Client3 = () => {
     };
 
     const scenario14 = {
-<<<<<<< HEAD
         videos: ['video/Anim_Ambiance_Map01.mp4'],
-=======
-        videos: ["video/Anim_Ambiance_map01.mp4"]
->>>>>>> a8fe4f7 (start question debug)
     };
 
     const scenarios = [

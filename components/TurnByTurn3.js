@@ -1,10 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import Frame from "./Frame";
 import Indicator from "./Indicator";
-<<<<<<< HEAD
-import answer from "./Answer";
-=======
->>>>>>> aa4705d (added visual with new version of turn by turn)
+
 
 function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex}) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
@@ -85,11 +82,7 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
 
     return (
         <section id="turnByTurn">
-<<<<<<< HEAD
             <Frame color={"green"} crop={true} text={randomTheme}/>
-=======
-            <Frame color={"green"} crop={true} text={randomTheme} />
->>>>>>> aa4705d (added visual with new version of turn by turn)
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
@@ -108,11 +101,7 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
                     {animals !== undefined &&
                         animals.length > 0 &&
                         animals.map((animal, index) => (
-<<<<<<< HEAD
-                            <div key={index} id={index} className="animal" onClick={(e) => handleFlipCard(e)}>
-=======
                             <div key={index} id={index} className={`animal ${hiddenCards.includes(index.toString()) ? "hidden" : ""}`} onClick={(e) => handleFlipCard(e)}>
->>>>>>> aa4705d (added visual with new version of turn by turn)
                                 <img src={"images/animals/" + animal.icon} alt="Animal icon"/>
                                 <p>{animal.name}</p>
                             </div>

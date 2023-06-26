@@ -69,11 +69,7 @@ function TurnByTurn({socket, data, client, groupName}) {
 
     return (
         <section id="turnByTurn">
-<<<<<<< HEAD
             <Frame color={"green"} crop={true} text={randomTheme}/>
-=======
-            <Frame color={"green"} crop={true} text={randomTheme} />
->>>>>>> aa4705d (added visual with new version of turn by turn)
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
@@ -92,11 +88,7 @@ function TurnByTurn({socket, data, client, groupName}) {
                     {animals !== undefined &&
                         animals.length > 0 &&
                         animals.map((animal, index) => (
-<<<<<<< HEAD
-                            <div key={index} id={index} className="animal" onClick={(e) => handleFlipCard(e)}>
-=======
                             <div key={index} id={index} className={`animal ${hiddenCards.includes(index.toString()) ? "hidden" : ""}`} onClick={(e) => handleFlipCard(e)}>
->>>>>>> aa4705d (added visual with new version of turn by turn)
                                 <img src={"images/animals/" + animal.icon} alt="Animal icon"/>
                                 <p>{animal.name}</p>
                             </div>

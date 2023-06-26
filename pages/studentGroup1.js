@@ -3,9 +3,6 @@ import {io} from "socket.io-client";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
 import TurnByTurn from "../components/TurnByTurn";
-import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
-import ShowInteractions from "../components/ShowInteractions";
-import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
 import StartScreen from "../components/StartScreen";
 import Introduce from "../components/Introduce";
@@ -20,21 +17,12 @@ import Answer from "../components/Answer";
 export default function StudentTablet1() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
     const [teamSelected, setTeamSelected] = useState(null);
-    const [rulesButtonClicked, setRulesButtonClicked] = useState(false);
     const [teamsDone, setTeamsDone] = useState(false);
-    const [answerSelected, setAnswerSelected] = useState(null);
     const [currentScreen, setCurrentScreen] = useState(null);
     const [turnByTurnData, setTurnByTurnData] = useState({});
-    const [animationInProgress, setAnimationInProgress] = useState(false);
-    const [animationQuestionData, setAnimationQuestionData] = useState([]);
-    const [themeSelected, setThemeSelected] = useState(null);
-    const [animalCards, setAnimalCards] = useState([]);
-    const [interactionsData, setInteractionsData] = useState(null);
     const [interactionsExplainedData, setInteractionsExplainedData] = useState(null);
     const [audioScenario, setAudioScenario] = useState(false);
-    const [currentScenario, setCurrentScenario] = useState(null);
     const [showAnswer, setShowAnswer] = useState(null);
-    const [audioLoaded, setAudioLoaded] = useState(false);
     const socketClient1Ref = useRef(null);
     const [hiddenCards, setHiddenCards] = useState([]);
     const [currentIndex, setCurrentIndex] = useState([]);
@@ -100,10 +88,7 @@ export default function StudentTablet1() {
         socketClient1.on("stopAudioIndice", () => {
             setAudioScenario(false);
         });
-<<<<<<< HEAD
-=======
 
->>>>>>> a8fe4f7 (start question debug)
         socketClient1.on("startGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
@@ -291,9 +276,6 @@ export default function StudentTablet1() {
 
                 {currentScreen === "conclusion" && <Conclusion/>}
 
-                {currentScenario && currentScenario.id === 11 && (
-                    <AudioPlayer src={currentScenario.audios}/>
-                )}
 
             </div>
         </>
