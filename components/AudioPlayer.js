@@ -8,10 +8,9 @@ const AudioPlayer = ({ src }) => {
         const sound = new Howl({
             src: [src],
             html5: true,
-            autoplay: true,
             loop: true,
             volume: 1,
-            stereo: false,
+            stereo: false
         });
         soundRef.current = sound;
 

@@ -173,9 +173,7 @@ export default function StudentTablet1() {
 
             <div className="global-container">
 
-                {audioScenario &&
-                    <AudioPlayer src={"audio/Corbeau.mov"}/>
-                }
+                {audioScenario && <AudioPlayer src={"audio/Corbeau.mov"}/>}
 
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
