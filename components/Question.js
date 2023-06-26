@@ -3,11 +3,12 @@ import Frame from "./Frame";
 import config from "../config";
 import socket from "socket.io-client";
 
-function Question({socket, answerSelected, onAnswerSelected, client}) {
+function Question({socket, onAnswerSelected, client}) {
 
     const questions = ["Les animaux se mangent entre eux", "Les animaux se protègent les uns des autres", "Les animaux s'entraident pour se nourrir"]
     const [questionSelected, setQuestionSelected] = useState(null)
     const [revealText, setRevealText] = useState(false)
+    const [questionData, setQuestionData] = useState(null)
 
     useEffect(() => {
         if (socket) {
@@ -18,19 +19,29 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
                 }
             });
 
-            socket.on("questionReveal", function () {
-                setTimeout(() => {
-                    const bottomPart = document.querySelector("#question .bottom-part");
-                    bottomPart.classList.add("is-answer");
-                    setRevealText(true)
-                    setTimeout(() => {
-                        socket.emit("showConclusion")
-                    }, 5000)
-                }, 3000)
+            socket.on("questionReveal", function (data) {
+                setQuestionData(data)
             });
 
         }
     }, []);
+
+    useEffect(() => {
+        questionReveal()
+    }, [questionData])
+
+    function questionReveal() {
+        if (questionData !== null) {
+            setTimeout(() => {
+                const bottomPart = document.querySelector("#question .bottom-part");
+                bottomPart.classList.add("is-answer");
+                setRevealText(true)
+                setTimeout(() => {
+                    socket.emit("showConclusion")
+                }, 5000)
+            }, 3000)
+        }
+    }
 
     function handleClickOnQuestion(e) {
         const button = document.querySelector('#question .button-next');
@@ -57,14 +68,11 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
         if (!button.classList.contains('disabled')) {
             if (answerSelectedIndex) {
                 setQuestionSelected(answerSelectedIndex);
+                onAnswerSelected(answerSelectedIndex)
             }
             button.classList.add('disabled')
         }
     }
-
-    useEffect(() => {
-        onAnswerSelected(questionSelected)
-    }, [questionSelected])
 
     return (
         <section id="question">
@@ -98,9 +106,9 @@ function Question({socket, answerSelected, onAnswerSelected, client}) {
                         </div>
                     ))}
 
-                    {revealText === true && (
+                    {revealText === true && questionData !== null && (
                         <>
-                            {questionSelected === 2 ? (
+                            {questionData[client] === 2 ? (
                                 <img src={"images/good-answer.svg"} alt="Good answer icon" className="icon" />
                             ) : (
                                 <img src={"images/wrong-answer.svg"} alt="Bad answer icon" className="icon" />

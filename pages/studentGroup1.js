@@ -286,7 +286,7 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "question" && (
-                    <Question socket={socketClient1Ref.current} answerSelected={answerSelected}  onAnswerSelected={handleAnswerQuestion}/>
+                    <Question socket={socketClient1Ref.current} onAnswerSelected={handleAnswerQuestion} client={"one"}/>
                 )}
 
                 {currentScreen === "conclusion" && <Conclusion/>}
