@@ -12,6 +12,7 @@ function Question({ socket, onAnswerSelected, client }) {
     const [questionSelected, setQuestionSelected] = useState(null);
     const [revealText, setRevealText] = useState(false);
     const [questionData, setQuestionData] = useState(null);
+    const [questionRevealed, setQuestionRevealed] = useState(false);
 
     useEffect(() => {
         if (socket) {
@@ -28,23 +29,23 @@ function Question({ socket, onAnswerSelected, client }) {
                 console.log(data);
                 if (questionData === null) {
                     setQuestionData(data);
-                    console.log(data);
+                    setQuestionRevealed(true);
                 }
             });
         }
     }, [socket]);
 
     useEffect(() => {
-        const bottomPart = document.querySelector("#question .bottom-part");
-        setTimeout(() => {
-            bottomPart.classList.add("is-active");
+        if (questionRevealed) {
+            const bottomPart = document.querySelector("#question .bottom-part");
             setTimeout(() => {
-                socket.emit("conclusion");
-            }, 5000);
-        }, 3000);
-        console.log(questionData);
-    }, [questionData]);
-
+                bottomPart.classList.add("is-active");
+                setTimeout(() => {
+                    socket.emit("conclusion");
+                }, 5000);
+            }, 3000);
+        }
+    }, [questionRevealed, socket]);
 
     function handleClickOnQuestion(e) {
         const button = document.querySelector("#question .button-next");

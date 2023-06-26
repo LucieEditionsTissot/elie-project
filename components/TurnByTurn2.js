@@ -84,7 +84,6 @@ function TurnByTurn2({socket, data, client, groupName, hiddenCards, currentIndex
                 };
                 socket.emit("updateGameData", updatedData);
             }
-
             setStateOfTheGame([...stateOfTheGame]);
             buttonNext.classList.add("disabled");
         }

@@ -468,14 +468,13 @@ io.on("connection", (socket) => {
         }
         socket.broadcast.emit("answerChosen", data[1]);
         console.log(questionData);
-        if (client1State === "answer" && client2State === "answer") {
             console.log(questionData);
-            console.log(io.to('client1').emit("questionReveal", questionData.one))
-            console.log(io.to('client2').emit("questionReveal", questionData.two))
+            console.log(io.emit("questionReveal", questionData))
+            console.log(io.emit("questionReveal", questionData))
 
-            io.to('client1').emit("questionReveal", questionData.one);
-            io.to('client2').emit("questionReveal", questionData.two);
-        }
+            io.emit("questionReveal", questionData);
+            io.emit("questionReveal", questionData);
+
     });
 
     socket.on("showConclusion", (answer) => {
