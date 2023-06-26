@@ -225,7 +225,11 @@ io.on("connection", (socket) => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         client3State = stateManager.getClientState(client3SocketId);
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         if (client1State === "wantsToStartExperience" && client2State === "wantsToStartExperience") {
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
             io.emit("confirmIntroductionStart");
         }
     });
@@ -238,6 +242,8 @@ io.on("connection", (socket) => {
             io.emit("showTeams", stateManager.teams);
             stateManager.updateClientState(client1SocketId, "teams");
             stateManager.updateClientState(client2SocketId, "teams");
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
         }
     });
 
@@ -249,7 +255,11 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client2SocketId, "teamAdded");
         io.emit("teamAdded", teamName);
         socket.broadcast.emit("teamChosen", teamName);
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         if (client1State === "teamAdded" && client2State === "teamAdded") {
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
             teamsAreDoneShowRules();
         }
 
@@ -263,6 +273,8 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "rules");
         stateManager.updateClientState(client2SocketId, "rules");
         stateManager.updateClientState(client3SocketId, "rules");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("teamsAreDoneShowRules");
     }
 
@@ -271,6 +283,8 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "rulesAreUnderstood");
         stateManager.updateClientState(client2SocketId, "rulesAreUnderstood");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("rulesAreDoneSelectThemeRandomly");
     });
 
@@ -283,6 +297,8 @@ io.on("connection", (socket) => {
     socket.on("selectTheme", () => {
         stateManager.updateClientState(client1SocketId, "selectTheme");
         stateManager.updateClientState(client2SocketId, "selectTheme");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("themeSelected");
     });
 
@@ -291,6 +307,8 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "explain");
         stateManager.updateClientState(client2SocketId, "explain");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("themeIsSelectedShowThemeExplanation");
     });
     socket.on("introIndice1", () => {
@@ -298,6 +316,8 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice1");
         stateManager.updateClientState(client2SocketId, "introIndice1");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("setIndice1Screen");
     });
 
@@ -333,6 +353,8 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "getCurrentGameData");
         stateManager.updateClientState(client2SocketId, "getCurrentGameData");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("gameDataUpdated", gameData);
     });
 
@@ -341,6 +363,8 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "getCurrentGameDataLastTime");
         stateManager.updateClientState(client2SocketId, "getCurrentGameDataLastTime");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         io.emit("gameDataUpdatedLastTime", gameData);
     });
 
@@ -349,7 +373,11 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice2");
         stateManager.updateClientState(client2SocketId, "introIndice2");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         if (client1State === "introIndice2" && client2State === "introIndice2") {
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
             io.emit("setIndice2Screen");
         }
     });
@@ -359,7 +387,11 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice3");
         stateManager.updateClientState(client2SocketId, "introIndice3");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         if (client1State === "introIndice3" && client2State === "introIndice3") {
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
             io.emit("setIndice3Screen");
         }
     });
@@ -388,7 +420,11 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animalChosen");
         stateManager.updateClientState(client2SocketId, "animalChosen");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         if (client1State === "animalChosen" && client2State === "animalChosen") {
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
             io.emit("showInteractions", (animalsChosenData));
         }
     });
@@ -398,7 +434,11 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "undestrandInteraction");
         stateManager.updateClientState(client2SocketId, "undestrandInteraction");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
         if (client1State === "undestrandInteraction" && client2State === "undestrandInteraction") {
+            console.log(stateManager.getClientState(client2SocketId));
+            console.log(stateManager.getClientState(client2SocketId));
             io.emit("interactionExplained");
         }
     })
@@ -408,24 +448,10 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animationIsDoneAskQuestion");
         stateManager.updateClientState(client2SocketId, "animationIsDoneAskQuestion");
+        console.log(stateManager.getClientState(client2SocketId));
+        console.log(stateManager.getClientState(client2SocketId));
             io.emit('askQuestion');
     })
-
-    socket.on("animationQuestionAnswer", (data) => {
-        client1State = stateManager.getClientState(client1SocketId);
-        client2State = stateManager.getClientState(client2SocketId);
-        stateManager.updateClientState(client1SocketId, "animationQuestionAnswer");
-        stateManager.updateClientState(client2SocketId, "animationQuestionAnswer");
-        socket.broadcast.emit("answerChosen", data)
-    })
-
-    // ANIMATION IS ANSWERED  ////////////////////////
-    socket.on("animationQuestionIsAnswered", (answerId) => {
-        client1State = stateManager.getClientState(client1SocketId);
-        client2State = stateManager.getClientState(client2SocketId);
-        stateManager.updateClientState(client1SocketId, "animationQuestionIsAnswered");
-        stateManager.updateClientState(client2SocketId, "animationQuestionIsAnswered");
-    });
 
     socket.on("answer", (data) => {
         if (data[0] === "one") {
@@ -441,13 +467,14 @@ io.on("connection", (socket) => {
             stateManager.updateClientState(client2SocketId, "answer");
         }
         socket.broadcast.emit("answerChosen", data[1]);
-        console.log(client1State + "Ici");
-        console.log(client1State);
-        console.log(socket.broadcast.emit("answerChosen", data[1]));
+        console.log(questionData);
         if (client1State === "answer" && client2State === "answer") {
-            console.log(client1State + "là");
-            console.log(client2State);
-            io.emit("questionReveal", questionData);
+            console.log(questionData);
+            console.log(io.to('client1').emit("questionReveal", questionData.one))
+            console.log(io.to('client2').emit("questionReveal", questionData.two))
+
+            io.to('client1').emit("questionReveal", questionData.one);
+            io.to('client2').emit("questionReveal", questionData.two);
         }
     });
 
