@@ -155,7 +155,7 @@ export default function StudentTablet1() {
     };
 
     const handleAnswerQuestion = (answer) => {
-        const data = ["one", answer]
+        const data = ["one", Number(answer)]
         socketClient1Ref.current.emit("answer", data);
     }
 
