@@ -101,6 +101,7 @@ export default function StudentTablet2() {
         });
 
         socketClient2.on("gameDataUpdated", (updatedData) => {
+            setAudioScenario(false);
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
             setCurrentIndex(updatedData.currentIndex);
@@ -192,9 +193,9 @@ export default function StudentTablet2() {
             </Head>
 
             <div className="global-container">
-                {audioScenario &&
-                <AudioPlayer src={"audio/Corbeau.mov"}/>
-                }
+
+                <AudioPlayer scenario={audioScenario} src={"audio/corbeau.mp3"}/>
+
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
