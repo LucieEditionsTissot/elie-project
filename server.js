@@ -296,9 +296,11 @@ io.on("connection", (socket) => {
     socket.on("introIndice1", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
+        client3State = stateManager.getClientState(client3SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice1");
         stateManager.updateClientState(client2SocketId, "introIndice1");
-        io.emit("setIndice1Screen");
+        stateManager.updateClientState(client3SocketId, "introIndice1");
+            io.emit("setIndice1Screen");
     });
 
 
@@ -311,7 +313,6 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "gameOn");
         stateManager.updateClientState(client2SocketId, "gameOn");
         const dataTurnByTurn = [randomTheme, animals[randomTheme]];
-        console.log("Data turn by turn: ", dataTurnByTurn);
         gameData = { dataTurn: dataTurnByTurn, nextGameIndex: 0, hiddenCards: { one: [], two: [] } };
         io.emit("startGame", dataTurnByTurn);
     });
@@ -347,8 +348,10 @@ io.on("connection", (socket) => {
     socket.on("introIndice2", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
+        client3State = stateManager.getClientState(client3SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice2");
         stateManager.updateClientState(client2SocketId, "introIndice2");
+        stateManager.updateClientState(client3SocketId, "introIndice2");
         if (client1State === "introIndice2" && client2State === "introIndice2") {
             io.emit("setIndice2Screen");
         }
@@ -357,8 +360,10 @@ io.on("connection", (socket) => {
     socket.on("introIndice3", () => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
+        client3State = stateManager.getClientState(client3SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice3");
         stateManager.updateClientState(client2SocketId, "introIndice3");
+        stateManager.updateClientState(client3SocketId, "introIndice3");
         if (client1State === "introIndice3" && client2State === "introIndice3") {
             io.emit("setIndice3Screen");
         }
@@ -376,7 +381,6 @@ io.on("connection", (socket) => {
         }
     });
 
-    // ANIMAL CHOSEN  ////////////////////////////////
     socket.on("animalChosen", (animalChosen) => {
         if (animalChosen[0] === "one") {
             animalsChosenData.one = [animalChosen[1], animalChosen[2]];
@@ -439,14 +443,6 @@ io.on("connection", (socket) => {
         }
 
     });
-
-    function checkIfAnimationQuestionIsCorrect() {
-        IdOfAnimationQuestionAnswered.map((answerId) => {
-            if (answerId !== answersAnimation[randomTheme].correctAnswer) {
-                isFinalQuestionIsCorrect = false
-            }
-        })
-    }
 
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
