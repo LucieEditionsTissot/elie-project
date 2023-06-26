@@ -162,17 +162,17 @@ const Client3 = () => {
         });
         socketClient3.on("showInteractions", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
+        });
         socketClient3.on("interactionExplained", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
+        });
 
         socketClient3.on("scenarioDone", () => {
             setIsScenarioDone(true);
         });
         socketClient3.on("answer", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
+        });
 
         socketClient3.on("audioEnded", () => {
             console.log("Audio ended");
@@ -229,10 +229,8 @@ const Client3 = () => {
          }
          else {
                  if (currentVideo) {
-                     console.log("Reapeat");
                      currentVideo.currentTime = 0.1;
                      currentVideo.loop = true;
-                     console.log(currentVideo);
                  }
              }
     };
