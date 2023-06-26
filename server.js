@@ -432,16 +432,21 @@ io.on("connection", (socket) => {
             questionData.one = data[1]
             stateManager.set( "answerChosen" ,data[1]);
             client1State = stateManager.getClientState(client1SocketId);
-            stateManager.updateClientState(client1SocketId, "answersAdded");
+            stateManager.updateClientState(client1SocketId, "answer");
         }
         if (data[0] === "two") {
             questionData.two = data[1]
             stateManager.set( "answerChosen" ,data[1]);
             client2State = stateManager.getClientState(client2SocketId);
-            stateManager.updateClientState(client2SocketId, "answersAdded");
+            stateManager.updateClientState(client2SocketId, "answer");
         }
         socket.broadcast.emit("answerChosen", data[1]);
-        if (client1State === "answersAdded" && client2State === "answersAdded" && questionData.one !== null && questionData.two !== null) {
+        console.log(client1State + "Ici");
+        console.log(client1State);
+        console.log(socket.broadcast.emit("answerChosen", data[1]));
+        if (client1State === "answer" && client2State === "answer") {
+            console.log(client1State + "là");
+            console.log(client2State);
             io.emit("questionReveal", questionData);
         }
     });
