@@ -20,7 +20,9 @@ function Question({socket, onAnswerSelected, client}) {
             });
 
             socket.on("questionReveal", function (data) {
+                if (questionData !== null) {
                 setQuestionData(data)
+                }
             });
 
         }
@@ -31,16 +33,14 @@ function Question({socket, onAnswerSelected, client}) {
     }, [questionData])
 
     function questionReveal() {
-        if (questionData !== null) {
             setTimeout(() => {
                 const bottomPart = document.querySelector("#question .bottom-part");
                 bottomPart.classList.add("is-answer");
                 setRevealText(true)
                 setTimeout(() => {
                     socket.emit("showConclusion")
-                }, 5000)
+                }, 15000)
             }, 3000)
-        }
     }
 
     function handleClickOnQuestion(e) {
