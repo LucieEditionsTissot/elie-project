@@ -1,6 +1,6 @@
 # Elie - Exposition ludique sur les interactions entre les êtres vivants
 
-![Elie Logo](https://github.com/LucieEditionsTissot/elie-project/tree/776aa7878a5a189004b3287120848b394c3e90a0/public/images/elie.jpeg)
+![Elie Logo](https://github.com/LucieEditionsTissot/elie-project/blob/64144bc87c667bd00ae311f309a0397349108986/public/images/elie.jpeg)
 
 Elie est une exposition ludique conçue pour les élèves de CM1-CM2 dans le but de leur expliquer les différentes interactions entre les êtres vivants. Cette application web interactive a été développée dans le cadre d'un projet de dernière année de Bachelor.
 
