@@ -1,13 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import Head from "next/head";
 import ShowTeams from "../components/ShowTeams";
-import ThemeScreen from "../components/ThemeScreen";
-import RulesScreen from "../components/RulesScreen";
 import TurnByTurn from "../components/TurnByTurn";
-import AnimationQuestionScreen from "../components/AnimationQuestionScreen";
-import ThemeExplanation from "../components/ThemeExplanation";
-import ShowInteractions from "../components/ShowInteractions";
-import UnderstandInteraction from "../components/UnderstandInteraction";
 import Conclusion from "../components/Conclusion";
 import AudioPlayer from "../components/AudioPlayer";
 import {url} from "./_app";
