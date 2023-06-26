@@ -300,6 +300,7 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "introIndice1");
         stateManager.updateClientState(client2SocketId, "introIndice1");
         stateManager.updateClientState(client3SocketId, "introIndice1");
+
             io.emit("setIndice1Screen");
     });
 
