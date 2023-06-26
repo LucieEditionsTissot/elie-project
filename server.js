@@ -39,112 +39,112 @@ const animals = {
         "teamGroupOne": {
             "animals": [
                 {
-                    "name": "Biche",
-                    "icon": "biche.svg",
-                    "fullName" : "La biche"
-                },
-                {
-                    "name": "Truite",
-                    "icon": "ours.svg",
-                    "fullName" : "L'ours"
-                },
-                {
-                    "name": "Renard",
-                    "icon": "renard.svg",
-                    "fullName" : "Le renard"
-                },
-                {
-                    "name": "Salamandre",
-                    "icon": "salamandre.svg",
-                    "fullName" : "La salamandre"
-                },
-                {
-                    "name": "Marmotte",
-                    "icon": "marmotte.svg",
-                    "fullName" : "La marmotte"
-                },
-                {
-                    "name": "Cerf",
-                    "icon": "cerf.svg",
-                    "fullName" : "Le cerf"
-                },
-                {
-                    "name": "Crapaud",
-                    "icon": "crapaud.svg",
-                    "fullName" : "Le crapaud"
+                    "name": "Cheval",
+                    "icon": "cheval.svg",
+                    "fullName": "Le cheval"
                 },
                 {
                     "name": "Loup",
                     "icon": "loup.svg",
-                    "fullName" : "Le loup"
+                    "fullName": "Le loup"
                 },
                 {
-                    "name": "Lapin",
-                    "icon": "lapin.svg",
-                    "fullName" : "Le lapin"
+                    "name": "Ours",
+                    "icon": "ours.svg",
+                    "fullName": "L'ours"
                 },
                 {
-                    "name": "Aigle",
-                    "icon": "aigle.svg",
-                    "fullName" : "L'aigle"
+                    "name": "Requin",
+                    "icon": "requin.svg",
+                    "fullName": "Le requin"
+                },
+                {
+                    "name": "Taureau",
+                    "icon": "taureau.svg",
+                    "fullName": "Le teaureau"
+                },
+                {
+                    "name": "Chien",
+                    "icon": "chien.svg",
+                    "fullName": "Le chien"
+                },
+                {
+                    "name": "Baleine",
+                    "icon": "baleine.svg",
+                    "fullName": "La baleine"
+                },
+                {
+                    "name": "Lynx",
+                    "icon": "lynx.svg",
+                    "fullName": "Le lynx"
+                },
+                {
+                    "name": "Autruche",
+                    "icon": "autruche.svg",
+                    "fullName": "Le lapin"
+                },
+                {
+                    "name": "Lion",
+                    "icon": "lion.svg",
+                    "fullName": "Le lion"
                 }
             ],
-            "answer": 7
+            "answer": 1
         },
         "teamGroupTwo": {
             "animals": [
                 {
-                    "name": "Lézard",
-                    "icon": "ours.svg",
-                    "fullName" : "Le lézard"
+                    "name": "Kangourou",
+                    "icon": "kangaroo.svg",
+                    "fullName": "Le kangourou"
                 },
                 {
-                    "name": "Biche",
-                    "icon": "biche.svg",
-                    "fullName" : "La biche"
+                    "name": "Oie",
+                    "icon": "oie.svg",
+                    "fullName": "L'oie"
                 },
                 {
-                    "name": "Hibou",
-                    "icon": "ours.svg",
-                    "fullName" : "Le hibou"
+                    "name": "Élan",
+                    "icon": "elan.svg",
+                    "fullName": "L'élan"
                 },
                 {
-                    "name": "Papillon",
-                    "icon": "ours.svg",
-                    "fullName" : "Le papillon"
+                    "name": "Tortue",
+                    "icon": "tortue.svg",
+                    "fullName": "La tortue"
+                },
+                {
+                    "name": "Lama",
+                    "icon": "lama.svg",
+                    "fullName": "Le lama"
+                },
+                {
+                    "name": "Flamant Rose",
+                    "icon": "flamantRose.svg",
+                    "fullName": "Le flamant rose"
+                },
+                {
+                    "name": "Perroquet",
+                    "icon": "perroquet.svg",
+                    "fullName": "Le perroquet"
                 },
                 {
                     "name": "Corbeau",
-                    "icon": "ours.svg",
-                    "fullName" : "Le corbeau"
+                    "icon": "corbeau.svg",
+                    "fullName": "Le corbeau"
                 },
                 {
-                    "name": "Coccinelle",
-                    "icon": "ours.svg",
-                    "fullName" : "La coccinelle"
+                    "name": "Zèbre",
+                    "icon": "zebre.svg",
+                    "fullName": "Le zèbre"
                 },
                 {
-                    "name": "Faucon",
-                    "icon": "ours.svg",
-                    "fullName" : "Le faucon"
-                },
-                {
-                    "name": "Chouette",
-                    "icon": "ours.svg",
-                    "fullName" : "La chouette"
-                },
-                {
-                    "name": "Rat",
-                    "icon": "ours.svg",
-                    "fullName" : "Le rat"
-                },
-                {
-                    "name": "Loup",
-                    "icon": "loup.svg",
-                    "fullName" : "Le loup"
+                    "name": "Poule",
+                    "icon": "poule.svg",
+                    "fullName": "La poule"
                 }
             ],
-            "answer": 4
+            "answer": 7
         }
     },
 };
@@ -302,17 +302,14 @@ io.on("connection", (socket) => {
     });
 
 
-
     socket.on("gameOn", () => {
-        console.log("Game is launched");
         randomTheme = chooseRandomTheme();
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "gameOn");
         stateManager.updateClientState(client2SocketId, "gameOn");
         const dataTurnByTurn = [randomTheme, animals[randomTheme]];
-        console.log("Data turn by turn: ", dataTurnByTurn);
-        gameData = { dataTurn: dataTurnByTurn, nextGameIndex: 0, hiddenCards: { one: [], two: [] } };
+        gameData = {dataTurn: dataTurnByTurn, nextGameIndex: 0, hiddenCards: {one: [], two: []}};
         io.emit("startGame", dataTurnByTurn);
     });
 
@@ -408,7 +405,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animationIsDoneAskQuestion");
         stateManager.updateClientState(client2SocketId, "animationIsDoneAskQuestion");
-            io.emit('askQuestion');
+        io.emit('askQuestion');
     })
 
     socket.on("animationQuestionAnswer", (data) => {
@@ -430,29 +427,24 @@ io.on("connection", (socket) => {
     socket.on("answer", (data) => {
         if (data[0] === "one") {
             questionData.one = data[1]
-            stateManager.set( "answerChosen" ,data[1]);
-            client1State = stateManager.getClientState(client1SocketId);
+            stateManager.set("answerChosen", data[1]);
             stateManager.updateClientState(client1SocketId, "answer");
+            client1State = stateManager.getClientState(client1SocketId);
         }
         if (data[0] === "two") {
             questionData.two = data[1]
-            stateManager.set( "answerChosen" ,data[1]);
-            client2State = stateManager.getClientState(client2SocketId);
+            stateManager.set("answerChosen", data[1]);
             stateManager.updateClientState(client2SocketId, "answer");
+            client2State = stateManager.getClientState(client2SocketId);
         }
         socket.broadcast.emit("answerChosen", data[1]);
-        console.log(client1State + "Ici");
-        console.log(client1State);
-        console.log(socket.broadcast.emit("answerChosen", data[1]));
-        if (client1State === "answer" && client2State === "answer") {
-            console.log(client1State + "là");
-            console.log(client2State);
+        if (client1State === "answer" && client2State === "answer" && questionData.one !== null && questionData.two !== null) {
             io.emit("questionReveal", questionData);
         }
     });
 
     socket.on("showConclusion", (answer) => {
-        stateManager.set( "showConclusion" ,answer);
+        stateManager.set("showConclusion", answer);
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "showConclusion");
