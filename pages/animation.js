@@ -15,9 +15,9 @@ const Client3 = () => {
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
     const allMediaFiles = [
         "audio/SonsAmbiance.mp3",
-        "audio/Regles.mp3",
-        "video/Anim_Ambiance.mp4",
-        "video/Rules.mp4",
+        'audio/Regles.mp3',
+        'video/Anim_Ambiance.mp4',
+        "video/ExplicationsDesRegles.mp4",
         'audio/LeMutualisme.mp3',
         'video/ChoixDuTheme.mp4',
         'audio/MutualismeInfo.mp3',
@@ -28,9 +28,10 @@ const Client3 = () => {
         'video/indices/indice2/LC_B_anim_indice_02.mp4',
         "audio/Indice_02.mp3",
         'audio/Indice_03.mp3',
-        'video/indices/indice3/LC_B_anim_indice_03.mp4',
         'video/Interaction_Intro.mp4',
-        'video/Interaction_Anim.mp4'
+        'video/Interaction_Anim.mp4',
+        'video/indices/indice3/LC_A_intro_indice_03.mp4',
+        'video/indices/indice3/LC_A_intro_indice_02.mp4'
 
     ];
 
@@ -55,8 +56,7 @@ const Client3 = () => {
     };
 
     const scenario2 = {
-        audios: "audio/Regles.mp3",
-        videos: ["video/Rules.mp4"]
+        videos: ["video/ExplicationsDesRegles.mp4"]
     };
 
     const scenarios3 = {
@@ -68,8 +68,7 @@ const Client3 = () => {
     };
 
     const scenario5 = {
-        audios: "audio/Indice_01.mp3",
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4'],
     };
 
     const scenario6 = {
@@ -77,8 +76,7 @@ const Client3 = () => {
     };
 
     const scenario7 = {
-        audios: "audio/Indice_02.mp3",
-        videos: ['video/indices/indice2/LC_B_anim_indice_02.mp4'],
+        videos: ['video/indices/indice2/LC_A_intro_indice_02.mp4'],
     };
 
     const scenario8 = {
@@ -86,8 +84,7 @@ const Client3 = () => {
     };
 
     const scenario9 = {
-        audios: ['audio/Indice_03.mp3'],
-        videos: ['video/indices/indice3/LC_B_anim_indice_03.mp4'],
+        videos: ['video/indices/indice3/LC_A_intro_indice_03.mp4'],
     };
 
     const scenario10 = {
@@ -95,7 +92,7 @@ const Client3 = () => {
     };
 
     const scenario11 = {
-        videos: ["video/Anim_Ambiance.mp4"]
+        videos: ["video/Anim_Ambiance_Map01.mp4"]
     };
 
     const scenario12 = {
@@ -107,7 +104,7 @@ const Client3 = () => {
     };
 
     const scenario14 = {
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/Anim_Ambiance_Map01.mp4'],
     };
 
     const scenarios = [
@@ -173,6 +170,9 @@ const Client3 = () => {
         socketClient3.on("scenarioDone", () => {
             setIsScenarioDone(true);
         });
+        socketClient3.on("answer", () => {
+
+        })
 
         socketClient3.on("audioEnded", () => {
             console.log("Audio ended");

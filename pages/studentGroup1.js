@@ -93,11 +93,13 @@ export default function StudentTablet1() {
         socketClient1.on("setIndice3Screen", () => {
             setCurrentScreen("indice3");
         });
-
         socketClient1.on("audioIndice", () => {
             setAudioScenario(true);
         });
 
+        socketClient1.on("stopAudioIndice", () => {
+            setAudioScenario(false);
+        });
         socketClient1.on("startGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
