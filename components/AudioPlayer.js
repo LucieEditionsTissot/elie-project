@@ -1,28 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 import { Howl } from 'howler';
 
-const AudioPlayer = ({ src }) => {
-    const soundRef = useRef(null);
+const AudioPlayer = ({ scenario, src }) => {
 
     useEffect(() => {
-        const sound = new Howl({
-            src: [src],
-            html5: true,
-            autoplay: true,
-            loop: true,
-            volume: 1,
-            stereo: false,
-        });
-        soundRef.current = sound;
+        window.addEventListener("click", () => {
+            const audio = document.querySelector("#audio");
+            if (audio) {
+                audio.autoplay = true
+            }
+        })
+    }, [])
 
-        sound.play();
+    useEffect(() => {
+        const audio = document.querySelector("#audio");
+        audio.muted = !(audio && scenario);
+    }, [scenario])
 
-        return () => {
-            sound.stop();
-        };
-    }, [src]);
-
-    return null;
+    return (
+        <audio id={"audio"} src={src} loop muted></audio>
+    );
 };
 
 export default AudioPlayer;

@@ -273,6 +273,12 @@ img {
   height: 100Vh;
   width: 100vw;
   background-color: black;
+  pointer-events: none;
+  cursor: none;
+}
+
+video {
+  cursor: none;
 }
 
 #startScreen {
@@ -807,7 +813,7 @@ header a:last-child h3 {
 }
 #turnByTurn .template-wrapper .animal-wrapper .animal.locked {
   border: 1px solid #eeede6;
-  background-color: red !important;
+  background-color: #d76677 !important;
   opacity: 0.3;
 }
 #turnByTurn .indicator {
@@ -961,11 +967,11 @@ header a:last-child h3 {
 #question .question-wrapper .question.is-active .right-part p {
   color: #fefff6 !important;
 }
-#question .question-wrapper .question.selectByAnotherTeam .left-part {
+#question .question-wrapper .question.selectedByOtherTeam .left-part {
   border: 1px solid #d8d6c8;
   background-color: #d8d6c8;
 }
-#question .question-wrapper .question.selectByAnotherTeam .right-part {
+#question .question-wrapper .question.selectedByOtherTeam .right-part {
   background-color: #eeede6;
 }
 #question .question-wrapper .question:nth-child(1) .left-part:before {

@@ -13,7 +13,6 @@ import Question from "../components/Question";
 import TurnByTurn2 from "../components/TurnByTurn2";
 import TurnByTurn3 from "../components/TurnByTurn3";
 import Answer from "../components/Answer";
-import answer from "../components/Answer";
 
 export default function StudentTablet2() {
     const [otherTeamWantsToContinue, setOtherTeamWantsToContinue] = useState(false);
@@ -101,6 +100,7 @@ export default function StudentTablet2() {
         });
 
         socketClient2.on("gameDataUpdated", (updatedData) => {
+            setAudioScenario(false);
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
             setCurrentIndex(updatedData.currentIndex);
@@ -192,9 +192,9 @@ export default function StudentTablet2() {
             </Head>
 
             <div className="global-container">
-                {audioScenario &&
-                <AudioPlayer src={"audio/Corbeau.mov"}/>
-                }
+
+                <AudioPlayer scenario={audioScenario} src={"audio/corbeau.mp3"}/>
+
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
@@ -287,9 +287,6 @@ export default function StudentTablet2() {
 
                 {currentScreen === "conclusion" && <Conclusion/>}
 
-                {currentScenario && currentScenario.id === 12 && (
-                    <AudioPlayer src={currentScenario.audios}/>
-                )}
             </div>
         </>
     );

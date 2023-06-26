@@ -33,8 +33,6 @@ const Client3 = () => {
         'audio/Indice_03.mp3',
         'video/Interaction_Intro.mp4',
         'video/Interaction_Anim.mp4',
-        'video/indices/indice3/LC_A_intro_indice_03.mp4',
-        'video/indices/indice3/LC_A_intro_indice_02.mp4'
 
     ];
 

@@ -81,6 +81,7 @@ export default function StudentTablet1() {
         socketClient1.on("setIndice3Screen", () => {
             setCurrentScreen("indice3");
         });
+
         socketClient1.on("audioIndice", () => {
             setAudioScenario(true);
         });
@@ -95,6 +96,7 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("gameDataUpdated", (updatedData) => {
+            setAudioScenario(false);
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
             setCurrentIndex(updatedData.currentIndex);
@@ -173,9 +175,7 @@ export default function StudentTablet1() {
 
             <div className="global-container">
 
-                {audioScenario &&
-                    <AudioPlayer src={"audio/Corbeau.mov"}/>
-                }
+                <AudioPlayer scenario={audioScenario} src={"audio/loup.mp3"}/>
 
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
@@ -187,6 +187,7 @@ export default function StudentTablet1() {
 
                 {currentScreen === "introduce" && (
                     <Introduce onClick={handleContinueIntroduction}/>
+
                 )}
 
                 {currentScreen === "teams" && (
