@@ -173,7 +173,7 @@ export default function StudentTablet2() {
         socketClient2Ref.current.emit("rules");
     };
     const handleAnswerQuestion = (answer) => {
-        const data = ["two", answer]
+        const data = ["two", Number(answer)]
         socketClient2Ref.current.emit("answer", data);
     }
 

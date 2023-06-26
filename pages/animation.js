@@ -15,12 +15,9 @@ const Client3 = () => {
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
     const allMediaFiles = [
         "audio/SonsAmbiance.mp3",
-        'audio/Regles.mp3',
         'video/Anim_Ambiance.mp4',
         "video/ExplicationsDesRegles.mp4",
-        'audio/LeMutualisme.mp3',
         'video/ChoixDuTheme.mp4',
-        'audio/MutualismeInfo.mp3',
         'video/LeMutualisme.mp4',
         'video/indices/indice1/LC_A_intro_indice_01.mp4',
         'video/indices/indice2/LC_A_intro_indice_02.mp4',
@@ -28,12 +25,8 @@ const Client3 = () => {
         'video/indices/indice1/LC_B_anim_indice_01.mp4',
         'video/indices/indice2/LC_B_anim_indice_02.mp4',
         'video/indices/indice3/LC_B_anim_indice_03.mp4',
-        'audio/Indice_01.mp3',
-        "audio/Indice_02.mp3",
-        'audio/Indice_03.mp3',
         'video/Interaction_Intro.mp4',
         'video/Interaction_Anim.mp4',
-
     ];
 
     function preloadMedia(files) {
