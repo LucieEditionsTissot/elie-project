@@ -171,7 +171,7 @@ const Client3 = () => {
             setIsScenarioDone(true);
         });
         socketClient3.on("answer", () => {
-
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         })
 
         socketClient3.on("audioEnded", () => {
