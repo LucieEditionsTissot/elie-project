@@ -100,6 +100,10 @@ export default function StudentTablet1() {
         socketClient1.on("stopAudioIndice", () => {
             setAudioScenario(false);
         });
+<<<<<<< HEAD
+=======
+
+>>>>>>> a8fe4f7 (start question debug)
         socketClient1.on("startGame", (data) => {
             setTurnByTurnData(data);
             setCurrentScreen("turnByTurn");
@@ -111,7 +115,7 @@ export default function StudentTablet1() {
             setCurrentIndex(updatedData.currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
-                return { ...prevData, ...updatedData };
+                return {...prevData, ...updatedData};
             });
             setCurrentScreen("turnByTurn2");
         });
@@ -122,7 +126,7 @@ export default function StudentTablet1() {
             setCurrentIndex(updatedData.currentIndex);
             setTurnByTurnData((prevData) => {
                 console.log(updatedData);
-                return { ...prevData, ...updatedData };
+                return {...prevData, ...updatedData};
             });
             setCurrentScreen("turnByTurn3");
         });
@@ -162,9 +166,12 @@ export default function StudentTablet1() {
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
     };
+
     const handleAnswerQuestion = (answer) => {
-        socketClient1Ref.current.emit("answer", answer);
+        const data = ["one", answer]
+        socketClient1Ref.current.emit("answer", data);
     }
+
     return (
         <>
             <Head>
@@ -180,12 +187,15 @@ export default function StudentTablet1() {
             </Head>
 
             <div className="global-container">
+
                 {audioScenario &&
-                <AudioPlayer src={"audio/loup.mov"}/>
+                    <AudioPlayer src={"audio/Corbeau.mov"}/>
                 }
+
                 {otherTeamWantsToContinue && (
                     <div className="otherTeamWantsToContinue"></div>
                 )}
+
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>
                 )}
@@ -195,7 +205,8 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "teams" && (
-                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected} onTeamSelected={handleAddTeam} client={1}/>
+                    <ShowTeams socket={socketClient1Ref.current} teamSelected={teamSelected}
+                               onTeamSelected={handleAddTeam} client={1}/>
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
@@ -205,26 +216,34 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "theme" && (
-                    <Interaction title={"Choix de l'interaction"} subTitle={""} arrow={true} arrowDown={false} eye={false}
+                    <Interaction title={"Choix de l'interaction"} subTitle={""} arrow={true} arrowDown={false}
+                                 eye={false}
                                  volume={false} puzzle={false} frameText={"Interaction"}/>
                 )}
+
                 {currentScreen === "themeExplanation" && (
-                    <Interaction title={"Mutualisme "} subTitle={""} arrow={false} arrowDown={false} eye={false}
+                    <Interaction title={"Mutualisme "} subTitle={""} arrow={true} arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
                 {currentScreen === "indice1" && (
-                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={true}
+                    <Interaction title={"Indice 1"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false}
+                                 eye={true}
                                  volume={false} puzzle={false} frameText={"Indice 1"}/>
                 )}
+
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true} arrowDown={true} eye={false}
+                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true}
+                                 arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
+
                 {currentScreen === "indice3" && (
-                    <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false} eye={false}
+                    <Interaction title={"Indice 3"} subTitle={"Regardez le plateau"} arrow={true} arrowDown={false}
+                                 eye={false}
                                  volume={false} puzzle={true} frameText={"Indice 3"}/>
                 )}
+
                 {currentScreen === "turnByTurn" && (
                     <TurnByTurn
                         socket={socketClient1Ref.current}
@@ -233,6 +252,7 @@ export default function StudentTablet1() {
                         groupName={"teamGroupOne"}
                     />
                 )}
+
                 {currentScreen === "turnByTurn2" && (
                     <TurnByTurn2
                         socket={socketClient1Ref.current}
@@ -243,6 +263,7 @@ export default function StudentTablet1() {
                         currentIndex={currentIndex}
                     />
                 )}
+
                 {currentScreen === "turnByTurn3" && (
                     <TurnByTurn3
                         socket={socketClient1Ref.current}
@@ -254,27 +275,26 @@ export default function StudentTablet1() {
                     />
                 )}
 
-
                 {currentScreen === "showInteractions" && (
                     <Answer socket={socketClient1Ref.current} animalChosen={showAnswer} client={"one"}/>
                 )}
 
                 {currentScreen === "understandInteraction" && (
-                    <Interaction title={"Mutualisme"} subTitle={" écoutez et regardez le plateau"} arrow={true} arrowDown={false} eye={false}
+                    <Interaction title={"Mutualisme"} subTitle={" écoutez et regardez le plateau"} arrow={true}
+                                 arrowDown={false} eye={false}
                                  volume={false} puzzle={false} frameText={"Mutualisme"}/>
                 )}
 
-
                 {currentScreen === "question" && (
-                    <Question socket={socketClient1Ref.current} answerSelected={answerSelected}  onTeamSelected={handleAnswerQuestion} client={1}/>
+                    <Question socket={socketClient1Ref.current} onAnswerSelected={handleAnswerQuestion} client={"one"}/>
                 )}
-
 
                 {currentScreen === "conclusion" && <Conclusion/>}
 
                 {currentScenario && currentScenario.id === 11 && (
                     <AudioPlayer src={currentScenario.audios}/>
                 )}
+
             </div>
         </>
     );
