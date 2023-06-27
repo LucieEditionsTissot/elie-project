@@ -454,6 +454,7 @@ io.on("connection", (socket) => {
         }
     });
 
+
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
         stateManager.updateClientState(socket.id, "disconnected");

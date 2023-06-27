@@ -103,7 +103,7 @@ function TurnByTurn2({socket, data, client, groupName, hiddenCards, currentIndex
                         className="button-next flex flex-row justify-center items-center rounded-full disabled"
                         onClick={handleClickOnNextButton}
                     >
-                        <p>Indice 2</p>
+                        <p>Indice 3</p>
                         <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                     </div>
                 </div>
