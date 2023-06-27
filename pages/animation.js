@@ -175,6 +175,7 @@ const Client3 = () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
         socketClient3.on("conclusion", () => {
+            currentVideo.pause();
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         })
 
@@ -237,7 +238,6 @@ const Client3 = () => {
          if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
              socketClient3Ref.current.emit("animationIsDoneAskQuestion");
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-             currentVideo.pause();
          }
          else {
                  if (currentVideo) {
