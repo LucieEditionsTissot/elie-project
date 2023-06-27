@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import Frame from "./Frame";
-import Indicator from "./Indicator";
 
 function TurnByTurn({socket, data, client, groupName}) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
@@ -69,7 +68,7 @@ function TurnByTurn({socket, data, client, groupName}) {
 
     return (
         <section id="turnByTurn">
-            <Frame color={"green"} crop={true} text={randomTheme}/>
+            <Frame color={"green"} crop={false} text={randomTheme}/>
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
@@ -80,7 +79,7 @@ function TurnByTurn({socket, data, client, groupName}) {
                         className="button-next flex flex-row justify-center items-center rounded-full disabled"
                         onClick={handleClickOnNextButton}
                     >
-                        <p>Indice 2</p>
+                        <p>Suivant</p>
                         <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                     </div>
                 </div>
@@ -95,7 +94,6 @@ function TurnByTurn({socket, data, client, groupName}) {
                         ))}
                 </div>
             </div>
-            <Indicator/>
         </section>
     );
 }

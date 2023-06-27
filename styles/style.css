@@ -451,7 +451,7 @@ video {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 40px solid #32405a;
+  border: 30px solid #32405a;
   background-color: #2b3850;
 }
 #interaction .wrapper .icon {
@@ -464,7 +464,7 @@ video {
   position: relative;
   max-width: 85%;
   font-family: "PP Pangram Sans Rounded bold", sans-serif;
-  font-size: 55px;
+  font-size: 50px;
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: 0.085em;
@@ -496,7 +496,7 @@ video {
 }
 #interaction .arrow img {
   position: relative;
-  height: 80px;
+  height: 70px;
   width: auto;
 }
 
@@ -605,9 +605,12 @@ header a:last-child h3 {
 #teams .teams-wrapper .card ul li {
   position: relative;
   margin-bottom: 5px;
-  padding: 15px 0;
+  height: 42px;
   width: 100%;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #fefff6;
   font-family: "PP Pangram Sans Rounded medium", sans-serif;
   font-size: 18px;
@@ -764,17 +767,14 @@ header a:last-child h3 {
 #turnByTurn {
   position: relative;
 }
-#turnByTurn .template-wrapper {
-  padding: 7.7% 7% 7.75%;
-}
-#turnByTurn .template-wrapper .animal-wrapper {
+#turnByTurn .animal-wrapper {
   position: relative;
   padding: 20px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
-#turnByTurn .template-wrapper .animal-wrapper .animal {
+#turnByTurn .animal-wrapper .animal {
   position: relative;
   height: 100%;
   width: 100%;
@@ -787,15 +787,15 @@ header a:last-child h3 {
   background-color: #faf9ef;
   border: 3px solid #eeede6;
   opacity: 1;
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), border 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), border 0.8s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-#turnByTurn .template-wrapper .animal-wrapper .animal img {
+#turnByTurn .animal-wrapper .animal img {
   position: relative;
   height: auto;
   width: 65%;
   pointer-events: none;
 }
-#turnByTurn .template-wrapper .animal-wrapper .animal p {
+#turnByTurn .animal-wrapper .animal p {
   position: relative;
   margin-top: 20px;
   max-width: 90%;
@@ -807,50 +807,26 @@ header a:last-child h3 {
   text-align: center;
   color: #67787f;
 }
-#turnByTurn .template-wrapper .animal-wrapper .animal.hidden {
+#turnByTurn .animal-wrapper .animal .lock {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  height: 25px;
+  width: auto;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#turnByTurn .animal-wrapper .animal.hidden {
   border: 1px solid #eeede6;
   opacity: 0.3;
 }
-#turnByTurn .template-wrapper .animal-wrapper .animal.locked {
+#turnByTurn .animal-wrapper .animal.locked {
   border: 1px solid #eeede6;
-  background-color: #d76677 !important;
   opacity: 0.3;
 }
-#turnByTurn .indicator {
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 38%;
-  z-index: 100;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-#turnByTurn .indicator .wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-#turnByTurn .indicator .wrapper img {
-  position: relative;
-  margin-right: 10px;
-  height: auto;
-  width: 20px;
-}
-#turnByTurn .indicator .wrapper .card {
-  position: relative;
-  margin-right: 5px;
-  height: 37px;
-  width: 25px;
-  border-radius: 5px;
-  background: #2B3850;
-}
-#turnByTurn .indicator .wrapper .card:last-child {
-  margin-right: 0;
+#turnByTurn .animal-wrapper .animal.locked .lock {
+  opacity: 1;
 }
 
 #animationScreen {
@@ -1025,8 +1001,8 @@ header a:last-child h3 {
 }
 .answer .animal img {
   position: relative;
-  height: 90px;
-  width: auto;
+  height: auto;
+  width: 175px;
   transform: scale(1);
   opacity: 1;
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
