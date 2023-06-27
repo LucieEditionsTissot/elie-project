@@ -221,21 +221,23 @@ const Client3 = () => {
             console.log(socketClient3Ref.current.emit("gameOn"));
             socketClient3Ref.current.emit("gameOn");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+            currentVideo.pause();
         }
          if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
              console.log(socketClient3Ref.current.emit("getCurrentGameData"));
                 socketClient3Ref.current.emit("getCurrentGameData");
                 setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+             currentVideo.pause();
         }
          if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
-             console.log(socketClient3Ref.current.emit("getCurrentGameDataLastTime"));
             socketClient3Ref.current.emit("getCurrentGameDataLastTime");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+             currentVideo.pause();
         }
          if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
-             console.log(socketClient3Ref.current.emit("animationIsDoneAskQuestion"));
              socketClient3Ref.current.emit("animationIsDoneAskQuestion");
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+             currentVideo.pause();
          }
          else {
                  if (currentVideo) {
