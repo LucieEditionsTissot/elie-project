@@ -96,7 +96,6 @@ export default function StudentTablet1() {
         });
 
         socketClient1.on("gameDataUpdated", (updatedData) => {
-            setAudioScenario(false);
             console.log("game data is: ", updatedData);
             setHiddenCards(updatedData.hiddenCards);
             setCurrentIndex(updatedData.currentIndex);

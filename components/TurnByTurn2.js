@@ -1,6 +1,5 @@
 import {useEffect, useState, useRef} from "react";
 import Frame from "./Frame";
-import Indicator from "./Indicator";
 
 function TurnByTurn2({socket, data, client, groupName, hiddenCards, currentIndex}) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
@@ -92,7 +91,7 @@ function TurnByTurn2({socket, data, client, groupName, hiddenCards, currentIndex
 
     return (
         <section id="turnByTurn">
-            <Frame color={"green"} crop={true} text={randomTheme}/>
+            <Frame color={"green"} crop={false} text={randomTheme}/>
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
@@ -103,7 +102,7 @@ function TurnByTurn2({socket, data, client, groupName, hiddenCards, currentIndex
                         className="button-next flex flex-row justify-center items-center rounded-full disabled"
                         onClick={handleClickOnNextButton}
                     >
-                        <p>Indice 3</p>
+                        <p>Suivant</p>
                         <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>
                     </div>
                 </div>
@@ -114,11 +113,11 @@ function TurnByTurn2({socket, data, client, groupName, hiddenCards, currentIndex
                             <div key={index} id={index} className="animal" onClick={(e) => handleFlipCard(e)}>
                                 <img src={"images/animals/" + animal.icon} alt="Animal icon"/>
                                 <p>{animal.name}</p>
+                                <img src={"images/lock.svg"} alt="lock icon" className="lock"/>
                             </div>
                         ))}
                 </div>
             </div>
-            <Indicator/>
         </section>
     );
 }

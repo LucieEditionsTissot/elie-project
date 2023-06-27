@@ -66,7 +66,7 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
                   {Object.keys(config.teams).map((teamName, index) => (
                     
                         <div ref={ref => (cardRefs.current[index] = ref)} key={index} id={index}
-                             className={`card ${client === 1 ? "blue" : "red"}`}
+                             className={`card ${client === 1 ? "red" : "blue"}`}
                              onClick={() => handleClickOnTeam(index)}><h2 className="team-name">{teamName}</h2>
                             <ul> {
                                 config.teams[teamName].map((member, index) => (
