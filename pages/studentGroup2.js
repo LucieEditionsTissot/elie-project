@@ -42,6 +42,9 @@ export default function StudentTablet2() {
         socketClient2.on("disconnect", function () {
             console.log("Client 2 disconnected");
         });
+        socketClient2.on("reload", () => {
+            window.location.reload();
+        });
 
         socketClient2.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
@@ -131,6 +134,9 @@ export default function StudentTablet2() {
 
         socketClient2.on("askQuestion", () => {
             setCurrentScreen("question");
+        });
+        socketClient2.on("finalExplanation", () => {
+            setCurrentScreen("finalExplanation");
         });
 
         socketClient2.on("conclusion", () => {
@@ -283,7 +289,11 @@ export default function StudentTablet2() {
                 {currentScreen === "question" && (
                     <Question socket={socketClient2Ref.current} onAnswerSelected={handleAnswerQuestion} client={"two"}/>
                 )}
-
+                {currentScreen === "finalExplanation" && (
+                    <Interaction title={"Explication"} subTitle={" écoutez et regardez le  plateau"} arrow={true} arrowDown={false}
+                                 eye={false}
+                                 volume={false} puzzle={false} frameText={"Explication"}/>
+                )}
                 {currentScreen === "conclusion" && <Conclusion/>}
 
             </div>

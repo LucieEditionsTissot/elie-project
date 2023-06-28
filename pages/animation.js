@@ -27,7 +27,16 @@ const Client3 = () => {
         'video/indices/indice3/LC_B_anim_indice_03.mp4',
         'video/Interaction_Intro.mp4',
         'video/Interaction_Anim.mp4',
+        'audio/salut.mp3',
+        "audio/equipe.mp3",
+        'audio/carte01.mp3',
+        'audio/carte02.mp3',
+        'audio/carte03.mp3',
+        'audio/explicationfinale.mp3',
+        'audio/conclusion.mp3',
+
     ];
+
 
     function preloadMedia(files) {
         const promises = files.map((file) => {
@@ -48,63 +57,77 @@ const Client3 = () => {
     const scenario1 = {
         videos: ["video/Anim_Ambiance.mp4"]
     };
-
     const scenario2 = {
-        videos: ["video/ExplicationsDesRegles.mp4"]
+        audios: 'audio/salut.mp3',
+        videos: ["video/Anim_Ambiance.mp4"]
     };
-
-    const scenarios3 = {
-        videos: ['video/ChoixDuTheme.mp4'],
+    const scenario3 = {
+        audios: "audio/equipe.mp3",
+        videos: ["video/Anim_Ambiance.mp4"]
     };
-
     const scenario4 = {
-        videos: ['video/LeMutualisme.mp4'],
+        videos: ["video/ExplicationsDesRegles.mp4"],
     };
 
     const scenario5 = {
-        videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4'],
+        videos: ['video/ChoixDuTheme.mp4'],
     };
 
     const scenario6 = {
-        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
+        videos: ['video/LeMutualisme.mp4'],
     };
 
     const scenario7 = {
-        videos: ['video/indices/indice2/LC_A_intro_indice_02.mp4'],
+        videos: ['video/indices/indice1/LC_A_intro_indice_01.mp4'],
     };
 
     const scenario8 = {
-        videos: ['video/indices/indice2/LC_B_anim_indice_02.mp4'],
+        audios: 'audio/carte01.mp3',
+        videos: ['video/indices/indice1/LC_B_anim_indice_01.mp4'],
     };
 
     const scenario9 = {
-        videos: ['video/indices/indice3/LC_A_intro_indice_03.mp4'],
+        videos: ['video/indices/indice2/LC_A_intro_indice_02.mp4'],
     };
 
     const scenario10 = {
-        videos: ['video/indices/indice3/LC_B_anim_indice_03.mp4'],
+        audios: 'audio/carte02.mp3',
+        videos: ['video/indices/indice2/LC_B_anim_indice_02.mp4'],
     };
 
     const scenario11 = {
-        videos: ["video/Anim_Ambiance_Map01.mp4"]
+        videos: ['video/indices/indice3/LC_A_intro_indice_03.mp4'],
     };
 
     const scenario12 = {
-        videos: ['video/Interaction_Intro.mp4'],
+        audios: 'audio/carte03.mp3',
+        videos: ['video/indices/indice3/LC_B_anim_indice_03.mp4'],
     };
 
     const scenario13 = {
-        videos: ['video/Interaction_Anim.mp4'],
+        videos: ["video/Anim_Ambiance_Map01.mp4"]
     };
 
     const scenario14 = {
+        videos: ['video/Interaction_Intro.mp4'],
+    };
+
+    const scenario15 = {
+        videos: ['video/Interaction_Anim.mp4'],
+    };
+    const scenario16 = {
+        audios:'audio/explicationfinale.mp3',
+        videos: ['video/Interaction_Anim.mp4'],
+    };
+    const scenario17 = {
+        audios: 'audio/conclusion.mp3',
         videos: ['video/Anim_Ambiance_Map01.mp4'],
     };
 
     const scenarios = [
         scenario1,
         scenario2,
-        scenarios3,
+        scenario3,
         scenario4,
         scenario5,
         scenario6,
@@ -115,8 +138,12 @@ const Client3 = () => {
         scenario11,
         scenario12,
         scenario13,
-        scenario14
+        scenario14,
+        scenario15,
+        scenario16,
+        scenario17
     ];
+
 
     const cleanup = () => {
         if (currentAudio) {
@@ -137,6 +164,9 @@ const Client3 = () => {
     }, [])
 
     useEffect(() => {
+        console.log("coucou")
+
+
         socketClient3Ref.current = io(url);
         const socketClient3 = socketClient3Ref.current;
 
@@ -148,8 +178,14 @@ const Client3 = () => {
             console.log("Client 3 disconnected");
         });
 
-        socketClient3.on("reloadClient", () => {
+        socketClient3.on("reload", () => {
             window.location.reload();
+        });
+        socketClient3.on("confirmIntroductionStart", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        });
+        socketClient3.on("showTeams", () => {
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
 
         socketClient3.on("teamsAreDoneShowRules", () => {
@@ -174,10 +210,9 @@ const Client3 = () => {
         socketClient3.on("answer", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
-        socketClient3.on("conclusion", () => {
-            currentVideo.pause();
+        socketClient3.on("finalExplanation", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
+        });
 
         socketClient3.on("audioEnded", () => {
             console.log("Audio ended");
@@ -194,51 +229,64 @@ const Client3 = () => {
 
     }, [currentScenarioToPlay]);
 
+
     const handleAudioEnded = () => {
-        if (currentScenarioToPlay === 4) {
-        } else {
-            currentAudio.loop = true;
-            currentAudio.play();
+        if (currentScenarioToPlay === 15) {
+            console.log(socketClient3Ref.current.emit("setConclusion"))
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+            socketClient3Ref.current.emit("setConclusion");
         }
-    }
+
+        else {
+            if(currentAudio) {
+                currentAudio.pause();
+            }
+        }
+    };
 
     const handleVideoEnded = () => {
-        if (currentScenarioToPlay === 1 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        if (currentScenarioToPlay === 3 && scenarios[currentScenarioToPlay].videos.length === 1) {
             console.log("La bande vidéo est terminée.");
+            console.log(socketClient3Ref.current.emit("rulesAreUnderstood"));
             socketClient3Ref.current.emit("rulesAreUnderstood");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
-        if (currentScenarioToPlay === 2 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
             console.log(socketClient3Ref.current.emit("explain"));
             socketClient3Ref.current.emit("explain");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
-        }  if (currentScenarioToPlay === 3 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }  if (currentScenarioToPlay === 5 && scenarios[currentScenarioToPlay].videos.length === 1) {
             console.log(socketClient3Ref.current.emit("introIndice1"));
             socketClient3Ref.current.emit("introIndice1");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
-        }  if (currentScenarioToPlay === 4 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        }  if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
             console.log(socketClient3Ref.current.emit("gameOn"));
             socketClient3Ref.current.emit("gameOn");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
             currentVideo.pause();
         }
-         if (currentScenarioToPlay === 6 && scenarios[currentScenarioToPlay].videos.length === 1) {
+         if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
              console.log(socketClient3Ref.current.emit("getCurrentGameData"));
                 socketClient3Ref.current.emit("getCurrentGameData");
                 setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
              currentVideo.pause();
         }
-         if (currentScenarioToPlay === 8 && scenarios[currentScenarioToPlay].videos.length === 1) {
+         if (currentScenarioToPlay === 10 && scenarios[currentScenarioToPlay].videos.length === 1) {
+             console.log(socketClient3Ref.current.emit("getCurrentGameDataLastTime"));
             socketClient3Ref.current.emit("getCurrentGameDataLastTime");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
              currentVideo.pause();
         }
-         if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
+         if (currentScenarioToPlay === 13 && scenarios[currentScenarioToPlay].videos.length === 1) {
              socketClient3Ref.current.emit("animationIsDoneAskQuestion");
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
          }
+         if(currentScenarioToPlay === 16 && scenarios[currentScenarioToPlay].videos.length === 1) {
+             socketClient3Ref.current.emit("reloadClients");
+         }
+
          else {
                  if (currentVideo) {
                      currentVideo.currentTime = 0.1;
@@ -257,9 +305,10 @@ const Client3 = () => {
 
             audioElement.addEventListener("canplaythrough", () => {
                 setAudioLoaded(true);
+                console.log("truc truc")
             });
 
-            audioElement.removeEventListener("ended", handleAudioEnded);
+            audioElement.addEventListener("ended", handleAudioEnded);
         } else {
             setCurrentAudio(null);
         }
@@ -269,12 +318,13 @@ const Client3 = () => {
             videoElement.src = currentScenario.videos[currentVideoIndex];
             videoElement.className = "fixed top-0 left-0 w-screen h-screen";
             setCurrentVideo(videoElement);
-            if(currentScenarioToPlay === 5 ||
+            if(currentScenarioToPlay === 9 ||
                 currentScenarioToPlay === 0 ||
                 currentScenarioToPlay === 7 ||
-                currentScenarioToPlay === 10 ||
+                currentScenarioToPlay === 11 ||
                 currentScenarioToPlay === 12 ||
-                currentScenarioToPlay === 13) {
+                currentScenarioToPlay === 14 ||
+                currentScenarioToPlay === 16) {
                 videoElement.loop=true;
             }
             setVideoLoaded(false);
@@ -309,7 +359,6 @@ const Client3 = () => {
         preloadMedia(allMediaFiles)
             .then(() => {
                 if (isMounted) {
-                    setAudioLoaded(true);
                     setVideoLoaded(true);
                 }
             })
@@ -326,11 +375,10 @@ const Client3 = () => {
     return (
         <>
             <div id="animation">
-                <AudioPlayerAmbiant src="audio/SonsAmbiance.mp3"/>
 
                 {scenarios[currentScenarioToPlay].audios &&
-                    audioLoaded &&
-                    !currentAudio && (
+                    audioLoaded && !currentAudio &&
+                    (
                         <AudioPlayerAmbiant src={scenarios[currentScenarioToPlay].audios}/>
                     )}
                 {scenarios[currentScenarioToPlay].videos &&

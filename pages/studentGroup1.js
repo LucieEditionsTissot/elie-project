@@ -40,6 +40,10 @@ export default function StudentTablet1() {
             console.log("Client 1 disconnected");
         });
 
+        socketClient1.on("reload", () => {
+            window.location.reload();
+        });
+
         socketClient1.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
         });
@@ -128,6 +132,10 @@ export default function StudentTablet1() {
 
         socketClient1.on("askQuestion", () => {
             setCurrentScreen("question");
+        });
+
+        socketClient1.on("finalExplanation", () => {
+            setCurrentScreen("finalExplanation");
         });
 
         socketClient1.on("conclusion", () => {
@@ -225,7 +233,7 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "indice2" && (
-                    <Interaction title={"Indice 2"} subTitle={"Ecoutez dans les enceintes"} arrow={true}
+                    <Interaction title={"Indice 2"} subTitle={"écoutez dans les enceintes"} arrow={true}
                                  arrowDown={true} eye={false}
                                  volume={true} puzzle={false} frameText={"Indice 2"}/>
                 )}
@@ -280,7 +288,11 @@ export default function StudentTablet1() {
                 {currentScreen === "question" && (
                     <Question socket={socketClient1Ref.current} onAnswerSelected={handleAnswerQuestion} client={"one"}/>
                 )}
-
+                {currentScreen === "finalExplanation" && (
+                    <Interaction title={"Explication"} subTitle={" écoutez et regardez le  plateau"} arrow={true} arrowDown={false}
+                                 eye={false}
+                                 volume={false} puzzle={false} frameText={"Explication"}/>
+                )}
                 {currentScreen === "conclusion" && <Conclusion/>}
 
 
