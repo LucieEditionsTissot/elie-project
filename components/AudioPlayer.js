@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Howl } from 'howler';
-
 const AudioPlayer = ({ scenario, src }) => {
 
     useEffect(() => {
