@@ -15,6 +15,26 @@
     align-items: center;
     border: 30px solid rgba(50, 64, 90, 1);
     background-color: $dark-blue;
+    animation: pulse 5s infinite;
+
+    @keyframes pulse {
+
+      0% {
+        transform: scale(1);
+        border: 30px solid rgba(50, 64, 90, 1);
+      }
+
+      50% {
+        transform: scale(1.03);
+        border: 25px solid rgba(50, 64, 90, 1);
+      }
+
+      100% {
+        transform: scale(1);
+        border: 30px solid rgba(50, 64, 90, 1);
+      }
+
+    }
 
     .icon {
       position: relative;
@@ -39,7 +59,7 @@
     .sub-title {
       position: relative;
       margin-top: 15px;
-      max-width: 65%;
+      max-width: 60%;
       font-family: "PP Pangram Sans Rounded bold", sans-serif;
       font-size: 23px;
       font-weight: 400;
@@ -54,18 +74,44 @@
 
   .arrow {
     position: relative;
-    padding: 60px 30px;
+    padding: 30px 10px;
     border-radius: 50px;
+    overflow: hidden;
     background-color: rgba(50, 64, 90, 1);
 
     &.down {
       transform: rotate(180deg);
     }
 
-    img {
+    div {
       position: relative;
-      height: 70px;
-      width: auto;
+      padding: 30px 20px;
+      overflow: hidden;
+
+      img {
+        position: relative;
+        height: 80px;
+        width: auto;
+        animation: direction 2.5s infinite linear;
+
+        @keyframes direction {
+
+          0% {
+            top: 110px;
+          }
+
+          75% {
+            top: -110px;
+          }
+
+          100% {
+            top: -110px;
+          }
+
+        }
+
+      }
+
     }
 
   }
