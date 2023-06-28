@@ -213,7 +213,7 @@ const Client3 = () => {
         socketClient3.on("finalExplanation", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
-        
+
         socketClient3.on("audioEnded", () => {
             console.log("Audio ended");
         });
@@ -324,7 +324,6 @@ const Client3 = () => {
                 currentScenarioToPlay === 11 ||
                 currentScenarioToPlay === 12 ||
                 currentScenarioToPlay === 14 ||
-                currentScenarioToPlay === 15 ||
                 currentScenarioToPlay === 16) {
                 videoElement.loop=true;
             }
