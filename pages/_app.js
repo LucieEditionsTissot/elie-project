@@ -3,7 +3,7 @@ import '../styles/globals.css';
 import React from "react";
 import Head from "next/head";
 
-export const url = "192.168.1.137:3000"
+export const url = "192.168.0.46:3000"
 
 function MyApp({Component, pageProps}) {
 

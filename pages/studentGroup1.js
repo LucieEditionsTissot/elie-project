@@ -40,7 +40,6 @@ export default function StudentTablet1() {
             console.log("Client 1 disconnected");
         });
 
-
         socketClient1.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
         });
@@ -141,21 +140,29 @@ export default function StudentTablet1() {
 
     }, []);
 
-    const handleAddTeam = (teamName) => {
-        socketClient1Ref.current.emit("addTeam", teamName);
-    }
+    useEffect(() => {
+        setOtherTeamWantsToContinue(false)
+    }, [currentScreen])
 
     const handleStartButtonClick = () => {
         socketClient1Ref.current.emit("wantsToStartExperience");
+        socketClient1Ref.current.emit("otherTeamWantsToContinue");
     }
 
     const handleContinueIntroduction = () => {
         socketClient1Ref.current.emit("wantsToContinueIntroduction");
+        socketClient1Ref.current.emit("otherTeamWantsToContinue");
     };
+
+    const handleAddTeam = (teamName) => {
+        socketClient1Ref.current.emit("addTeam", teamName);
+        socketClient1Ref.current.emit("otherTeamWantsToContinue");
+    }
 
     const handleAnswerQuestion = (answer) => {
         const data = ["one", Number(answer)]
         socketClient1Ref.current.emit("answer", data);
+        socketClient1Ref.current.emit("otherTeamWantsToContinue");
     }
 
     return (
@@ -176,12 +183,12 @@ export default function StudentTablet1() {
 
                 <AudioPlayer scenario={audioScenario} src={"audio/loup.mp3"}/>
 
-                {otherTeamWantsToContinue && (
-                    <div className="otherTeamWantsToContinue"></div>
-                )}
+                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue === true ? "show" : ""}`}>
+                    <p>L'autre équipe t'attend</p>
+                </div>
 
                 {currentScreen === "start" && (
-                   <StartScreen onClick={handleStartButtonClick}/>
+                    <StartScreen onClick={handleStartButtonClick}/>
                 )}
 
                 {currentScreen === "introduce" && (

@@ -43,8 +43,6 @@ export default function StudentTablet2() {
             console.log("Client 2 disconnected");
         });
 
-        setOtherTeamWantsToContinue(false);
-
         socketClient2.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);
         });
@@ -157,20 +155,23 @@ export default function StudentTablet2() {
 
     }, []);
 
-    const handleAddTeam = (teamIndex) => {
-        setTeamSelected(teamIndex)
-        socketClient2Ref.current.emit("addTeam", teamIndex);
-    }
-    const handleContinueIntroduction = () => {
-        socketClient2Ref.current.emit("wantsToContinueIntroduction");
-    };
+    useEffect(() => {
+        setOtherTeamWantsToContinue(false)
+    }, [currentScreen])
 
     const handleStartButtonClick = () => {
         socketClient2Ref.current.emit("wantsToStartExperience");
     };
-    const handleRulesButtonClick = () => {
-        socketClient2Ref.current.emit("rules");
+
+    const handleContinueIntroduction = () => {
+        socketClient2Ref.current.emit("wantsToContinueIntroduction");
     };
+
+    const handleAddTeam = (teamIndex) => {
+        setTeamSelected(teamIndex)
+        socketClient2Ref.current.emit("addTeam", teamIndex);
+    }
+
     const handleAnswerQuestion = (answer) => {
         const data = ["two", Number(answer)]
         socketClient2Ref.current.emit("answer", data);
@@ -194,9 +195,9 @@ export default function StudentTablet2() {
 
                 <AudioPlayer scenario={audioScenario} src={"audio/corbeau.mp3"}/>
 
-                {otherTeamWantsToContinue && (
-                    <div className="otherTeamWantsToContinue"></div>
-                )}
+                <div className={`otherTeamWantsToContinue ${otherTeamWantsToContinue === true ? "show" : ""}`}>
+                    <p>L'autre équipe t'attend</p>
+                </div>
 
                 {currentScreen === "start" && (
                     <StartScreen onClick={handleStartButtonClick}/>
@@ -211,7 +212,6 @@ export default function StudentTablet2() {
                 )}
 
                 {currentScreen === "rules" && teamsDone && (
-                    // <RulesScreen socket={socketClient1Ref.current} onRulesButtonClicked={handleRulesButtonClick} />
                     <Interaction title={"Regardez le plateau"} subTitle={"Pour comprendre les règles"} arrow={true}
                                  arrowDown={false} eye={false} volume={false} puzzle={false}
                                  frameText={"Règles du jeu"}/>
