@@ -235,12 +235,7 @@ const Client3 = () => {
 
 
     const handleAudioEnded = () => {
-        if (currentScenarioToPlay === 1) {
-            console.log("hello");
-            currentAudio.pause();
-        }
         if (currentScenarioToPlay === 15) {
-            currentAudio.pause();
             console.log(socketClient3Ref.current.emit("setConclusion"))
             socketClient3Ref.current.emit("setConclusion");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
