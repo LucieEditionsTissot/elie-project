@@ -1,7 +1,5 @@
 import {useEffect, useState, useRef} from "react";
 import Frame from "./Frame";
-import Indicator from "./Indicator";
-import answer from "./Answer";
 
 function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex}) {
     const [stateOfTheGame, setStateOfTheGame] = useState([]);
@@ -82,7 +80,7 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
 
     return (
         <section id="turnByTurn">
-            <Frame color={"green"} crop={true} text={randomTheme}/>
+            <Frame color={"green"} crop={false} text={randomTheme}/>
             <div className="template-wrapper">
                 <div className="top-part">
                     <div className="left-part">
@@ -104,11 +102,11 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
                             <div key={index} id={index} className="animal" onClick={(e) => handleFlipCard(e)}>
                                 <img src={"images/animals/" + animal.icon} alt="Animal icon"/>
                                 <p>{animal.name}</p>
+                                <img src={"images/lock.svg"} alt="lock icon" className="lock"/>
                             </div>
                         ))}
                 </div>
             </div>
-            <Indicator/>
         </section>
     );
 }

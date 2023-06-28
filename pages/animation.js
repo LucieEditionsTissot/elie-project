@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import VideoPlayer from '../components/VideoPlayer';
-import AudioPlayer from '../components/AudioPlayer';
 import io from "socket.io-client";
 import * as url from "url";
+import AudioPlayerAmbiant from "../components/AudioPlayerAmbiant";
 
 const Client3 = () => {
     const [audioLoaded, setAudioLoaded] = useState(false);
@@ -175,6 +175,7 @@ const Client3 = () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
         socketClient3.on("conclusion", () => {
+            currentVideo.pause();
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         })
 
@@ -237,7 +238,6 @@ const Client3 = () => {
          if (currentScenarioToPlay === 11 && scenarios[currentScenarioToPlay].videos.length === 1) {
              socketClient3Ref.current.emit("animationIsDoneAskQuestion");
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-             currentVideo.pause();
          }
          else {
                  if (currentVideo) {
@@ -326,12 +326,12 @@ const Client3 = () => {
     return (
         <>
             <div id="animation">
-                <AudioPlayer src="audio/SonsAmbiance.mp3"/>
+                <AudioPlayerAmbiant src="audio/SonsAmbiance.mp3"/>
 
                 {scenarios[currentScenarioToPlay].audios &&
                     audioLoaded &&
                     !currentAudio && (
-                        <AudioPlayer src={scenarios[currentScenarioToPlay].audios}/>
+                        <AudioPlayerAmbiant src={scenarios[currentScenarioToPlay].audios}/>
                     )}
                 {scenarios[currentScenarioToPlay].videos &&
                     videoLoaded &&

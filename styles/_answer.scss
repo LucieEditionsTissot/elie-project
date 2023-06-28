@@ -20,8 +20,8 @@
 
     img {
       position: relative;
-      height: 90px;
-      width: auto;
+      height: auto;
+      width: 175px;
       transform: scale(1);
       opacity: 1;
       transition: transform 0.8s $ease-power4-out, opacity 0.8s $ease-power4-out;

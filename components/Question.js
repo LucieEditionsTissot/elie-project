@@ -35,7 +35,7 @@ function Question({socket, onAnswerSelected, client}) {
                 setTimeout(() => {
                     socket.emit("showConclusion");
                 }, 5000);
-            }, 3000);
+            }, 2000);
         }
     }, [questionRevealed]);
 
