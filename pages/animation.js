@@ -242,7 +242,9 @@ const Client3 = () => {
         }
 
         else {
-            currentAudio.pause();
+            if(currentAudio) {
+                currentAudio.pause();
+            }
         }
     };
 
