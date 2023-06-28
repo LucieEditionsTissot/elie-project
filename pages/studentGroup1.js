@@ -39,7 +39,9 @@ export default function StudentTablet1() {
         socketClient1.on("disconnect", function () {
             console.log("Client 1 disconnected");
         });
-
+        socketClient1.on("reload", () => {
+            window.location.reload();
+        });
 
         socketClient1.on("otherTeamWantsToContinue", () => {
             setOtherTeamWantsToContinue(true);

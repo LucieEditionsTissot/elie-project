@@ -178,7 +178,7 @@ const Client3 = () => {
             console.log("Client 3 disconnected");
         });
 
-        socketClient3.on("reloadClient", () => {
+        socketClient3.on("reload", () => {
             window.location.reload();
         });
         socketClient3.on("confirmIntroductionStart", () => {
@@ -212,9 +212,9 @@ const Client3 = () => {
         });
         socketClient3.on("finalExplanation", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
+        });
+
         socketClient3.on("conclusion", () => {
-            currentVideo.pause();
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         })
 
@@ -236,7 +236,14 @@ const Client3 = () => {
 
     const handleAudioEnded = () => {
         if (currentScenarioToPlay === 1) {
+            console.log("hello");
             currentAudio.pause();
+        }
+        if (currentScenarioToPlay === 15) {
+            currentAudio.pause();
+            console.log(socketClient3Ref.current.emit("setConclusion"))
+            socketClient3Ref.current.emit("setConclusion");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         }
 
         else {
@@ -284,11 +291,15 @@ const Client3 = () => {
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
          }
         if (currentScenarioToPlay === 15 && scenarios[currentScenarioToPlay].videos.length === 1) {
-            currentAudio.pause();
-            console.log(socketClient3Ref.current.emit("setConclusion"))
+            console.log(socketClient3Ref.current.emit("setConclusion"));
             socketClient3Ref.current.emit("setConclusion");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+            currentVideo.pause();
         }
+         if(currentScenarioToPlay === 16 && scenarios[currentScenarioToPlay].videos.length === 1) {
+             socketClient3Ref.current.emit("reloadClients");
+         }
+
          else {
                  if (currentVideo) {
                      currentVideo.currentTime = 0.1;
@@ -310,7 +321,7 @@ const Client3 = () => {
                 console.log("truc truc")
             });
 
-            audioElement.removeEventListener("ended", handleAudioEnded);
+            audioElement.addEventListener("ended", handleAudioEnded);
         } else {
             setCurrentAudio(null);
         }

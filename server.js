@@ -466,6 +466,11 @@ io.on("connection", (socket) => {
             io.emit("conclusion");
         }
     });
+    socket.on("reloadClients", () => {
+        setTimeout(() => {
+            io.emit("reload");
+        }, "10000");
+    })
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
         stateManager.updateClientState(socket.id, "disconnected");

@@ -42,6 +42,9 @@ export default function StudentTablet2() {
         socketClient2.on("disconnect", function () {
             console.log("Client 2 disconnected");
         });
+        socketClient2.on("reload", () => {
+            window.location.reload();
+        });
 
         setOtherTeamWantsToContinue(false);
 
