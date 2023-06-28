@@ -330,7 +330,9 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "getCurrentGameData");
         stateManager.updateClientState(client2SocketId, "getCurrentGameData");
-        io.emit("gameDataUpdated", gameData);
+        if (client1State === "getCurrentGameData" && client2State === "getCurrentGameData") {
+            io.emit("gameDataUpdated", gameData);
+        }
     });
 
     socket.on("getCurrentGameDataLastTime", () => {
@@ -338,7 +340,9 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "getCurrentGameDataLastTime");
         stateManager.updateClientState(client2SocketId, "getCurrentGameDataLastTime");
-        io.emit("gameDataUpdatedLastTime", gameData);
+        if (client1State === "getCurrentGameDataLastTime" && client2State === "getCurrentGameDataLastTime") {
+            io.emit("gameDataUpdatedLastTime", gameData);
+        }
     });
 
     socket.on("introIndice2", () => {
@@ -450,11 +454,18 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(client1SocketId, "showConclusion");
         stateManager.updateClientState(client2SocketId, "showConclusion");
         if (client1State === "showConclusion" && client2State === "showConclusion") {
+            io.emit("finalExplanation");
+        }
+    });
+    socket.on("setConclusion", () => {
+        client1State = stateManager.getClientState(client1SocketId);
+        client2State = stateManager.getClientState(client2SocketId);
+        stateManager.updateClientState(client1SocketId, "setConclusion");
+        stateManager.updateClientState(client2SocketId, "setConclusion");
+        if (client1State === "setConclusion" && client2State === "setConclusion") {
             io.emit("conclusion");
         }
     });
-
-
     interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
         stateManager.updateClientState(socket.id, "disconnected");

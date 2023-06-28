@@ -10,6 +10,7 @@ Questions interactives pour tester les connaissances des élèves.
 Projection de vidéos sur un panneau central
 Système de websockets pour une communication en temps réel entre le serveur et le client.
 Interface utilisateur conviviale et intuitive réalisée avec Next.js et SCSS.
+
 ### Technologies utilisées
 #### Node.js : plateforme de développement côté serveur.
 #### Socket.IO : bibliothèque de websockets pour permettre une communication en temps réel.

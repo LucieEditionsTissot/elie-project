@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Howl } from 'howler';
 
-const AudioPlayer = ({ src }) => {
+const AudioPlayerAmbiant = ({ src }) => {
     const soundRef = useRef(null);
 
     useEffect(() => {
@@ -9,7 +9,7 @@ const AudioPlayer = ({ src }) => {
             src: [src],
             html5: true,
             autoplay: true,
-            loop: true,
+            loop: false,
             volume: 1,
             stereo: false,
         });
@@ -25,4 +25,4 @@ const AudioPlayer = ({ src }) => {
     return null;
 };
 
-export default AudioPlayer;
+export default AudioPlayerAmbiant;
