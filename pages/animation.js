@@ -213,11 +213,7 @@ const Client3 = () => {
         socketClient3.on("finalExplanation", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         });
-
-        socketClient3.on("conclusion", () => {
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
-
+        
         socketClient3.on("audioEnded", () => {
             console.log("Audio ended");
         });
@@ -237,8 +233,8 @@ const Client3 = () => {
     const handleAudioEnded = () => {
         if (currentScenarioToPlay === 15) {
             console.log(socketClient3Ref.current.emit("setConclusion"))
-            socketClient3Ref.current.emit("setConclusion");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+            socketClient3Ref.current.emit("setConclusion");
         }
 
         else {
@@ -287,12 +283,6 @@ const Client3 = () => {
              socketClient3Ref.current.emit("animationIsDoneAskQuestion");
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
          }
-        if (currentScenarioToPlay === 15 && scenarios[currentScenarioToPlay].videos.length === 1) {
-            console.log(socketClient3Ref.current.emit("setConclusion"));
-            socketClient3Ref.current.emit("setConclusion");
-            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-            currentVideo.pause();
-        }
          if(currentScenarioToPlay === 16 && scenarios[currentScenarioToPlay].videos.length === 1) {
              socketClient3Ref.current.emit("reloadClients");
          }
@@ -333,7 +323,9 @@ const Client3 = () => {
                 currentScenarioToPlay === 7 ||
                 currentScenarioToPlay === 11 ||
                 currentScenarioToPlay === 12 ||
-                currentScenarioToPlay === 14) {
+                currentScenarioToPlay === 14 ||
+                currentScenarioToPlay === 15 ||
+                currentScenarioToPlay === 16) {
                 videoElement.loop=true;
             }
             setVideoLoaded(false);
