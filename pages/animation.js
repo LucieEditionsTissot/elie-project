@@ -178,7 +178,7 @@ const Client3 = () => {
             console.log("Client 3 disconnected");
         });
 
-        socketClient3.on("reloadClient", () => {
+        socketClient3.on("reload", () => {
             window.location.reload();
         });
         socketClient3.on("confirmIntroductionStart", () => {
@@ -238,6 +238,12 @@ const Client3 = () => {
         if (currentScenarioToPlay === 1) {
             currentAudio.pause();
         }
+        if (currentScenarioToPlay === 15 && scenarios[currentScenarioToPlay].videos.length === 1) {
+            currentAudio.pause();
+            console.log(socketClient3Ref.current.emit("setConclusion"))
+            socketClient3Ref.current.emit("setConclusion");
+            setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+        }
 
         else {
             currentAudio.pause();
@@ -284,11 +290,15 @@ const Client3 = () => {
              setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
          }
         if (currentScenarioToPlay === 15 && scenarios[currentScenarioToPlay].videos.length === 1) {
-            currentAudio.pause();
-            console.log(socketClient3Ref.current.emit("setConclusion"))
+            console.log(socketClient3Ref.current.emit("setConclusion"));
             socketClient3Ref.current.emit("setConclusion");
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
+            currentVideo.pause();
         }
+         if(currentScenarioToPlay === 16 && scenarios[currentScenarioToPlay].videos.length === 1) {
+             socketClient3Ref.current.emit("reloadClients");
+         }
+
          else {
                  if (currentVideo) {
                      currentVideo.currentTime = 0.1;
