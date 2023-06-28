@@ -212,9 +212,9 @@ const Client3 = () => {
         });
         socketClient3.on("finalExplanation", () => {
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
-        })
+        });
+
         socketClient3.on("conclusion", () => {
-            currentVideo.pause();
             setCurrentScenarioToPlay((prevScenario) => prevScenario + 1);
         })
 
@@ -236,9 +236,10 @@ const Client3 = () => {
 
     const handleAudioEnded = () => {
         if (currentScenarioToPlay === 1) {
+            console.log("hello");
             currentAudio.pause();
         }
-        if (currentScenarioToPlay === 15 && scenarios[currentScenarioToPlay].videos.length === 1) {
+        if (currentScenarioToPlay === 15) {
             currentAudio.pause();
             console.log(socketClient3Ref.current.emit("setConclusion"))
             socketClient3Ref.current.emit("setConclusion");
@@ -320,7 +321,7 @@ const Client3 = () => {
                 console.log("truc truc")
             });
 
-            audioElement.removeEventListener("ended", handleAudioEnded);
+            audioElement.addEventListener("ended", handleAudioEnded);
         } else {
             setCurrentAudio(null);
         }
