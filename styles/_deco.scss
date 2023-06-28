@@ -1,0 +1,139 @@
+#deco {
+  position: absolute;
+  left: 50%;
+  bottom: -20px;
+  transform: translateX(-50%);
+  height: auto;
+  width: 105%;
+  z-index: 5;
+  border-radius: 20px;
+  pointer-events: none;
+
+  .background {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 140px;
+    width: 100%;
+    z-index: 0;
+  }
+
+  .left-green {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 260px;
+    width: auto;
+    z-index: 1;
+    animation: left-green 8s infinite ease-in-out;
+
+    @keyframes left-green {
+
+      0% {
+        transform: rotate(-10deg) scale(1.02) translateX(-25px);
+        filter: brightness(1.1);
+      }
+
+      50% {
+        transform: rotate(0) scale(1) translateX(-5px);
+        filter: brightness(1);
+      }
+
+      100% {
+        transform: rotate(-10deg) scale(1.02) translateX(-25px);
+        filter: brightness(1.1);
+      }
+
+    }
+
+  }
+
+  .left-grey {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    height: 220px;
+    width: auto;
+    animation: left-grey 8s infinite ease-in-out;
+
+    @keyframes left-grey {
+
+      0% {
+        transform: rotate(-13deg) scale(1.06) translateX(-35px);
+        filter: brightness(1.1);
+      }
+
+      50% {
+        transform: rotate(0) scale(1) translateX(-5px);
+        filter: brightness(1);
+      }
+
+      100% {
+        transform: rotate(-13deg) scale(1.06) translateX(-35px);
+        filter: brightness(1.1);
+      }
+
+    }
+
+  }
+
+  .right-white {
+    position: absolute;
+    bottom: 0;
+    right: 70px;
+    height: 170px;
+    width: auto;
+    animation: right-white 8s infinite ease-in-out;
+
+    @keyframes right-white {
+
+      0% {
+        transform: rotate(-10deg) translateX(-25px);
+        filter: brightness(1.05);
+      }
+
+      50% {
+        transform: rotate(0) translateX(-5px);
+        filter: brightness(1);
+      }
+
+      100% {
+        transform: rotate(-10deg) translateX(-25px);
+        filter: brightness(1.05);
+      }
+
+    }
+
+  }
+
+  .right-grey {
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    height: 270px;
+    width: auto;
+    z-index: 1;
+    animation: right-grey 8s infinite ease-in-out;
+
+    @keyframes right-grey {
+
+      0% {
+        transform: rotate(-10deg) scale(1.02) translateX(-25px);
+        filter: brightness(1.2);
+      }
+
+      50% {
+        transform: rotate(0) scale(1) translateX(-5px);
+        filter: brightness(1);
+      }
+
+      100% {
+        transform: rotate(-10deg) scale(1.02) translateX(-25px);
+        filter: brightness(1.2);
+      }
+
+    }
+
+  }
+
+}

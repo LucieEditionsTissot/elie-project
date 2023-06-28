@@ -10,7 +10,9 @@ function Interaction(props) {
 
             {props.arrow &&
                 <div className={`arrow ${props.arrowDown ? "down" : ""}`}>
-                    <img src={"images/arrow-green.svg"} alt="arrow icon"/>
+                    <div>
+                        <img src={"images/arrow-green.svg"} alt={"arrow green"}/>
+                    </div>
                 </div>
             }
 
@@ -38,7 +40,9 @@ function Interaction(props) {
 
             {props.arrow &&
                 <div className={`arrow ${props.arrowDown ? "down" : ""}`}>
-                    <img src={"images/arrow-green.svg"} alt="arrow icon"/>
+                    <div>
+                        <img src={"images/arrow-green.svg"} alt={"arrow green"}/>
+                    </div>
                 </div>
             }
 

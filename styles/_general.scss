@@ -215,17 +215,6 @@ section {
 
 }
 
-.deco {
-  position: absolute;
-  left: 50%;
-  bottom: -85px;
-  transform: translateX(-50%);
-  height: auto;
-  width: 105%;
-  z-index: 5;
-  pointer-events: none;
-}
-
 img {
   -webkit-user-drag: none;
   user-select: none;

@@ -82,17 +82,12 @@ body {
 
 }
 
-
-@import "general";
 @import "start";
+@import "deco";
+@import "general";
 @import "dialog";
 @import "interaction";
-@import "header";
-@import "components";
 @import "teams";
-@import "rules";
-@import "theme";
-@import "map";
 @import "turnByTurn";
 @import "animation";
 @import "question";
