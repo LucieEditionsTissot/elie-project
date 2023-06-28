@@ -12,7 +12,7 @@
   div {
     position: relative;
     padding: 30px 30px 30px 45px;
-    border-radius: 20px;
+    border-radius: 10px;
     background-color: $wheat;
 
     h6 {
@@ -76,9 +76,9 @@
 
 .button-next-intro {
   position: absolute;
-  top: 11vh;
-  right: 6vw;
-  padding: 15px 20px 15px 25px;
+  top: 12.05vh;
+  right: 6.8vw;
+  padding: 12px 15px 12px 18px;
   background-color: $pink;
   opacity: 1;
   transition: opacity 0.8s $ease-power4-out;
@@ -90,13 +90,15 @@
 
   p {
     position: relative;
+    top: 1px;
     margin-right: 10px;
     font-family: "PP Pangram Sans Rounded bold", sans-serif;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 400;
     line-height: 1;
     letter-spacing: 0.04em;
     text-align: center;
+    white-space: nowrap;
     text-transform: uppercase;
     color: $wheat;
   }

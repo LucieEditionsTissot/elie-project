@@ -61,7 +61,7 @@ const animals = {
                 {
                     "name": "Taureau",
                     "icon": "taureau.svg",
-                    "fullName": "Le teaureau"
+                    "fullName": "Le taureau"
                 },
                 {
                     "name": "Chien",
@@ -81,7 +81,7 @@ const animals = {
                 {
                     "name": "Autruche",
                     "icon": "autruche.svg",
-                    "fullName": "Le lapin"
+                    "fullName": "L'autruche"
                 },
                 {
                     "name": "Lion",
@@ -225,6 +225,7 @@ io.on("connection", (socket) => {
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
         client3State = stateManager.getClientState(client3SocketId);
+        socket.broadcast.emit("otherTeamWantsToContinue");
         if (client1State === "wantsToStartExperience" && client2State === "wantsToStartExperience") {
             io.emit("confirmIntroductionStart");
         }
@@ -234,6 +235,7 @@ io.on("connection", (socket) => {
         stateManager.updateClientState(socket.id, "wantsToContinueIntroduction");
         client1State = stateManager.getClientState(client1SocketId);
         client2State = stateManager.getClientState(client2SocketId);
+        socket.broadcast.emit("otherTeamWantsToContinue");
         if (client1State === "wantsToContinueIntroduction" && client2State === "wantsToContinueIntroduction") {
             io.emit("showTeams", stateManager.teams);
             stateManager.updateClientState(client1SocketId, "teams");
@@ -247,6 +249,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "teamAdded");
         stateManager.updateClientState(client2SocketId, "teamAdded");
+        socket.broadcast.emit("otherTeamWantsToContinue");
         io.emit("teamAdded", teamName);
         socket.broadcast.emit("teamChosen", teamName);
         if (client1State === "teamAdded" && client2State === "teamAdded") {
@@ -350,6 +353,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice2");
         stateManager.updateClientState(client2SocketId, "introIndice2");
+        socket.broadcast.emit("otherTeamWantsToContinue");
         if (client1State === "introIndice2" && client2State === "introIndice2") {
             io.emit("setIndice2Screen");
         }
@@ -360,6 +364,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "introIndice3");
         stateManager.updateClientState(client2SocketId, "introIndice3");
+        socket.broadcast.emit("otherTeamWantsToContinue");
         if (client1State === "introIndice3" && client2State === "introIndice3") {
             io.emit("setIndice3Screen");
         }
@@ -389,6 +394,7 @@ io.on("connection", (socket) => {
         client2State = stateManager.getClientState(client2SocketId);
         stateManager.updateClientState(client1SocketId, "animalChosen");
         stateManager.updateClientState(client2SocketId, "animalChosen");
+        socket.broadcast.emit("otherTeamWantsToContinue");
         if (client1State === "animalChosen" && client2State === "animalChosen") {
             io.emit("showInteractions", (animalsChosenData));
         }

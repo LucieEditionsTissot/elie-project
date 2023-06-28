@@ -16,15 +16,19 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
     }, []);
 
     function handleClickOnTeam(index) {
+        const buttonNext = document.querySelector(".button-next");
         if (teamSelected === null) {
             const cards = cardRefs.current;
             const selectedCard = cards[index];
             if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
                 if (selectedCard.classList.contains("selected")) {
                     selectedCard.classList.remove("selected");
+                    buttonNext.classList.add("disabled");
+
                 } else {
                     cards.forEach((card) => card.classList.remove("selected"));
                     selectedCard.classList.add("selected");
+                    buttonNext.classList.remove("disabled");
                 }
             }
         }
@@ -32,12 +36,13 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
 
     function handleClickOnValidateButton() {
         const selectedCard = cardRefs.current.find((card) => card.classList.contains("selected"));
-        if (selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
+        const buttonNext = document.querySelector(".button-next");
+
+        if (!buttonNext.classList.contains("disabled") && selectedCard && !selectedCard.classList.contains("selectedByOtherTeam")) {
             const teamIndex = selectedCard.id;
             onTeamSelected(teamIndex)
-            const button = document.querySelector("#teams .button-next");
-            if (button) {
-                button.classList.add("disabled");
+            if (buttonNext) {
+                buttonNext.classList.add("disabled");
             }
         }
     }
@@ -54,7 +59,7 @@ function ShowTeams({socket, teamSelected, onTeamSelected, client}) {
                         <h3>Pour commencer,</h3>
                         <h3>Choisissez votre équipe !</h3>
                     </div>
-                    <div className="button-next flex flex-row justify-center items-center rounded-full"
+                    <div className="button-next flex flex-row justify-center items-center rounded-full disabled"
                          onClick={() => handleClickOnValidateButton()}>
                         <p>Suivant</p>
                         <img src={"images/next-icon-wheat.svg"} alt="Next icon"/>

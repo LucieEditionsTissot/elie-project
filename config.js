@@ -1,9 +1,9 @@
 const teams = {
-    "CCI Team": ["Alban", "Aude", ""],
-    "Les Corbax": ["Sacha", "Jean", "Guilhem"],
-    "Naga Monsters": ["Léa", "Baptiste", "Timothée"],
+    "CCI Jury": ["Aurélien", "Léa", "Alban C."],
+    "Les Papets": ["Gilles", "Dominique", "Damien"],
+    "Naga Monsters": ["Jean", "Sacha", "Lucie"],
     "Les Éclairs": ["Raphaël", "Virgile", "Mathieu"],
-    "Eclipse Max": ["Alma", "Jeanne", "Emma"],
+    "CCI Team": ["Alban P.", "Aude", "Coralie"],
     "Les Reblocks": ["Rose", "Gabrielle", "Inès"]
 }
 

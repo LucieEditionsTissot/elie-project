@@ -59,7 +59,7 @@
     .sub-title {
       position: relative;
       margin-top: 15px;
-      max-width: 60%;
+      max-width: 300px;
       font-family: "PP Pangram Sans Rounded bold", sans-serif;
       font-size: 23px;
       font-weight: 400;
@@ -75,6 +75,8 @@
   .arrow {
     position: relative;
     padding: 30px 10px;
+    height: 170px;
+    width: 75px;
     border-radius: 50px;
     overflow: hidden;
     background-color: rgba(50, 64, 90, 1);
@@ -85,8 +87,13 @@
 
     div {
       position: relative;
-      padding: 30px 20px;
       overflow: hidden;
+      height: 100%;
+      width: 100%;
+      border-radius: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       img {
         position: relative;
