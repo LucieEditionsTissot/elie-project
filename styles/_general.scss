@@ -1,13 +1,14 @@
 .global-container {
-  position: relative;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
   z-index: 10;
-  padding: 12px;
+  padding: 13px;
   background-color: $blue;
   overflow: hidden;
+  border-radius: 20px;
 }
 
 section {
@@ -16,8 +17,8 @@ section {
   left: 0;
   height: 100%;
   width: 100%;
-  border-radius: 20px;
   overflow: hidden;
+  border-radius: 20px;
 
   .template-wrapper {
     position: absolute;
@@ -148,6 +149,7 @@ section {
   -webkit-user-drag: none;
   pointer-events: none;
   background-color: $blue;
+  border-radius: 20px;
 
   &.greenBackground {
     background-color: $green;

@@ -10,6 +10,7 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
     const [correctAnswer, setCorrectAnswer] = useState(data[1][groupName]["answer"]);
     const [currentGameIndex, setCurrentGameIndex] = useState(0);
     const hiddenCardsRef = useRef(hiddenCards);
+    const [validateIsClicked, setValidateIsClicked] = useState(false);
 
     useEffect(() => {
         setStateOfTheGame(stateOfTheGame.slice(1));
@@ -30,23 +31,28 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
         const element = e.target.closest(".animal");
         const allCards = document.querySelectorAll(".animal");
         let allHiddenCards = document.querySelectorAll(".animal.hidden");
+        const buttonNext = document.querySelector(".button-next");
 
-        if (!element.classList.contains('locked')) {
-            if (allHiddenCards.length < maxNumberOfCard) {
-                element.classList.toggle("hidden");
-            } else {
-                if (element.classList.contains("hidden")) {
-                    element.classList.remove("hidden");
+        if (!validateIsClicked) {
+
+            if (!element.classList.contains('locked')) {
+                if (allHiddenCards.length < maxNumberOfCard) {
+                    element.classList.toggle("hidden");
+                } else {
+                    if (element.classList.contains("hidden")) {
+                        element.classList.remove("hidden");
+                    }
                 }
             }
-        }
 
-        const numberOfHiddenCard = document.querySelectorAll(".animal.hidden").length;
-        const buttonNext = document.querySelector(".button-next");
-        if (numberOfHiddenCard === 3) {
-            buttonNext.classList.remove("disabled")
-        } else {
-            buttonNext.classList.add("disabled")
+            const numberOfHiddenCard = document.querySelectorAll(".animal.hidden").length;
+            const buttonNext = document.querySelector(".button-next");
+            if (numberOfHiddenCard === 3) {
+                buttonNext.classList.remove("disabled")
+            } else {
+                buttonNext.classList.add("disabled")
+            }
+
         }
 
     }
@@ -75,6 +81,7 @@ function TurnByTurn3({socket, data, client, groupName, hiddenCards, currentIndex
 
             setStateOfTheGame([...stateOfTheGame]);
             buttonNext.classList.add("disabled");
+            setValidateIsClicked(true)
         }
     }
 

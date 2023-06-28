@@ -61,7 +61,7 @@ const animals = {
                 {
                     "name": "Taureau",
                     "icon": "taureau.svg",
-                    "fullName": "Le teaureau"
+                    "fullName": "Le taureau"
                 },
                 {
                     "name": "Chien",
@@ -81,7 +81,7 @@ const animals = {
                 {
                     "name": "Autruche",
                     "icon": "autruche.svg",
-                    "fullName": "Le lapin"
+                    "fullName": "L'autruche"
                 },
                 {
                     "name": "Lion",

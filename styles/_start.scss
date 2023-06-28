@@ -24,7 +24,7 @@
   .start-button {
     position: relative;
     margin-top: 35px;
-    padding: 20px 29px 20px 23px;
+    padding: 20px 35px 20px 23px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,11 +49,12 @@
 
     p {
       position: relative;
-      margin-left: 25px;
+      top: 1px;
+      margin-left: 20px;
       font-family: "PP Pangram Sans Rounded bold", sans-serif;
       font-size: 35px;
       font-weight: 400;
-      line-height: 1;
+      line-height: 25px;
       letter-spacing: 0.05em;
       text-align: left;
       text-transform: uppercase;

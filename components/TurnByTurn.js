@@ -9,6 +9,7 @@ function TurnByTurn({socket, data, client, groupName}) {
     const [animals, setAnimals] = useState({});
     const [correctAnswer, setCorrectAnswer] = useState("");
     const [currentGameIndex, setCurrentGameIndex] = useState(0);
+    const [validateIsClicked, setValidateIsClicked] = useState(false);
 
     useEffect(() => {
         setData(data);
@@ -26,20 +27,24 @@ function TurnByTurn({socket, data, client, groupName}) {
         const allCards = document.querySelectorAll(".animal");
         let allHiddenCards = document.querySelectorAll(".animal.hidden");
 
-        if (allHiddenCards.length < maxNumberOfCard) {
-            element.classList.toggle("hidden");
-        } else {
-            if (element.classList.contains("hidden")) {
-                element.classList.remove("hidden");
-            }
-        }
+        if (!validateIsClicked) {
 
-        const numberOfHiddenCard = document.querySelectorAll(".animal.hidden").length;
-        const buttonNext = document.querySelector(".button-next");
-        if (numberOfHiddenCard === 3) {
-            buttonNext.classList.remove("disabled")
-        } else {
-            buttonNext.classList.add("disabled")
+            if (allHiddenCards.length < maxNumberOfCard) {
+                element.classList.toggle("hidden");
+            } else {
+                if (element.classList.contains("hidden")) {
+                    element.classList.remove("hidden");
+                }
+            }
+
+            const numberOfHiddenCard = document.querySelectorAll(".animal.hidden").length;
+            const buttonNext = document.querySelector(".button-next");
+            if (numberOfHiddenCard === 3) {
+                buttonNext.classList.remove("disabled")
+            } else {
+                buttonNext.classList.add("disabled")
+            }
+
         }
 
     }
@@ -63,6 +68,7 @@ function TurnByTurn({socket, data, client, groupName}) {
             setStateOfTheGame([...stateOfTheGame]);
 
             buttonNext.classList.add("disabled");
+            setValidateIsClicked(true)
         }
     }
 

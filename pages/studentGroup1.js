@@ -181,7 +181,7 @@ export default function StudentTablet1() {
                 )}
 
                 {currentScreen === "start" && (
-                    <StartScreen onClick={handleStartButtonClick}/>
+                   <StartScreen onClick={handleStartButtonClick}/>
                 )}
 
                 {currentScreen === "introduce" && (
