@@ -472,6 +472,7 @@ io.on("connection", (socket) => {
             io.emit("conclusion");
         }
     });
+
     socket.on("reloadClients", () => {
         setTimeout(() => {
             io.emit("reload");

@@ -323,8 +323,7 @@ const Client3 = () => {
                 currentScenarioToPlay === 7 ||
                 currentScenarioToPlay === 11 ||
                 currentScenarioToPlay === 12 ||
-                currentScenarioToPlay === 14 ||
-                currentScenarioToPlay === 16) {
+                currentScenarioToPlay === 14) {
                 videoElement.loop=true;
             }
             setVideoLoaded(false);
